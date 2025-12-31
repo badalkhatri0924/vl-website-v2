@@ -39,7 +39,7 @@ export default function Home() {
                 className="flex flex-col items-center cursor-pointer group"
               >
                <p className="text-xs font-black text-accent uppercase tracking-ultra mb-3 transition-transform group-hover:-translate-y-1">Primary Consultation</p>
-               <p className="text-white font-display text-2xl border-b border-accent/40 pb-2 group-hover:text-accent transition-colors">chirag@versionlabs.co</p>
+               <p className="text-white font-display text-2xl border-b border-accent/40 pb-2 group-hover:text-accent transition-colors">daxeel@versionlabs.co</p>
               </Link>
             </div>
           </div>

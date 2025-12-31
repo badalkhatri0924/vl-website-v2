@@ -285,7 +285,7 @@ const CaseStudies: React.FC = () => {
           src="/intel-logo.svg"
           alt="Intel Logo"
           width={150}
-          height={40}
+          height={50}
           className="object-contain"
         />
       )
@@ -297,7 +297,19 @@ const CaseStudies: React.FC = () => {
           src="/digital-india-logo.png"
           alt="Digital India Logo"
           width={150}
-          height={60}
+          height={50}
+          className="object-contain"
+        />
+      )
+    },
+    { 
+      name: "Ministry of Digial Malaysia", 
+      logo: (
+        <Image
+          src="/ministry-of-digital-malaysia-logo.png"
+          alt="Ministry of Digial Malaysia Logo"
+          width={90}
+          height={50}
           className="object-contain"
         />
       )
@@ -408,7 +420,7 @@ const CaseStudies: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 border border-slate-100 bg-[#F9FBFC] overflow-hidden">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 border border-slate-100 bg-[#F9FBFC] overflow-hidden">
             {partners.map((partner, i) => (
               <div 
                 key={i} 
