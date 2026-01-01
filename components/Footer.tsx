@@ -76,10 +76,10 @@ const Footer: React.FC = () => {
         
         {/* Bottom Institutional Strip */}
         <div className="pt-12 border-t border-slate-100">
-          <div className="flex flex-col lg:flex-row justify-between items-center gap-10">
+          <div className="flex flex-col lg:flex-row justify-center items-center gap-10">
             <div className="flex items-center space-x-8">
               <p className="text-base font-black uppercase tracking-[0.2em] text-slate-300">
-                © 2024 VERSIONLABS — VERSIONLABS DIGITAL INFRASTRUCTURE
+                © 2025 Version Labs LLP. All rights reserved.
               </p>
               <div className="hidden lg:block h-5 w-px bg-slate-200"></div>
               <div className="flex items-center space-x-3 text-base font-black text-accent/60 uppercase tracking-widest">
@@ -88,11 +88,11 @@ const Footer: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-x-8 gap-y-5 text-base font-black uppercase tracking-ultra text-slate-300">
+            {/* <div className="flex flex-wrap justify-center gap-x-8 gap-y-5 text-base font-black uppercase tracking-ultra text-slate-300">
               <button className="hover:text-accent transition-colors">DIGITAL PRIVACY ACT</button>
               <span className="hidden lg:block text-slate-200">•</span>
               <button className="hover:text-accent transition-colors">STANDARD PROTOCOLS</button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
