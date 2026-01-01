@@ -136,10 +136,14 @@ const Header: React.FC = () => {
 
       {/* Mobile Menu Dropdown - Opens Below Header */}
       <div 
-        className={`lg:hidden absolute left-0 right-0 top-full w-full bg-obsidian-950 border-t border-white/10 transform transition-all duration-300 ease-in-out overflow-hidden shadow-2xl ${
+        className={`lg:hidden absolute left-0 right-0 top-full w-full transform transition-all duration-500 ease-in-out overflow-hidden ${
           isMobileMenuOpen 
             ? 'max-h-[calc(100vh-80px)] opacity-100 translate-y-0' 
             : 'max-h-0 opacity-0 -translate-y-4 pointer-events-none'
+        } ${
+          useWhiteHeader
+            ? 'bg-white border-t border-slate-200/60 shadow-[0_4px_24px_rgba(0,0,0,0.04)]'
+            : 'bg-obsidian-950 border-t border-white/10 shadow-2xl'
         }`}
       >
         <nav className="container mx-auto px-8 py-6">
@@ -151,16 +155,22 @@ const Header: React.FC = () => {
                   <Link
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`block py-4 text-base font-black uppercase tracking-[0.25em] transition-all duration-200 ${
-                      isActive
-                        ? 'text-white bg-white/10 px-4 -mx-4 rounded-sm'
-                        : 'text-white/60 hover:text-white hover:bg-white/5 px-4 -mx-4 rounded-sm'
+                    className={`block py-4 text-base font-black uppercase tracking-[0.25em] transition-colors duration-300 ${
+                      useWhiteHeader
+                        ? isActive
+                          ? 'text-accent bg-accent/10 px-4 -mx-4 rounded-sm'
+                          : 'text-slate-500 hover:text-accent hover:bg-slate-50 px-4 -mx-4 rounded-sm'
+                        : isActive
+                          ? 'text-white bg-white/10 px-4 -mx-4 rounded-sm'
+                          : 'text-white/60 hover:text-white hover:bg-white/5 px-4 -mx-4 rounded-sm'
                     }`}
                   >
                     {item.label}
                   </Link>
                   {index < navItems.length - 1 && (
-                    <div className="border-b border-white/10 my-1" />
+                    <div className={`my-1 transition-colors duration-500 ${
+                      useWhiteHeader ? 'border-b border-slate-200/60' : 'border-b border-white/10'
+                    }`} />
                   )}
                 </div>
               );
@@ -174,7 +184,9 @@ const Header: React.FC = () => {
             className={`mt-8 group/btn relative w-full px-8 py-5 font-black uppercase tracking-[0.35em] text-[11px] transition-all duration-300 flex items-center justify-center space-x-4 border-2 ${
               pathname === '/enquiry'
                 ? 'border-accent bg-accent text-white'
-                : 'border-accent text-accent hover:bg-accent hover:text-white'
+                : useWhiteHeader
+                  ? 'border-slate-200 text-obsidian-900 hover:border-accent hover:text-accent bg-white'
+                  : 'border-accent text-accent hover:bg-accent hover:text-white'
             }`}
           >
             <span>Inquire Now</span>
