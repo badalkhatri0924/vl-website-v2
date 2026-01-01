@@ -226,7 +226,7 @@ const ProjectCard: React.FC<{ project: any }> = ({ project }) => {
               ))}
             </div>
             
-            <div className="flex flex-row flex-wrap gap-3">
+            {/* <div className="flex flex-row flex-wrap gap-3">
               {project.tags.map((tag: string) => (
                 <div 
                   key={tag} 
@@ -235,7 +235,7 @@ const ProjectCard: React.FC<{ project: any }> = ({ project }) => {
                   {tag}
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
 
