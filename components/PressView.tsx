@@ -6,7 +6,7 @@ import { PRESS_ITEMS } from '@/components/PressSection';
 
 const PressView: React.FC = () => {
   return (
-    <div className="pt-32 pb-32 bg-[#F8FAFB]">
+    <div className="pt-40 pb-32 bg-[#F8FAFB]">
       <div className="container mx-auto px-6">
         {/* Navigation Breadcrumb to allow returning to main landing page */}
         <div className="mb-16">
