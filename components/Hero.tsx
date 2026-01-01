@@ -91,12 +91,12 @@ const Hero: React.FC = () => {
                     <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
                   </svg>
                 </div>
-                <span className="pr-8 text-obsidian-950 font-black uppercase tracking-ultra text-sm">Consult with Architect</span>
+                <span className="pr-8 text-obsidian-950 font-black uppercase tracking-widest text-sm">Consult with Architect</span>
               </Link>
 
               <Link 
                 href="/portfolio"
-                className="text-white/40 hover:text-white text-sm font-black uppercase tracking-ultra transition-colors border-b border-white/10 pb-2 hover:border-amber-400"
+                className="text-white/40 hover:text-white text-sm font-black uppercase tracking-widest transition-colors border-b border-white/10 pb-2 hover:border-amber-400"
               >
                 Explore Works
               </Link>

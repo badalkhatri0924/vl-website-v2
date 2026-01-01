@@ -88,7 +88,7 @@ const ServicesView: React.FC = () => {
                 </p>
                 <ul className="grid grid-cols-2 gap-y-4 gap-x-8">
                   {service.features.map(f => (
-                    <li key={f} className="flex items-center space-x-3 text-sm font-medium text-slate-700">
+                    <li key={f} className="flex items-center space-x-3 text-base font-medium text-slate-700">
                       <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
                       <span>{f}</span>
                     </li>
