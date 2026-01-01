@@ -290,18 +290,7 @@ const CaseStudies: React.FC = () => {
         />
       )
     },
-    { 
-      name: "Digital India", 
-      logo: (
-        <Image
-          src="/digital-india-logo.png"
-          alt="Digital India Logo"
-          width={150}
-          height={50}
-          className="object-contain"
-        />
-      )
-    },
+   
     { 
       name: "Ministry of Digial Malaysia", 
       logo: (
@@ -330,9 +319,21 @@ const CaseStudies: React.FC = () => {
       name: "FICCI", 
       logo: (
         <Image
-          src="/ficci-logo.svg"
+          src="/ficci-logo.png"
           alt="FICCI Logo"
-          width={130}
+          width={90}
+          height={50}
+          className="object-contain"
+        />
+      )
+    },
+    { 
+      name: "Digital India", 
+      logo: (
+        <Image
+          src="/digital-india-logo.png"
+          alt="Digital India Logo"
+          width={150}
           height={50}
           className="object-contain"
         />
@@ -344,7 +345,7 @@ const CaseStudies: React.FC = () => {
         <Image
           src="/dell-logo.png"
           alt="Dell Logo"
-          width={100}
+          width={90}
           height={50}
           className="object-contain"
         />
