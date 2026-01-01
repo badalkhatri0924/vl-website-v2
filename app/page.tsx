@@ -14,7 +14,7 @@ export default function Home() {
       <WhyUs />
       <CaseStudies />
       <PressSection />
-      <Testimonials />
+      {/* <Testimonials /> */}
       
       {/* High-Impact Bottom Call to Action */}
       <section className="py-60 bg-obsidian-950 relative overflow-hidden">
