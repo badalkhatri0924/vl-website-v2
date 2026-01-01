@@ -20,7 +20,7 @@ const WhyUs: React.FC = () => {
     {
       title: "Mission-Ready",
       label: "Execution",
-      desc: "End-to-end delivery from initial digital strategy to high-performance deployment and 24/7 technical support."
+      desc: "End-to-end delivery from initial digital strategy to high-performance deployment and technical support."
     }
   ];
 
