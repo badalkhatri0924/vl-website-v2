@@ -52,9 +52,9 @@ const StatCard: React.FC<{
             <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></div>
             <span className="text-sm font-black uppercase tracking-widest text-slate-500">System Live</span>
           </div>
-          <span className="text-sm font-black uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full border border-accent/20">
+          {/* <span className="text-sm font-black uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full border border-accent/20">
             {trend}
-          </span>
+          </span> */}
         </div>
         <h3 className="text-white font-display font-bold text-lg leading-tight tracking-tight max-w-[200px] group-hover:text-accent transition-colors">
           {title}
