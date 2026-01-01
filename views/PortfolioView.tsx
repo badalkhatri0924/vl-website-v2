@@ -15,11 +15,11 @@ const ProjectGridCard: React.FC<{ project: any }> = ({ project }) => {
           className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-        <div className="absolute top-6 left-6 flex items-center space-x-3">
-          <span className="text-lg">{project.flag}</span>
-          <span className="bg-white/95 backdrop-blur px-3 py-1 text-[9px] font-black uppercase tracking-ultra text-obsidian-900 border border-slate-100 shadow-sm">
-            {project.region}
-          </span>
+        <div className="absolute top-6 left-6">
+          <div className="bg-white px-3 py-1 flex items-center space-x-2 text-sm font-black uppercase tracking-ultra text-obsidian-900 border border-slate-100 shadow-sm">
+            <span className="text-base">{project.flag}</span>
+            <span>{project.region}</span>
+          </div>
         </div>
       </div>
 
