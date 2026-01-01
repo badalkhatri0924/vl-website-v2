@@ -70,7 +70,7 @@ const EnquiryView: React.FC = () => {
                 We maintain the highest level of administrative discretion. Please use your institutional email for expedited priority routing.
               </p>
 
-              <div className="space-y-12">
+              {/* <div className="space-y-12">
                 <div className="p-10 border border-slate-100 bg-white shadow-sm relative overflow-hidden group">
                   <div className="absolute top-0 left-0 w-1 h-full bg-accent opacity-40 group-hover:opacity-100 transition-opacity"></div>
                   <h4 className="text-obsidian-900 font-black uppercase text-base tracking-ultra mb-4">Confidentiality Protocol</h4>
@@ -87,7 +87,7 @@ const EnquiryView: React.FC = () => {
                   </div>
                   <span className="text-sm font-black uppercase tracking-ultra text-slate-300">End-to-End Encrypted Liaison</span>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Right Column: Form */}
