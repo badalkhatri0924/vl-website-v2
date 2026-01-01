@@ -21,7 +21,7 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: 'VersionLabs',
-  description: 'Premium enterprise-grade platforms for government and national learning missions by VersionLabs, featuring AI-powered citizen services and secure digital infrastructure',
+  description: 'Platforms for government and national learning missions by VersionLabs, featuring AI-powered citizen services and secure digital infrastructure',
 }
 
 export default function RootLayout({
