@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -16,6 +17,11 @@ const Header: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   // Check if we are on a page that needs a white header by default
   const isSubPage = pathname !== '/';
@@ -114,17 +120,75 @@ const Header: React.FC = () => {
           </nav>
 
           {/* Mobile Menu Trigger */}
-          <Link 
-            href="/enquiry"
-            className={`lg:hidden p-3 transition-colors ${
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className={`lg:hidden p-3 transition-colors z-[101] relative ${
               useWhiteHeader ? 'text-obsidian-900 hover:text-accent' : 'text-white hover:text-amber-400'
             }`}
+            aria-label="Toggle mobile menu"
           >
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
-          </Link>
+          </button>
         </div>
+      </div>
+
+      {/* Mobile Menu Dropdown - Opens Below Header */}
+      <div 
+        className={`lg:hidden absolute left-0 right-0 top-full w-full bg-obsidian-950 border-t border-white/10 transform transition-all duration-300 ease-in-out overflow-hidden shadow-2xl ${
+          isMobileMenuOpen 
+            ? 'max-h-[calc(100vh-80px)] opacity-100 translate-y-0' 
+            : 'max-h-0 opacity-0 -translate-y-4 pointer-events-none'
+        }`}
+      >
+        <nav className="container mx-auto px-8 py-6">
+          <div className="flex flex-col">
+            {navItems.map((item, index) => {
+              const isActive = pathname === item.href;
+              return (
+                <div key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`block py-4 text-base font-black uppercase tracking-[0.25em] transition-all duration-200 ${
+                      isActive
+                        ? 'text-white bg-white/10 px-4 -mx-4 rounded-sm'
+                        : 'text-white/60 hover:text-white hover:bg-white/5 px-4 -mx-4 rounded-sm'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                  {index < navItems.length - 1 && (
+                    <div className="border-b border-white/10 my-1" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          
+          {/* Inquire Now Button for Mobile */}
+          <Link
+            href="/enquiry"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className={`mt-8 group/btn relative w-full px-8 py-5 font-black uppercase tracking-[0.35em] text-[11px] transition-all duration-300 flex items-center justify-center space-x-4 border-2 ${
+              pathname === '/enquiry'
+                ? 'border-accent bg-accent text-white'
+                : 'border-accent text-accent hover:bg-accent hover:text-white'
+            }`}
+          >
+            <span>Inquire Now</span>
+            <svg
+              className={`w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-2`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth="2.5"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+        </nav>
       </div>
     </header>
   );
