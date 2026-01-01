@@ -74,7 +74,7 @@ const Features: React.FC = () => {
           <h2 className="text-5xl md:text-8xl font-display font-black text-obsidian-900 mb-8 tracking-tighter leading-none">
             What We Do
           </h2>
-          <p className="text-slate-500 text-lg font-light max-w-2xl mx-auto leading-relaxed">
+          <p className="text-slate-500 text-xl font-light max-w-2xl mx-auto leading-relaxed">
             Three pillars of excellence that power nation-scale transformation
           </p>
         </div>
