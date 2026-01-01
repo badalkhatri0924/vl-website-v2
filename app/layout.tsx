@@ -3,7 +3,7 @@ import { Inter, Manrope } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import Chatbot from '@/components/Chatbot'
+// import Chatbot from '@/components/Chatbot'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -38,7 +38,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
-        <Chatbot />
+        {/* <Chatbot /> */}
       </body>
     </html>
   )
