@@ -75,3 +75,4 @@ const StrategyView: React.FC = () => {
 };
 
 export default StrategyView;
+

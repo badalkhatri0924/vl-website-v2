@@ -1,4 +1,4 @@
-import StrategySolutionView from '@/views/StrategySolutionView'
+import StrategySolutionView from '@/components/StrategySolutionView'
 
 export default function StrategySolutionPage() {
   return <StrategySolutionView />

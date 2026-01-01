@@ -45,3 +45,4 @@ const ImpactView: React.FC = () => {
 };
 
 export default ImpactView;
+

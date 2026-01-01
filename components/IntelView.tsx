@@ -454,3 +454,4 @@ const IntelView: React.FC = () => {
 };
 
 export default IntelView;
+

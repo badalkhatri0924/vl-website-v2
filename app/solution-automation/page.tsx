@@ -1,4 +1,4 @@
-import AutomationSolutionView from '@/views/AutomationSolutionView'
+import AutomationSolutionView from '@/components/AutomationSolutionView'
 
 export default function AutomationSolutionPage() {
   return <AutomationSolutionView />

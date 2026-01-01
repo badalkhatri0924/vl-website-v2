@@ -1,4 +1,4 @@
-import ImpactView from '@/views/ImpactView'
+import ImpactView from '@/components/ImpactView'
 
 export default function ImpactPage() {
   return <ImpactView />

@@ -144,3 +144,4 @@ const BlogView: React.FC = () => {
 };
 
 export default BlogView;
+

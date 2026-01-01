@@ -1,4 +1,4 @@
-import VersionLabsView from '@/views/VersionLabsView'
+import VersionLabsView from '@/components/VersionLabsView'
 
 export default function VersionLabsPage() {
   return <VersionLabsView />

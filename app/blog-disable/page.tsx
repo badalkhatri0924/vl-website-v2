@@ -1,4 +1,4 @@
-import BlogView from '@/views/BlogView'
+import BlogView from '@/components/BlogView'
 
 export default function BlogPage() {
   return <BlogView />

@@ -126,3 +126,4 @@ const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
 };
 
 export default BlogPostView;
+

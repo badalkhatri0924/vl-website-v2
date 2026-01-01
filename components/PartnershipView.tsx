@@ -163,3 +163,4 @@ const PartnershipView: React.FC = () => {
 };
 
 export default PartnershipView;
+

@@ -131,3 +131,4 @@ const AutomationSolutionView: React.FC = () => {
 };
 
 export default AutomationSolutionView;
+

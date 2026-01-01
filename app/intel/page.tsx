@@ -1,4 +1,4 @@
-import IntelView from '@/views/IntelView'
+import IntelView from '@/components/IntelView'
 
 export default function IntelPage() {
   return <IntelView />

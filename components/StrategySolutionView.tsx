@@ -104,3 +104,4 @@ const StrategySolutionView: React.FC = () => {
 };
 
 export default StrategySolutionView;
+

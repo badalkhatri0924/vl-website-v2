@@ -1,4 +1,4 @@
-import PartnershipView from '@/views/PartnershipView'
+import PartnershipView from '@/components/PartnershipView'
 
 export default function PartnershipPage() {
   return <PartnershipView />
