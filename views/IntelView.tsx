@@ -297,7 +297,7 @@ const IntelView: React.FC = () => {
         <div className="mb-20">
           <div className="flex items-center space-x-4 mb-6">
             <div className="w-12 h-px bg-accent"></div>
-            <span className="text-accent text-[11px] font-black uppercase tracking-ultra">Enterprise Mission Dashboard</span>
+            <span className="text-accent text-base font-black uppercase tracking-ultra">Enterprise Mission Dashboard</span>
           </div>
           <h1 className="text-5xl md:text-7xl font-display font-black text-white tracking-tighter mb-8 max-w-4xl">
             Intel Live <span className="text-accent italic font-light">Infrastructure.</span>
