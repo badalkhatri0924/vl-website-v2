@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
                  <div className="w-8 h-px bg-accent"></div>
                  <span className="text-base font-black uppercase tracking-ultra text-accent">Secure Line</span>
               </div>
-              <p className="text-obsidian-900 font-display text-base">daxeel@versionlabs.co</p>
+              <p className="text-obsidian-900 font-display text-base">contact@versionlabs.co</p>
             </Link>
           </div>
         </div>
