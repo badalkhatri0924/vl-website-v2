@@ -84,9 +84,9 @@ const Hero: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center gap-6">
               <Link 
                 href="/enquiry"
-                className="group relative flex items-center space-x-4 bg-amber-500 hover:bg-white transition-all duration-500 rounded-lg p-1 shadow-[0_10px_40px_rgba(245,158,11,0.2)]"
+                className="group relative flex items-center space-x-4 bg-amber-500 hover:bg-white transition-all duration-500 p-1 shadow-[0_10px_40px_rgba(245,158,11,0.2)]"
               >
-                <div className="bg-amber-400 p-4 rounded-lg text-obsidian-900 group-hover:scale-110 transition-transform">
+                <div className="bg-amber-400 p-4 text-obsidian-900 group-hover:scale-110 transition-transform">
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
                   </svg>

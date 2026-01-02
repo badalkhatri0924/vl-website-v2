@@ -108,9 +108,9 @@ const ProductShowcase: React.FC = () => {
             href="https://docxpert.in"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center space-x-4 bg-accent hover:bg-accent-600 transition-all duration-500 rounded-lg p-1 shadow-[0_10px_40px_rgba(0,100,224,0.2)] group"
+            className="inline-flex items-center space-x-4 bg-accent hover:bg-accent-600 transition-all duration-500 p-1 shadow-[0_10px_40px_rgba(0,100,224,0.2)] group"
           >
-            <div className="bg-accent-400 p-4 rounded-lg text-white group-hover:scale-110 transition-transform">
+            <div className="bg-accent-400 p-4 text-white group-hover:scale-110 transition-transform">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>

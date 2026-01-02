@@ -64,10 +64,10 @@ const Chatbot: React.FC = () => {
           {/* New Circular Trigger */}
           <button
             onClick={() => setIsOpen(true)}
-            className="relative w-16 h-16 rounded-full bg-white border border-accent/40 flex items-center justify-center text-accent transition-all duration-500 shadow-[0_10px_30px_rgba(79,193,198,0.1)] group-hover:shadow-[0_20px_50px_rgba(79,193,198,0.2)] group-hover:border-accent group-hover:scale-105 overflow-visible"
+            className="relative w-16 h-16 bg-white border border-accent/40 flex items-center justify-center text-accent transition-all duration-500 shadow-[0_10px_30px_rgba(79,193,198,0.1)] group-hover:shadow-[0_20px_50px_rgba(79,193,198,0.2)] group-hover:border-accent group-hover:scale-105 overflow-visible"
           >
             {/* Pulsing Aura */}
-            <div className="absolute inset-0 rounded-full bg-accent/10 animate-ping opacity-40 group-hover:opacity-40"></div>
+            <div className="absolute inset-0 bg-accent/10 animate-ping opacity-40 group-hover:opacity-40"></div>
             
             <svg className="w-7 h-7 relative z-10 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
@@ -128,7 +128,7 @@ const Chatbot: React.FC = () => {
               <button 
                 onClick={handleSend}
                 disabled={isLoading}
-                className="bg-accent text-white p-4 hover:bg-obsidian-900 disabled:opacity-50 transition-all rounded-sm"
+                className="bg-accent text-white p-4 hover:bg-obsidian-900 disabled:opacity-50 transition-all"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
               </button>

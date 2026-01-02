@@ -68,7 +68,7 @@ export const DialogContent: React.FC<DialogContentProps> = ({
       {showCloseButton && onClose && (
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
+          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-1 hover:bg-white/5"
           aria-label="Close"
         >
           <X size={20} />
