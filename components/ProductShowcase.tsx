@@ -48,35 +48,37 @@ const ProductShowcase: React.FC = () => {
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-100 to-transparent"></div>
       
       <div className="container mx-auto px-6 relative z-10">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12">
-          <div className="max-w-4xl">
+        {/* Header Section with Hero Image - Split Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-24">
+          {/* Left Side - Text Content */}
+          <div className="flex flex-col">
             <div className="mb-6 inline-flex items-center space-x-4 text-accent text-base font-display font-black uppercase tracking-[0.3em]">
               <div className="w-10 h-[2px] bg-accent"></div>
               <span>Our Product</span>
             </div>
-            <div className="max-w-2xl">
-            {/* <h2 className="text-accent text-base font-black uppercase tracking-ultra mb-8">Premium Differentiation</h2> */}
-            <h3 className="text-5xl font-display font-black text-obsidian-900">The Docxpert  <br/><span className="text-4xl text-accent italic">Document Processing Platform.</span></h3>
+            <h3 className="text-5xl font-display font-black text-obsidian-900 mb-8">
+              The Docxpert<br/>
+              <span className="text-4xl text-accent italic">Document Processing Platform.</span>
+            </h3>
+            {/* Testimonial moved below title */}
+            <div className="bg-slate-50 p-6 border-l-2 border-accent max-w-md shadow-sm">
+              <p className="text-slate-600 text-base italic font-light leading-relaxed">
+                "This platform offers exceptional value with competitive pricing, accurate OCR, and multilingual translation features."
+              </p>
+            </div>
           </div>
-          </div>
-          <div className="bg-slate-50 p-6 border-l-2 border-accent max-w-sm shadow-sm">
-            <p className="text-slate-600 text-base italic font-light leading-relaxed">
-              "This platform offers exceptional value with competitive pricing, accurate OCR, and multilingual translation features."
-            </p>
-          </div>
-        </div>
 
-        {/* Hero Image Section */}
-        <div className="mb-24 relative">
-          <div className="relative overflow-hidden rounded-lg shadow-[0_20px_60px_rgba(0,100,224,0.08)] border border-slate-100 group">
-            <img 
-              src="https://firebasestorage.googleapis.com/v0/b/versionlabs-official.firebasestorage.app/o/docxpert-homepage.webp?alt=media"
-              alt="Docxpert Document Processing Platform"
-              className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-[1.02]"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-transparent pointer-events-none"></div>
+          {/* Right Side - Hero Image */}
+          <div className="relative">
+            <div className="relative overflow-hidden rounded-lg shadow-[0_20px_60px_rgba(0,100,224,0.08)] border border-slate-100 group">
+              <img 
+                src="https://firebasestorage.googleapis.com/v0/b/versionlabs-official.firebasestorage.app/o/docxpert-homepage.webp?alt=media"
+                alt="Docxpert Document Processing Platform"
+                className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-[1.02]"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-transparent pointer-events-none"></div>
+            </div>
           </div>
         </div>
 
