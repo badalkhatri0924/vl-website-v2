@@ -348,17 +348,105 @@ const ProjectCard: React.FC<{ project: any }> = ({ project }) => {
   return cardContent;
 };
 
+// Compact Card Variant for Grid Layout
+const CompactProjectCard: React.FC<{ project: any }> = ({ project }) => {
+  const [hasAppeared, setHasAppeared] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasAppeared(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (cardRef.current) observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const cardContent = (
+    <div
+      ref={cardRef}
+      className={`bg-white border border-slate-200 transition-all duration-500 overflow-hidden shadow-none group transform h-full flex flex-col ${hasAppeared ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+        } ${project.projectLink ? 'hover:border-accent/40 hover:shadow-lg' : ''}`}
+    >
+      {/* Image on Top */}
+      <div className="relative h-64 overflow-hidden bg-slate-100">
+        <div className="absolute inset-0">
+          <img
+            src={project.imageUrl}
+            alt={project.title}
+            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-white/60 to-transparent z-10"></div>
+        <div className="absolute top-4 left-4 z-20">
+          <div className="flex items-center space-x-2">
+            <span className="text-lg">{project.flag}</span>
+            <span className="text-xs font-black uppercase tracking-ultra text-slate-600 bg-white/95 backdrop-blur px-3 py-1 border border-slate-200">
+              {project.region}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Content Below */}
+      <div className="p-6 flex flex-col flex-grow">
+        <div className="mb-4">
+          <span className="text-xs font-black uppercase tracking-ultra text-accent mb-2 inline-block">{project.type}</span>
+          <h4 className="text-2xl font-display font-black text-obsidian-900 mb-3 tracking-tight leading-tight">
+            {project.title}
+          </h4>
+          <div className="flex items-center space-x-2 mb-3">
+            <svg className="w-3 h-3 text-accent" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1.323l.395.07c1.33.237 2.45 1.054 3.128 2.174A2 2 0 0116 8.5V11l1.293 1.293A1 1 0 0018 13v1a1 1 0 01-1 1H3a1 1 0 01-1-1v-1a1 1 0 011.707-.707L5 11V8.5a2 2 0 01.477-1.933c.678-1.12 1.798-1.937 3.128-2.174L9 4.323V3a1 1 0 011-1zM8 16a2 2 0 004 0H8z" clipRule="evenodd" />
+            </svg>
+            <span className="text-xs font-black uppercase tracking-ultra text-obsidian-900">
+              {project.subtitle}
+            </span>
+          </div>
+          <p className="text-slate-600 text-sm leading-relaxed mb-4 font-light line-clamp-3">
+            {project.desc}
+          </p>
+        </div>
+
+        <div className="mt-auto pt-4 border-t border-slate-100">
+          <div className="flex gap-6">
+            {project.metrics.map((m: any, i: number) => (
+              <div key={i}>
+                <div className="text-2xl font-display font-black text-obsidian-900 mb-1">
+                  <CountUp value={m.value} />
+                </div>
+                <div className="text-xs font-black uppercase tracking-ultra text-slate-400">{m.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (project.projectLink) {
+    return (
+      <a
+        href={project.projectLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block cursor-pointer h-full"
+      >
+        {cardContent}
+      </a>
+    );
+  }
+
+  return cardContent;
+};
+
 const CaseStudies: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const sliderProjects = PROJECTS.slice(0, 3);
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % sliderProjects.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + sliderProjects.length) % sliderProjects.length);
-  };
+  const featuredProjects = PROJECTS.slice(0, 3);
 
   // Partners data with Logo Images from public folder
   const partners = [
@@ -441,43 +529,18 @@ const CaseStudies: React.FC = () => {
     <section id="cases" className="py-20 bg-white relative overflow-hidden">
       <div className="container mx-auto px-6">
         {/* Header Section */}
-        <div className="mb-16 flex flex-col md:flex-row justify-between items-end gap-8">
-          <div>
-            {/* <h2 className="text-accent text-base font-black uppercase tracking-ultra mb-6 flex items-center">
-              <span className="w-12 h-px bg-accent mr-6"></span>
-              CASE PORTFOLIOS
-            </h2> */}
-            <h3 className="text-4xl md:text-6xl font-display font-black text-obsidian-900 leading-tight tracking-tighter max-w-5xl">
-              Defining the Future of <br />
-              <span className="text-accent italic">Digital Sovereignty</span>.
-            </h3>
-          </div>
-
-          <div className="flex items-center space-x-4 mb-2">
-            <button onClick={prevSlide} className="w-14 h-14 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-accent hover:text-accent transition-all duration-300 active:scale-90">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button onClick={nextSlide} className="w-14 h-14 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:border-accent hover:text-accent transition-all duration-300 active:scale-90">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
+        <div className="mb-16">
+          <h3 className="text-4xl md:text-6xl font-display font-black text-obsidian-900 leading-tight tracking-tighter max-w-5xl">
+            Defining the Future of <br />
+            <span className="text-accent italic">Digital Sovereignty</span>.
+          </h3>
         </div>
 
-        {/* Project Cards Slider */}
-        <div className="relative overflow-visible pb-20">
-          <div className="overflow-hidden">
-            <div className="flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
-              {sliderProjects.map((project) => (
-                <div key={project.id} className="w-full flex-shrink-0 px-2">
-                  <ProjectCard project={project} />
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Project Cards - Stacked Vertically (One by One) */}
+        <div className="space-y-8 mb-20">
+          {featuredProjects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
         </div>
 
         {/* View More Button */}
