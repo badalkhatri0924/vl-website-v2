@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "yarn build && firebase deploy",
+    "deploy:develop": "yarn build && firebase hosting:channel:deploy develop",
+    "develop:list": "firebase hosting:channel:list"
   },
   "dependencies": {
     "@google/genai": "^1.34.0",

@@ -50,3 +50,15 @@ export interface BlogPost {
   readTime: string;
   imageUrl: string;
 }
+
+export interface Product {
+  id: string;
+  name: string;
+  tagline: string;
+  description: string;
+  imageUrl: string;
+  features: string[];
+  category: string;
+  link?: string;
+  testimonial?: string;
+}

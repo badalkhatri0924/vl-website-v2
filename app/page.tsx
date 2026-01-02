@@ -1,5 +1,6 @@
 import Hero from '@/components/Hero'
 import Features from '@/components/Features'
+import ProductShowcase from '@/components/ProductShowcase'
 import WhyUs from '@/components/WhyUs'
 import CaseStudies from '@/components/CaseStudies'
 import PressSection from '@/components/PressSection'
@@ -11,6 +12,7 @@ export default function Home() {
     <>
       <Hero />
       <Features />
+      <ProductShowcase />
       <WhyUs />
       <CaseStudies />
       <PressSection />

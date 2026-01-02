@@ -101,15 +101,15 @@ const Header: React.FC = () => {
               href="/enquiry"
               className={`group/btn relative px-10 py-5 font-black uppercase tracking-[0.35em] text-[11px] transition-all duration-300 flex items-center space-x-4 border-2 ${
                 pathname === '/enquiry' 
-                ? 'border-accent bg-accent text-white' 
+                ? 'border-accent bg-accent text-white hover:bg-accent-600 hover:border-accent-600' 
                 : useWhiteHeader 
-                  ? 'border-slate-200 text-obsidian-900 hover:border-accent hover:text-accent bg-white'
+                  ? 'border-slate-200 text-obsidian-900 hover:bg-accent hover:text-white hover:border-accent bg-white'
                   : 'border-white/20 text-white hover:border-white hover:bg-white/10'
               }`}
             >
               <span>Inquire Now</span>
               <svg 
-                className={`w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-2`} 
+                className={`w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1`} 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -183,15 +183,15 @@ const Header: React.FC = () => {
             onClick={() => setIsMobileMenuOpen(false)}
             className={`mt-8 group/btn relative w-full px-8 py-5 font-black uppercase tracking-[0.35em] text-[11px] transition-all duration-300 flex items-center justify-center space-x-4 border-2 ${
               pathname === '/enquiry'
-                ? 'border-accent bg-accent text-white'
+                ? 'border-accent bg-accent text-white hover:bg-accent-600 hover:border-accent-600'
                 : useWhiteHeader
-                  ? 'border-slate-200 text-obsidian-900 hover:border-accent hover:text-accent bg-white'
+                  ? 'border-slate-200 text-obsidian-900 hover:bg-accent hover:text-white hover:border-accent bg-white'
                   : 'border-accent text-accent hover:bg-accent hover:text-white'
             }`}
           >
             <span>Inquire Now</span>
             <svg
-              className={`w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-2`}
+              className={`w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

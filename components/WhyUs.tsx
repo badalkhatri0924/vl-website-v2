@@ -25,7 +25,7 @@ const WhyUs: React.FC = () => {
   ];
 
   return (
-    <section className="py-40 bg-white relative border-y border-slate-100">
+    <section className="py-20 bg-white relative border-y border-slate-100">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12">
           <div className="max-w-2xl">
