@@ -67,6 +67,19 @@ const ProductShowcase: React.FC = () => {
           </div>
         </div>
 
+        {/* Hero Image Section */}
+        <div className="mb-24 relative">
+          <div className="relative overflow-hidden rounded-lg shadow-[0_20px_60px_rgba(0,100,224,0.08)] border border-slate-100 group">
+            <img 
+              src="https://firebasestorage.googleapis.com/v0/b/versionlabs-official.firebasestorage.app/o/docxpert-homepage.webp?alt=media"
+              alt="Docxpert Document Processing Platform"
+              className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-[1.02]"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-transparent pointer-events-none"></div>
+          </div>
+        </div>
+
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
           {features.map((feature, idx) => (
