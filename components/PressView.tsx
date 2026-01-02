@@ -80,6 +80,8 @@ const PressView: React.FC = () => {
                   </span>
                   <a 
                     href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-sm font-black uppercase tracking-widest text-accent hover:text-obsidian-900 transition-colors"
                   >
                     READ FULL ARTICLE

@@ -95,9 +95,17 @@ const PressCard: React.FC<{ item: PressItem }> = ({ item }) => {
         </h3>
         
         <div className="mt-auto pt-8 border-t border-slate-50 flex items-center justify-between">
-          <span className="text-[11px] font-black uppercase tracking-tight text-obsidian-950">
+          <span className="text-sm font-black uppercase tracking-wider text-obsidian-950">
             {item.publisher}
           </span>
+          <a 
+            href={item.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-black uppercase tracking-widest text-accent hover:text-obsidian-900 transition-colors"
+          >
+            READ FULL ARTICLE
+          </a>
         </div>
       </div>
     </div>
