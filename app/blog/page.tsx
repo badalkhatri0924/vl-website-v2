@@ -1,6 +1,8 @@
 import BlogView from '@/components/BlogView'
+import { getBlogPosts } from '@/lib/sanity/utils'
 
-export default function BlogPage() {
-  return <BlogView />
+export default async function BlogPage() {
+  const posts = await getBlogPosts()
+  return <BlogView posts={posts} />
 }
 

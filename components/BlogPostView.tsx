@@ -2,10 +2,11 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { BlogPost } from '@/types';
+import { SanityBlogPost, formatDate } from '@/lib/sanity/utils';
+import PortableTextRenderer from './PortableTextRenderer';
 
 interface BlogPostViewProps {
-  post: BlogPost;
+  post: SanityBlogPost;
 }
 
 const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
@@ -38,7 +39,7 @@ const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
               <span className="px-5 py-2 border border-accent/40 bg-accent/10 text-accent text-sm font-black uppercase tracking-ultra">
                 {post.category}
               </span>
-              <span className="text-slate-400 text-sm font-black uppercase tracking-ultra">{post.date}</span>
+              <span className="text-slate-400 text-sm font-black uppercase tracking-ultra">{formatDate(post.publishedAt)}</span>
               <span className="w-1 h-1 bg-slate-700 rounded-full"></span>
               <span className="text-slate-400 text-sm font-black uppercase tracking-ultra">{post.readTime}</span>
             </div>
@@ -70,38 +71,20 @@ const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
               </p>
               
               <div className="space-y-10 text-lg md:text-xl">
-                <p>
-                  At VersionLabs, we believe the next decade of digital transformation will be defined by one core concept: <strong>Sovereignty</strong>. As global data architectures grow increasingly centralized, national governments are pivoting toward localized solutions that ensure data remains within their borders and AI models are trained on their specific cultural and linguistic nuances.
-                </p>
-                
-                <h3 className="text-3xl font-display font-black text-obsidian-900 mt-16 mb-6">The Infrastructure of Trust</h3>
-                
-                <p>
-                  Building for nations requires a fundamental shift in how we perceive uptime and security. In the private sector, a 99.9% availability is often sufficient. In national skilling missions involving millions of concurrent learners, even a few minutes of downtime can disrupt massive administrative workflows and erode public trust in the digital system.
-                </p>
-                
-                <blockquote className="border-l-4 border-accent pl-10 py-4 my-16 bg-slate-50 italic text-2xl text-obsidian-900 font-light">
-                  "True digital sovereignty isn't about isolationism; it's about building resilient systems that operate independently of global shifts in technology policy."
-                </blockquote>
-                
-                <p>
-                  Our roadmap for the upcoming year focuses heavily on air-gapped ready AI models. These systems allow governments to deploy the power of large language models without ever exposing sensitive citizen records to the public internet. By utilizing secure on-premise infrastructure, we bridge the gap between innovation and absolute national security.
-                </p>
-                
-                <p>
-                  In conclusion, the 'Digital Loom' we are weaving isn't just about software; it's about the fabric of modern governance. We invite you to explore our full portfolio and see how these strategies are being deployed in India, Malaysia, Vietnam, and beyond.
-                </p>
+                <PortableTextRenderer content={post.content} />
               </div>
             </div>
 
             {/* Tags & Sharing */}
-            <div className="mt-24 pt-12 border-t border-slate-100 flex flex-wrap gap-4">
-              {['Digital Sovereignty', 'Public Sector AI', 'National Infrastructure', 'Governance'].map(tag => (
-                <span key={tag} className="text-sm font-black uppercase tracking-ultra text-slate-400 bg-slate-50 px-4 py-2 border border-slate-100">
-                  #{tag}
-                </span>
-              ))}
-            </div>
+            {post.tags && post.tags.length > 0 && (
+              <div className="mt-24 pt-12 border-t border-slate-100 flex flex-wrap gap-4">
+                {post.tags.map(tag => (
+                  <span key={tag} className="text-sm font-black uppercase tracking-ultra text-slate-400 bg-slate-50 px-4 py-2 border border-slate-100">
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>

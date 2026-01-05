@@ -3,16 +3,66 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { BlogPost } from '@/types';
-import { BLOG_POSTS } from '@/data/blogPosts';
+import { SanityBlogPost, formatDate } from '@/lib/sanity/utils';
 
-const BlogView: React.FC = () => {
+interface BlogViewProps {
+  posts: SanityBlogPost[];
+}
+
+const BlogView: React.FC<BlogViewProps> = ({ posts }) => {
   const router = useRouter();
-  const featuredPost = BLOG_POSTS[0];
-  const otherPosts = BLOG_POSTS.slice(1);
+  const featuredPost = posts[0];
+  const otherPosts = posts.slice(1);
 
-  const handlePostClick = (post: BlogPost) => {
-    router.push(`/blog/${post.id}`);
+  if (!featuredPost) {
+    return (
+      <div className="pt-40 py-20 bg-[#FDFDFD]">
+        <div className="container mx-auto px-6">
+          <div className="mb-16 flex items-center justify-between">
+            <Link 
+              href="/"
+              className="flex items-center space-x-3 text-slate-400 hover:text-accent transition-colors group"
+            >
+              <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="text-sm font-black uppercase tracking-ultra">Back to Home</span>
+            </Link>
+            <Link
+              href="/studio/structure/post"
+              className="flex items-center space-x-2 px-6 py-3 bg-accent text-white text-sm font-black uppercase tracking-ultra hover:bg-accent/90 transition-all duration-300 shadow-sm"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+              </svg>
+              <span>Create Blog Post</span>
+            </Link>
+          </div>
+          <div className="text-center max-w-2xl mx-auto">
+            <h1 className="text-accent text-base font-black uppercase tracking-ultra mb-8">VersionLabs Insights</h1>
+            <h2 className="text-4xl md:text-6xl font-display font-black text-obsidian-900 leading-tight tracking-tighter mb-8">
+              No blog posts yet
+            </h2>
+            <p className="text-slate-600 text-xl mb-12">
+              Get started by creating your first blog post in Sanity Studio.
+            </p>
+            <Link
+              href="/studio/structure/post"
+              className="inline-flex items-center space-x-2 px-8 py-4 bg-obsidian-900 text-white text-sm font-black uppercase tracking-ultra hover:bg-accent transition-all duration-300 shadow-lg"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+              </svg>
+              <span>Create Your First Post</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handlePostClick = (post: SanityBlogPost) => {
+    router.push(`/blog/${post.slug.current}`);
   };
 
   return (
@@ -20,7 +70,7 @@ const BlogView: React.FC = () => {
       <div className="container mx-auto px-6">
         
         {/* Navigation Breadcrumb */}
-        <div className="mb-16">
+        <div className="mb-16 flex items-center justify-between">
           <Link 
             href="/"
             className="flex items-center space-x-3 text-slate-400 hover:text-accent transition-colors group"
@@ -30,6 +80,15 @@ const BlogView: React.FC = () => {
             </svg>
             <span className="text-sm font-black uppercase tracking-ultra">Back to Home</span>
           </Link>
+          {/* <Link
+            href="/studio/structure/post"
+            className="flex items-center space-x-2 px-6 py-3 bg-accent text-white text-sm font-black uppercase tracking-ultra hover:bg-accent/90 transition-all duration-300 shadow-sm"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Create Blog Post</span>
+          </Link> */}
         </div>
 
         {/* Editorial Header */}
@@ -88,7 +147,7 @@ const BlogView: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-slate-200 border border-slate-200">
           {otherPosts.map((post) => (
             <div 
-              key={post.id} 
+              key={post._id} 
               onClick={() => handlePostClick(post)}
               className="bg-white p-12 md:p-20 group cursor-pointer hover:bg-slate-50 transition-colors"
             >
@@ -96,7 +155,7 @@ const BlogView: React.FC = () => {
                 <span className="text-accent text-base font-black uppercase tracking-ultra">
                   {post.category}
                 </span>
-                <span className="text-slate-400 text-sm font-black uppercase tracking-ultra">{post.date}</span>
+                <span className="text-slate-400 text-sm font-black uppercase tracking-ultra">{formatDate(post.publishedAt)}</span>
               </div>
               <h3 className="text-2xl font-display font-black text-obsidian-900 mb-8 leading-tight tracking-tight group-hover:text-accent transition-colors">
                 {post.title}
