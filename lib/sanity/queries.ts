@@ -16,7 +16,14 @@ export const blogPostsQuery = groq`
     publishedAt,
     category,
     readTime,
-    "imageUrl": mainImage.asset->url,
+    "imageUrl": coalesce(mainImage.asset->url, "https://via.placeholder.com/1200x630/4A5568/FFFFFF?text=Blog+Post"),
+    "imageAsset": mainImage.asset->{
+      _id,
+      url,
+      metadata {
+        dimensions
+      }
+    },
     "content": body,
     tags
   }
@@ -38,7 +45,14 @@ export const blogPostBySlugQuery = groq`
     publishedAt,
     category,
     readTime,
-    "imageUrl": mainImage.asset->url,
+    "imageUrl": coalesce(mainImage.asset->url, "https://via.placeholder.com/1200x630/4A5568/FFFFFF?text=Blog+Post"),
+    "imageAsset": mainImage.asset->{
+      _id,
+      url,
+      metadata {
+        dimensions
+      }
+    },
     "content": body,
     tags
   }

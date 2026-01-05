@@ -16,7 +16,7 @@ export interface SanityBlogPost {
   publishedAt: string
   category: string
   readTime: string
-  imageUrl: string
+  imageUrl: string | null
   content: any[]
   tags?: string[]
 }

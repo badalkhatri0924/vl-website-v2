@@ -1,0 +1,109 @@
+### Blog Content Generation API - HTTP Test Requests
+### Use with REST Client extension in VS Code or similar tools
+
+@baseUrl = http://localhost:3000
+@contentType = application/json
+
+### 1. Test Sanity Connection
+GET {{baseUrl}}/api/test-sanity
+
+### 2. Get Available Categories
+GET {{baseUrl}}/api/blog/generate
+
+### 3. Generate Blog Post - Basic (Sovereign AI)
+POST {{baseUrl}}/api/blog/generate
+Content-Type: {{contentType}}
+
+{
+  "category": "Sovereign AI",
+  "publishStatus": "draft"
+}
+
+### 4. Generate Blog Post - With Specific Topic
+POST {{baseUrl}}/api/blog/generate
+Content-Type: {{contentType}}
+
+{
+  "category": "Sovereign AI",
+  "topic": "AI governance frameworks",
+  "publishStatus": "draft"
+}
+
+### 5. Generate Blog Post - LMS Scaling Category
+POST {{baseUrl}}/api/blog/generate
+Content-Type: {{contentType}}
+
+{
+  "category": "LMS Scaling",
+  "topic": "Multi-tenant architecture",
+  "publishStatus": "draft"
+}
+
+### 6. Generate Blog Post - Product Design Category
+POST {{baseUrl}}/api/blog/generate
+Content-Type: {{contentType}}
+
+{
+  "category": "Product Design",
+  "topic": "Citizen-centric design",
+  "publishStatus": "draft"
+}
+
+### 7. Generate and Publish Immediately
+POST {{baseUrl}}/api/blog/generate
+Content-Type: {{contentType}}
+
+{
+  "category": "Sovereign AI",
+  "topic": "Digital sovereignty",
+  "publishStatus": "published",
+  "authorId": "e1c4a23d-a254-4313-84a6-b1d07ef22973"
+}
+
+### 8. Generate with Custom Author
+POST {{baseUrl}}/api/blog/generate
+Content-Type: {{contentType}}
+
+{
+  "category": "LMS Scaling",
+  "authorId": "e1c4a23d-a254-4313-84a6-b1d07ef22973",
+  "publishStatus": "draft"
+}
+
+### 9. Generate with Different AI Provider (will fallback to Gemini)
+POST {{baseUrl}}/api/blog/generate
+Content-Type: {{contentType}}
+
+{
+  "category": "Sovereign AI",
+  "aiProvider": "huggingface",
+  "publishStatus": "draft"
+}
+
+### 10. Error Test - Invalid Category
+POST {{baseUrl}}/api/blog/generate
+Content-Type: {{contentType}}
+
+{
+  "category": "Invalid Category Name",
+  "publishStatus": "draft"
+}
+
+### 11. Error Test - Missing Category
+POST {{baseUrl}}/api/blog/generate
+Content-Type: {{contentType}}
+
+{
+  "publishStatus": "draft"
+}
+
+### 12. Error Test - Invalid AI Provider
+POST {{baseUrl}}/api/blog/generate
+Content-Type: {{contentType}}
+
+{
+  "category": "Sovereign AI",
+  "aiProvider": "invalid-provider",
+  "publishStatus": "draft"
+}
+

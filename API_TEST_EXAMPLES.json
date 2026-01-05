@@ -1,0 +1,330 @@
+{
+  "description": "API Test Examples for Blog Content Generation",
+  "baseUrl": "http://localhost:3000",
+  "endpoints": {
+    "generateBlogPost": {
+      "url": "/api/blog/generate",
+      "method": "POST",
+      "description": "Generate and create a blog post in Sanity CMS"
+    },
+    "getCategories": {
+      "url": "/api/blog/generate",
+      "method": "GET",
+      "description": "Get available categories and their topics"
+    },
+    "testSanity": {
+      "url": "/api/test-sanity",
+      "method": "GET",
+      "description": "Test Sanity connection and token validity"
+    }
+  },
+  "testCases": {
+    "1_basic_blog_generation": {
+      "name": "Basic Blog Post Generation",
+      "description": "Generate a blog post with minimal parameters",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/blog/generate",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "category": "Sovereign AI",
+          "publishStatus": "draft"
+        }
+      },
+      "expectedResponse": {
+        "success": true,
+        "postId": "string",
+        "slug": "string",
+        "title": "string",
+        "status": "draft",
+        "message": "string"
+      }
+    },
+    "2_with_specific_topic": {
+      "name": "Generate with Specific Topic",
+      "description": "Generate a blog post with a specific topic",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/blog/generate",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "category": "Sovereign AI",
+          "topic": "AI governance frameworks",
+          "publishStatus": "draft"
+        }
+      }
+    },
+    "3_publish_immediately": {
+      "name": "Generate and Publish Immediately",
+      "description": "Create a blog post and publish it right away",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/blog/generate",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "category": "LMS Scaling",
+          "topic": "Multi-tenant architecture",
+          "publishStatus": "published",
+          "authorId": "e1c4a23d-a254-4313-84a6-b1d07ef22973"
+        }
+      }
+    },
+    "4_product_design_category": {
+      "name": "Product Design Category",
+      "description": "Generate a blog post in Product Design category",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/blog/generate",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "category": "Product Design",
+          "topic": "Citizen-centric design",
+          "publishStatus": "draft"
+        }
+      }
+    },
+    "5_lms_scaling_category": {
+      "name": "LMS Scaling Category",
+      "description": "Generate a blog post in LMS Scaling category",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/blog/generate",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "category": "LMS Scaling",
+          "topic": "Platform performance optimization",
+          "publishStatus": "draft"
+        }
+      }
+    },
+    "6_with_custom_author": {
+      "name": "Generate with Custom Author",
+      "description": "Generate a blog post with a specific author ID",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/blog/generate",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "category": "Sovereign AI",
+          "authorId": "e1c4a23d-a254-4313-84a6-b1d07ef22973",
+          "publishStatus": "draft"
+        }
+      }
+    },
+    "7_different_ai_provider": {
+      "name": "Use Different AI Provider",
+      "description": "Generate using a different AI provider (will fallback to Gemini if not available)",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/blog/generate",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "category": "Sovereign AI",
+          "aiProvider": "huggingface",
+          "publishStatus": "draft"
+        }
+      },
+      "note": "Will fallback to Gemini if Hugging Face is not configured"
+    },
+    "8_get_categories": {
+      "name": "Get Available Categories",
+      "description": "Retrieve all available categories and their topics",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3000/api/blog/generate",
+        "headers": {}
+      },
+      "expectedResponse": {
+        "categories": [
+          {
+            "name": "Sovereign AI",
+            "description": "string",
+            "topics": ["string"]
+          }
+        ],
+        "availableProviders": ["gemini", "huggingface", "openrouter", "cohere"]
+      }
+    },
+    "9_test_sanity_connection": {
+      "name": "Test Sanity Connection",
+      "description": "Test if Sanity connection and token are working",
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:3000/api/test-sanity",
+        "headers": {}
+      },
+      "expectedResponse": {
+        "success": true,
+        "tokenPresent": true,
+        "tokenLength": 182,
+        "projectId": "jh5avta0",
+        "dataset": "production"
+      }
+    },
+    "10_error_invalid_category": {
+      "name": "Error: Invalid Category",
+      "description": "Test error handling for invalid category",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/blog/generate",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "category": "Invalid Category",
+          "publishStatus": "draft"
+        }
+      },
+      "expectedResponse": {
+        "error": "Invalid category. Available categories: ...",
+        "status": 400
+      }
+    },
+    "11_error_missing_category": {
+      "name": "Error: Missing Category",
+      "description": "Test error handling for missing required field",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/blog/generate",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "publishStatus": "draft"
+        }
+      },
+      "expectedResponse": {
+        "error": "Category is required",
+        "status": 400
+      }
+    }
+  },
+  "curlExamples": {
+    "basic_generation": "curl -X POST http://localhost:3000/api/blog/generate -H \"Content-Type: application/json\" -d '{\"category\": \"Sovereign AI\", \"publishStatus\": \"draft\"}'",
+    "with_topic": "curl -X POST http://localhost:3000/api/blog/generate -H \"Content-Type: application/json\" -d '{\"category\": \"Sovereign AI\", \"topic\": \"AI governance frameworks\", \"publishStatus\": \"draft\"}'",
+    "publish_immediately": "curl -X POST http://localhost:3000/api/blog/generate -H \"Content-Type: application/json\" -d '{\"category\": \"LMS Scaling\", \"publishStatus\": \"published\"}'",
+    "get_categories": "curl http://localhost:3000/api/blog/generate",
+    "test_sanity": "curl http://localhost:3000/api/test-sanity"
+  },
+  "postmanCollection": {
+    "info": {
+      "name": "Blog Content Generation API",
+      "description": "API tests for AI blog content generation system",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Generate Blog Post - Basic",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"category\": \"Sovereign AI\",\n  \"publishStatus\": \"draft\"\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/api/blog/generate",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["api", "blog", "generate"]
+          }
+        }
+      },
+      {
+        "name": "Generate Blog Post - With Topic",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"category\": \"Sovereign AI\",\n  \"topic\": \"AI governance frameworks\",\n  \"publishStatus\": \"draft\"\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/api/blog/generate",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["api", "blog", "generate"]
+          }
+        }
+      },
+      {
+        "name": "Generate Blog Post - Publish",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"category\": \"LMS Scaling\",\n  \"publishStatus\": \"published\"\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/api/blog/generate",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["api", "blog", "generate"]
+          }
+        }
+      },
+      {
+        "name": "Get Categories",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/api/blog/generate",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["api", "blog", "generate"]
+          }
+        }
+      },
+      {
+        "name": "Test Sanity Connection",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/api/test-sanity",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["api", "test-sanity"]
+          }
+        }
+      }
+    ]
+  }
+}
+

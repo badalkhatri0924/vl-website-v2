@@ -16,9 +16,14 @@ const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
       <section className="relative pt-48 pb-32 bg-obsidian-950 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src={post.imageUrl} 
+            src={post.imageUrl || 'https://via.placeholder.com/1200x630/4A5568/FFFFFF?text=Blog+Post'} 
             alt={post.title} 
             className="w-full h-full object-cover opacity-30 grayscale group-hover:scale-105 transition-transform duration-[10s]"
+            onError={(e) => {
+              // Fallback if image fails to load
+              const target = e.target as HTMLImageElement
+              target.src = 'https://via.placeholder.com/1200x630/4A5568/FFFFFF?text=Blog+Post'
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-obsidian-950 via-obsidian-950/60 to-transparent"></div>
         </div>

@@ -111,9 +111,14 @@ const BlogView: React.FC<BlogViewProps> = ({ posts }) => {
           <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[600px]">
             <div className="lg:col-span-7 relative overflow-hidden">
               <img 
-                src={featuredPost.imageUrl} 
+                src={featuredPost.imageUrl || 'https://via.placeholder.com/1200x630/4A5568/FFFFFF?text=Blog+Post'} 
                 alt={featuredPost.title} 
                 className="w-full h-full object-cover transition-transform duration-[4s] group-hover:scale-105 opacity-80"
+                onError={(e) => {
+                  // Fallback if image fails to load
+                  const target = e.target as HTMLImageElement
+                  target.src = 'https://via.placeholder.com/1200x630/4A5568/FFFFFF?text=Blog+Post'
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-r from-obsidian-950/40 to-transparent"></div>
             </div>
