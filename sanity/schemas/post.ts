@@ -47,7 +47,7 @@ export default defineType({
       name: 'publishedAt',
       title: 'Published at',
       type: 'datetime',
-      validation: (Rule) => Rule.required(),
+      description: 'Leave empty for draft posts',
     }),
     defineField({
       name: 'excerpt',

@@ -2,6 +2,19 @@ import { createClient } from '@sanity/client'
 import { config } from './config'
 
 /**
+ * Generate a random document ID for Sanity
+ */
+function generateDocumentId(): string {
+  // Generate a random string similar to Sanity's ID format
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let result = ''
+  for (let i = 0; i < 22; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return result
+}
+
+/**
  * Get or create authenticated Sanity client with write permissions
  * Creates a new client instance to ensure token is always current
  */
@@ -34,6 +47,7 @@ export interface CreatePostData {
   tags?: string[]
   publishedAt?: string
   mainImageAssetId?: string
+  publishStatus?: 'draft' | 'published'
 }
 
 export async function createBlogPost(data: CreatePostData): Promise<string> {
@@ -47,7 +61,19 @@ export async function createBlogPost(data: CreatePostData): Promise<string> {
   console.log('Project ID:', config.projectId)
   console.log('Dataset:', config.dataset)
 
+  // Generate a draft ID if publishStatus is 'draft'
+  // In Sanity, drafts have IDs prefixed with 'drafts.'
+  const isDraft = data.publishStatus === 'draft'
+  const documentId = isDraft ? `drafts.${generateDocumentId()}` : undefined
+
+  if (isDraft) {
+    console.log('Creating draft post with ID:', documentId)
+  } else {
+    console.log('Creating published post')
+  }
+
   const document = {
+    ...(documentId && { _id: documentId }),
     _type: 'post',
     title: data.title,
     slug: {
@@ -62,7 +88,9 @@ export async function createBlogPost(data: CreatePostData): Promise<string> {
     excerpt: data.excerpt,
     readTime: data.readTime,
     body: data.body,
-    publishedAt: data.publishedAt || new Date().toISOString(),
+    ...(data.publishedAt && {
+      publishedAt: data.publishedAt,
+    }),
     ...(data.tags && data.tags.length > 0 && {
       tags: data.tags,
     }),
@@ -79,6 +107,8 @@ export async function createBlogPost(data: CreatePostData): Promise<string> {
 
   try {
     const client = getWriteClient()
+    // For drafts, create with a draft ID (prefixed with 'drafts.')
+    // For published posts, create normally (which publishes by default)
     const result = await client.create(document)
     
     // Verify the post was created with image

@@ -172,6 +172,7 @@ export async function POST(request: NextRequest) {
       tags: blogContent.tags,
       publishedAt,
       mainImageAssetId,
+      publishStatus,
     })
 
     return NextResponse.json({
