@@ -39,6 +39,8 @@
         "slug": "string",
         "title": "string",
         "status": "draft",
+        "imageUrl": "string (URL to generated image) or null",
+        "imageAssetId": "string (Sanity asset ID) or null",
         "message": "string"
       }
     },
@@ -211,6 +213,39 @@
         "error": "Category is required",
         "status": 400
       }
+    },
+    "12_with_image_generation": {
+      "name": "Generate Blog Post with AI Image",
+      "description": "Generate a blog post and automatically create a relevant image using Gemini AI",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/blog/generate",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "category": "Product Design",
+          "topic": "Accessible user interfaces",
+          "publishStatus": "draft"
+        }
+      },
+      "expectedResponse": {
+        "success": true,
+        "postId": "draft.xxxxx-xxxx-xxxx",
+        "slug": "accessible-user-interfaces-design",
+        "title": "Accessible User Interfaces Design",
+        "status": "draft",
+        "imageUrl": "https://cdn.sanity.io/images/jh5avta0/production/image-xxxxx-1920x1080-png.png",
+        "imageAssetId": "image-xxxxx-xxxxx-xxxxx",
+        "message": "Blog post created successfully as draft"
+      },
+      "notes": [
+        "Image is generated using Gemini AI based on the blog content",
+        "Image generation adds approximately 5-10 seconds to the response time",
+        "If image generation fails, imageUrl and imageAssetId will be null",
+        "The generated image is automatically uploaded to Sanity CDN",
+        "Image URL can be used directly in frontend without additional processing"
+      ]
     }
   },
   "curlExamples": {

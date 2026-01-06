@@ -100,7 +100,7 @@ export async function createBlogPost(data: CreatePostData): Promise<string> {
 }
 
 /**
- * Upload an image to Sanity and return the asset reference
+ * Upload an image to Sanity from a URL and return the asset reference
  */
 export async function uploadImageToSanity(
   imageUrl: string,
@@ -128,6 +128,39 @@ export async function uploadImageToSanity(
   } catch (error) {
     console.error('Error uploading image to Sanity:', error)
     throw new Error(`Failed to upload image: ${error instanceof Error ? error.message : 'Unknown error'}`)
+  }
+}
+
+/**
+ * Upload an image buffer directly to Sanity and return the asset reference
+ * This is useful for AI-generated images
+ */
+export async function uploadImageBufferToSanity(
+  imageBuffer: Buffer,
+  filename: string = 'generated-image.png',
+  contentType: string = 'image/png'
+): Promise<{ assetId: string; url: string }> {
+  if (!process.env.SANITY_WRITE_TOKEN) {
+    throw new Error('SANITY_WRITE_TOKEN is required for uploading images')
+  }
+
+  try {
+    const client = getWriteClient()
+    const asset = await client.assets.upload('image', imageBuffer, {
+      filename,
+      contentType,
+    })
+
+    console.log('Image uploaded to Sanity successfully, asset ID:', asset._id)
+    
+    // Return both the asset ID and the URL
+    return {
+      assetId: asset._id,
+      url: asset.url || '',
+    }
+  } catch (error) {
+    console.error('Error uploading image buffer to Sanity:', error)
+    throw new Error(`Failed to upload image buffer: ${error instanceof Error ? error.message : 'Unknown error'}`)
   }
 }
 

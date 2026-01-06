@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateContent } from '@/services/aiContentService'
 import { markdownToPortableText } from '@/lib/sanity/portableTextConverter'
-import { createBlogPost, getDefaultAuthorId, getAuthors, uploadImageToSanity, testSanityConnection } from '@/lib/sanity/writeClient'
-import { getImageForCategory, calculateReadTime, countWords, getPlaceholderImage } from '@/lib/content/imageHandler'
+import { createBlogPost, getDefaultAuthorId, getAuthors, uploadImageBufferToSanity, testSanityConnection } from '@/lib/sanity/writeClient'
+import { generateBlogImage, calculateReadTime, countWords } from '@/lib/content/imageHandler'
 import { getAllCategories, getCategoryConfig } from '@/lib/content/categoryConfig'
 
 /**
@@ -113,47 +113,46 @@ export async function POST(request: NextRequest) {
     // Generate slug from title
     const slug = slugifyTitle(blogContent.title)
 
-    // Get image for the post
+    // Generate and upload image using Gemini Imagen
     let mainImageAssetId: string | undefined
+    let imageUrl: string | undefined
+    
     try {
-      const imageUrl = await getImageForCategory(category, topic, blogContent.title)
-      const placeholderUrl = getPlaceholderImage()
+      console.log('Generating image with Gemini Imagen for blog post...')
+      const generatedImage = await generateBlogImage(
+        blogContent.title,
+        category,
+        blogContent.excerpt
+      )
       
-      console.log('Image URL fetched:', imageUrl ? 'Image found' : 'No image')
-      console.log('Is placeholder?', imageUrl === placeholderUrl)
-      
-      if (imageUrl && imageUrl !== placeholderUrl) {
-        console.log('Uploading image to Sanity from URL:', imageUrl.substring(0, 50) + '...')
+      if (generatedImage && generatedImage.imageData) {
+        console.log('Image generated successfully, uploading to Sanity...')
         try {
-          mainImageAssetId = await uploadImageToSanity(imageUrl, `${slug}-image.jpg`)
-          console.log('Image uploaded successfully, asset ID:', mainImageAssetId)
+          const uploadResult = await uploadImageBufferToSanity(
+            generatedImage.imageData,
+            `${slug}-generated.png`,
+            generatedImage.mimeType
+          )
+          mainImageAssetId = uploadResult.assetId
+          imageUrl = uploadResult.url
+          console.log('Image uploaded successfully to Sanity')
+          console.log('Asset ID:', mainImageAssetId)
+          console.log('Image URL:', imageUrl)
         } catch (uploadError) {
-          console.error('Failed to upload image to Sanity:', uploadError)
-          // Try uploading placeholder as fallback
-          console.log('Attempting to upload placeholder image as fallback...')
-          try {
-            mainImageAssetId = await uploadImageToSanity(placeholderUrl, `${slug}-placeholder.jpg`)
-            console.log('Placeholder image uploaded, asset ID:', mainImageAssetId)
-          } catch (placeholderError) {
-            console.error('Failed to upload placeholder image:', placeholderError)
-            mainImageAssetId = undefined
-          }
+          console.error('Failed to upload generated image to Sanity:', uploadError)
+          mainImageAssetId = undefined
+          imageUrl = undefined
         }
       } else {
-        console.warn('Using placeholder image or no image available')
-        // Upload placeholder to ensure image always exists
-        try {
-          mainImageAssetId = await uploadImageToSanity(placeholderUrl, `${slug}-placeholder.jpg`)
-          console.log('Placeholder image uploaded, asset ID:', mainImageAssetId)
-        } catch (placeholderError) {
-          console.error('Failed to upload placeholder image:', placeholderError)
-          mainImageAssetId = undefined
-        }
+        console.warn('Failed to generate image with Gemini, post will be created without image')
+        mainImageAssetId = undefined
+        imageUrl = undefined
       }
     } catch (imageError) {
-      console.error('Failed to handle image:', imageError)
-      // Continue without image if all attempts fail
+      console.error('Error in image generation/upload process:', imageError)
+      // Continue without image if generation fails
       mainImageAssetId = undefined
+      imageUrl = undefined
     }
 
     // Set published date based on publish status
@@ -181,6 +180,8 @@ export async function POST(request: NextRequest) {
       slug,
       title: blogContent.title,
       status: publishStatus,
+      imageUrl: imageUrl || null,
+      imageAssetId: mainImageAssetId || null,
       message: `Blog post "${blogContent.title}" created successfully as ${publishStatus}`,
     })
   } catch (error) {

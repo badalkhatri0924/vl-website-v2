@@ -151,3 +151,204 @@ function extractTags(text: string): string[] | null {
   }
   return null;
 }
+
+/**
+ * Generate an image using Gemini's gemini-2.5-flash-image model
+ * This model supports image generation using the @google/genai SDK
+ */
+export async function generateImageWithGemini(
+  prompt: string
+): Promise<{ imageData: Buffer; mimeType: string } | null> {
+  const apiKey = process.env.API_KEY;
+  
+  if (!apiKey) {
+    console.error('❌ API_KEY not set, cannot generate image');
+    return null;
+  }
+
+  try {
+    console.log('🎨 Generating image with Gemini (gemini-2.5-flash-image)...');
+    console.log('📝 Prompt:', prompt.substring(0, 100) + '...');
+    
+    const ai = new GoogleGenAI({ apiKey });
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash-image",
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: prompt }]
+        }
+      ],
+    });
+
+    // Extract image from response
+    // Response structure: candidates[0].content.parts[0].inlineData
+    if (response.candidates && response.candidates.length > 0) {
+      const candidate = response.candidates[0];
+      
+      if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
+        for (const part of candidate.content.parts) {
+          if (part.inlineData && part.inlineData.data) {
+            // The image is base64 encoded in inlineData.data
+            const imageBuffer = Buffer.from(part.inlineData.data, 'base64');
+            const mimeType = part.inlineData.mimeType || 'image/png';
+            
+            console.log('✅ Image generated successfully with Gemini!');
+            console.log('📊 Image size:', Math.round(imageBuffer.length / 1024), 'KB');
+            console.log('📄 MIME type:', mimeType);
+            
+            return {
+              imageData: imageBuffer,
+              mimeType: mimeType,
+            };
+          }
+        }
+      }
+    }
+
+    console.warn('⚠️  No image data in Gemini response');
+    console.log('Response structure:', JSON.stringify(response).substring(0, 300));
+    
+    // Fallback to Unsplash if available
+    return await generateImageFromUnsplash(prompt);
+    
+  } catch (error) {
+    console.error('❌ Gemini image generation error:', error);
+    if (error instanceof Error) {
+      console.error('Error details:', error.message);
+    }
+    
+    // Try Unsplash as fallback
+    console.log('⚠️  Falling back to Unsplash...');
+    return await generateImageFromUnsplash(prompt);
+  }
+}
+
+/**
+ * Fallback: Generate image from Unsplash
+ * Uses smart keyword extraction to find relevant professional photos
+ */
+async function generateImageFromUnsplash(
+  prompt: string
+): Promise<{ imageData: Buffer; mimeType: string } | null> {
+  const unsplashAccessKey = process.env.UNSPLASH_ACCESS_KEY;
+  
+  if (!unsplashAccessKey) {
+    console.warn('⚠️  UNSPLASH_ACCESS_KEY not set, cannot fetch fallback image');
+    return null;
+  }
+
+  try {
+    const searchQuery = extractKeywordsFromPrompt(prompt);
+    console.log('🔍 Searching Unsplash for:', searchQuery);
+    
+    const url = `https://api.unsplash.com/photos/random?query=${encodeURIComponent(searchQuery)}&orientation=landscape`;
+    
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Client-ID ${unsplashAccessKey}`,
+      },
+    });
+
+    if (!response.ok) {
+      console.error('❌ Unsplash API error:', response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    const imageUrl = data.urls?.regular || data.urls?.full;
+    
+    if (!imageUrl) {
+      console.warn('⚠️  No image URL in Unsplash response');
+      return null;
+    }
+
+    // Fetch the actual image
+    const imageResponse = await fetch(imageUrl);
+    if (!imageResponse.ok) {
+      console.error('❌ Failed to fetch image from Unsplash URL');
+      return null;
+    }
+
+    const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+    const mimeType = imageResponse.headers.get('content-type') || 'image/jpeg';
+
+    console.log('✅ Image fetched successfully from Unsplash');
+    console.log('📊 Image size:', Math.round(imageBuffer.length / 1024), 'KB');
+
+    return {
+      imageData: imageBuffer,
+      mimeType: mimeType,
+    };
+  } catch (error) {
+    console.error('❌ Error fetching image from Unsplash:', error);
+    return null;
+  }
+}
+
+/**
+ * Extract keywords from an image prompt for search
+ */
+function extractKeywordsFromPrompt(prompt: string): string {
+  // Simple keyword extraction - take important words
+  const words = prompt.toLowerCase()
+    .replace(/[^\w\s]/g, ' ')
+    .split(/\s+/)
+    .filter(word => word.length > 4); // Filter short words
+  
+  // Take first 3-5 meaningful words
+  const keywords = words.slice(0, 5).join(' ');
+  return keywords || 'modern technology digital';
+}
+
+/**
+ * Generate an optimized image prompt for blog content
+ */
+export async function generateImagePromptForBlog(
+  title: string,
+  category: string,
+  excerpt?: string
+): Promise<string> {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    // Fallback to basic prompt
+    return `Professional, modern illustration representing ${category} - ${title}. Clean, corporate style suitable for a technology blog. High quality, photorealistic.`;
+  }
+
+  try {
+    const ai = new GoogleGenAI({ apiKey });
+
+    const metaPrompt = `You are an expert at creating image generation prompts. Based on the following blog post details, create a single, detailed image generation prompt (max 150 words) that would produce a professional, modern, high-quality featured image for a government technology blog.
+
+Blog Title: "${title}"
+Category: "${category}"
+${excerpt ? `Excerpt: "${excerpt}"` : ''}
+
+The image should be:
+- Professional and corporate-appropriate
+- Modern and visually appealing
+- Related to technology/government/digital transformation
+- Photorealistic or clean illustration style
+- Suitable for a 16:9 aspect ratio blog header
+
+Return ONLY the image generation prompt, nothing else.`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: [{ role: 'user', parts: [{ text: metaPrompt }] }],
+      config: {
+        temperature: 0.7,
+        topP: 0.9,
+      },
+    });
+
+    const imagePrompt = (response.text || '').trim();
+    console.log('Generated image prompt:', imagePrompt);
+    
+    return imagePrompt || `Professional illustration of ${category} - ${title}. Modern, clean, corporate style.`;
+  } catch (error) {
+    console.warn('Failed to generate image prompt with Gemini, using fallback:', error);
+    return `Professional, modern illustration representing ${category} - ${title}. Clean, corporate style suitable for a technology blog.`;
+  }
+}

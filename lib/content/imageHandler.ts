@@ -3,8 +3,11 @@
  * Supports Gemini image generation, Unsplash, and placeholders
  */
 
+import { generateImageWithGemini, generateImagePromptForBlog } from '@/services/geminiService'
+
 const UNSPLASH_API_URL = 'https://api.unsplash.com/photos/random'
-const PLACEHOLDER_IMAGE_URL = 'https://via.placeholder.com/1200x630/4A5568/FFFFFF?text=Blog+Post'
+// Using a simpler placeholder that's more reliable
+const PLACEHOLDER_IMAGE_URL = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI2MzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iNjMwIiBmaWxsPSIjNEE1NTY4Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI0OCIgZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlZlcnNpb25MYWJzIEJsb2c8L3RleHQ+PC9zdmc+'
 
 /**
  * Fetch an image from Unsplash based on a search query
@@ -168,5 +171,38 @@ export function calculateReadTime(wordCount: number): string {
  */
 export function countWords(text: string): number {
   return text.trim().split(/\s+/).filter(word => word.length > 0).length
+}
+
+/**
+ * Generate an image for a blog post using Gemini Imagen
+ * Returns the image buffer and metadata
+ */
+export async function generateBlogImage(
+  title: string,
+  category: string,
+  excerpt?: string
+): Promise<{ imageData: Buffer; mimeType: string } | null> {
+  try {
+    // First, generate an optimized prompt for the image
+    console.log('Generating image prompt for blog post...')
+    const imagePrompt = await generateImagePromptForBlog(title, category, excerpt)
+    
+    console.log('Generating image with Gemini Imagen...')
+    console.log('Image prompt:', imagePrompt)
+    
+    // Generate the image using Gemini
+    const result = await generateImageWithGemini(imagePrompt)
+    
+    if (result) {
+      console.log('Image generated successfully')
+      return result
+    } else {
+      console.warn('Failed to generate image with Gemini')
+      return null
+    }
+  } catch (error) {
+    console.error('Error in generateBlogImage:', error)
+    return null
+  }
 }
 
