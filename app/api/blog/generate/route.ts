@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generateContent, AIProvider } from '@/services/aiContentService'
+import { generateContent } from '@/services/aiContentService'
 import { markdownToPortableText } from '@/lib/sanity/portableTextConverter'
 import { createBlogPost, getDefaultAuthorId, getAuthors, uploadImageToSanity, testSanityConnection } from '@/lib/sanity/writeClient'
 import { getImageForCategory, calculateReadTime, countWords, getPlaceholderImage } from '@/lib/content/imageHandler'
@@ -65,22 +65,20 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate AI provider
-    const validProviders: AIProvider[] = ['gemini', 'huggingface', 'openrouter', 'cohere']
-    if (!validProviders.includes(aiProvider as AIProvider)) {
+    // Validate AI provider - only Gemini is supported now
+    if (aiProvider !== 'gemini') {
       return NextResponse.json(
-        { error: `Invalid AI provider. Valid options: ${validProviders.join(', ')}` },
+        { error: 'Invalid AI provider. Only "gemini" is supported in this deployment.' },
         { status: 400 }
       )
     }
 
     // Generate content using AI
-    console.log(`Generating blog content for category: ${category}, topic: ${topic || 'auto'}, provider: ${aiProvider}`)
+    console.log(`Generating blog content for category: ${category}, topic: ${topic || 'auto'}, provider: gemini`)
     
     const blogContent = await generateContent({
       category,
       topic,
-      provider: aiProvider as AIProvider,
     })
 
     // Get or use default author
@@ -215,7 +213,7 @@ export async function GET() {
 
     return NextResponse.json({
       categories: categoryDetails,
-      availableProviders: ['gemini', 'huggingface', 'openrouter', 'cohere'],
+      availableProviders: ['gemini'],
     })
   } catch (error) {
     return NextResponse.json(
