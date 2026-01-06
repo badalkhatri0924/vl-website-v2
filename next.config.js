@@ -27,14 +27,25 @@ const nextConfig = {
         ...config.resolve.fallback,
         fs: false,
       }
-      
-      // Provide useEffectEvent polyfill for Sanity Studio
-      config.plugins.push(
-        new webpack.ProvidePlugin({
-          'react': ['react', 'default'],
-        })
-      )
     }
+    
+    // Replace react imports in sanity modules with our polyfilled version
+    // This fixes the useEffectEvent import error in React 19
+    // TODO: Remove this polyfill once Sanity releases a version fully compatible with React 19.2+
+    // or when React stabilizes the useEffectEvent API export
+    config.plugins.push(
+      new webpack.NormalModuleReplacementPlugin(
+        /^react$/,
+        (resource) => {
+          // Only replace for sanity modules to avoid affecting other code
+          if (resource.context && resource.context.includes('node_modules/sanity')) {
+            const path = require('path')
+            const polyfillPath = path.resolve(__dirname, 'lib/polyfills/react-with-useeffectevent.js')
+            resource.request = polyfillPath
+          }
+        }
+      )
+    )
     
     return config
   },

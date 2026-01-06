@@ -222,4 +222,3 @@ Generated posts will include:
 - Test with optional free alternatives (Hugging Face, OpenRouter)
 - Verify PortableText conversion
 - Test Sanity write operations
-- - Test rate limiting and error handling for free tier limits
