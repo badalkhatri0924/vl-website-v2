@@ -79,7 +79,7 @@ const ProductPostView: React.FC<ProductPostViewProps> = ({ product }) => {
                 {product.features.map((feature, i) => (
                   <div 
                     key={i}
-                    className="flex items-start space-x-4 p-1 bg-white border border-slate-100"
+                    className="flex items-start space-x-4  bg-white border border-slate-100"
                   >
                     <div className="w-2 h-2 bg-accent mt-2 flex-shrink-0"></div>
                     <p className="text-xl text-slate-700 font-medium leading-relaxed">
