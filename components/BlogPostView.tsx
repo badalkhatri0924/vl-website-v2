@@ -47,7 +47,7 @@ const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
             
             {/* Mobile Layout: Category, Date, Image (flex-col) */}
             <div className="md:hidden flex flex-col gap-4 mb-8">
-              <span className="px-5 py-2.5 border border-accent/40 bg-accent/10 text-accent text-xs font-black uppercase tracking-ultra w-fit">
+              <span className="px-5 py-2.5 border border-accent/60 bg-accent/20 text-white text-xs font-black uppercase tracking-ultra w-fit">
                 {post.category}
               </span>
               <span className="text-slate-400 text-xs font-black uppercase tracking-ultra">{formatDate(post.publishedAt)}</span>
@@ -68,7 +68,7 @@ const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
             
             {/* Desktop Layout: Category, Date, Read Time (flex-row) */}
             <div className="hidden md:flex flex-wrap items-center gap-4 md:gap-6 mb-8 md:mb-12">
-              <span className="px-5 md:px-6 py-2.5 border border-accent/40 bg-accent/10 text-accent text-xs md:text-sm font-black uppercase tracking-ultra">
+              <span className="px-5 md:px-6 py-2.5 border border-accent/60 bg-accent/20 text-white text-xs md:text-sm font-black uppercase tracking-ultra">
                 {post.category}
               </span>
               <span className="text-slate-400 text-xs md:text-sm font-black uppercase tracking-ultra">{formatDate(post.publishedAt)}</span>
