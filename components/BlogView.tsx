@@ -41,7 +41,7 @@ const BlogView: React.FC<BlogViewProps> = ({ posts }) => {
             </Link>
           </div>
           <div className="text-center max-w-2xl mx-auto">
-            <h1 className="text-accent text-base font-black uppercase tracking-ultra mb-8">VersionLabs Insights</h1>
+            {/* <h1 className="text-accent text-base font-black uppercase tracking-ultra mb-8">VersionLabs Insights</h1> */}
             <h2 className="text-4xl md:text-6xl font-display font-black text-obsidian-900 leading-tight tracking-tighter mb-8">
               No blog posts yet
             </h2>
@@ -95,7 +95,7 @@ const BlogView: React.FC<BlogViewProps> = ({ posts }) => {
 
         {/* Editorial Header */}
         <div className="max-w-4xl mb-32">
-          <h1 className="text-accent text-base font-black uppercase tracking-ultra mb-8">VersionLabs Insights</h1>
+          {/* <h1 className="text-accent text-base font-black uppercase tracking-ultra mb-8">VersionLabs Insights</h1> */}
           <h2 className="text-6xl md:text-9xl font-display font-black text-obsidian-900 leading-[0.85] tracking-tighter mb-12">
             The Digital <br />
             <span className="text-accent italic font-light">Loom.</span>
