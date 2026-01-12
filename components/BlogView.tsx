@@ -103,11 +103,11 @@ const BlogView: React.FC<BlogViewProps> = ({ posts }) => {
           <p className="text-slate-600 text-xl md:text-2xl font-light leading-relaxed max-w-2xl text-balance mb-8">
             Strategic commentary on digital governance, nation-scale infrastructure, and the sovereign AI revolution.
           </p>
-          <ShareButton 
+          {/* <ShareButton 
             url={pathname}
             title="VersionLabs Insights - The Digital Loom"
             description="Strategic commentary on digital governance, nation-scale infrastructure, and the sovereign AI revolution."
-          />
+          /> */}
         </div>
 
         {/* Featured Post */}
@@ -209,14 +209,14 @@ const BlogView: React.FC<BlogViewProps> = ({ posts }) => {
                       </svg>
                     </div>
                   </div>
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  {/* <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                     <ShareButton 
                       url={`/blog/${post.slug.current}`}
                       title={post.title}
                       description={post.excerpt}
                       className="[&_span]:text-xs"
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
