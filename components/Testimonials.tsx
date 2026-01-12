@@ -6,7 +6,7 @@ import Link from 'next/link';
 export const TESTIMONIALS = [
   {
     id: "t1",
-    quote: "The ability to deploy a national-scale learning platform that handles millions of concurrent citizens while maintaining total data sovereignty is why we partner with VersionLabs.",
+    quote: "The ability to deploy a national-scale learning platform that handles millions of concurrent citizens while maintaining total data sovereignty is why we partner with this platform.",
     author: "Dato' Seri Mohd Zuki",
     position: "National AI Office Lead",
     organization: "Malaysia",
@@ -15,7 +15,7 @@ export const TESTIMONIALS = [
   },
   {
     id: "t2",
-    quote: "VersionLabs understands that in the public sector, UI/UX is an accessibility requirement, not a luxury. Their inclusive design approach has been critical to our G20 mission success.",
+    quote: "The platform understands that in the public sector, UI/UX is an accessibility requirement, not a luxury. Their inclusive design approach has been critical to our G20 mission success.",
     author: "Dr. Ananya Sharma",
     position: "Strategic Advisor",
     organization: "G20 Empower",
@@ -24,7 +24,7 @@ export const TESTIMONIALS = [
   },
   {
     id: "t3",
-    quote: "Securing national digital infrastructure against modern threats requires a partner who builds with a security-first mindset. VersionLabs is that partner for our skilling ecosystem.",
+    quote: "Securing national digital infrastructure against modern threats requires a partner who builds with a security-first mindset. This platform is that partner for our skilling ecosystem.",
     author: "Shri Rajesh Kumar",
     position: "Director General",
     organization: "Innovation Council",
@@ -33,7 +33,7 @@ export const TESTIMONIALS = [
   },
   {
     id: "t4",
-    quote: "Our transition to digital governance was seamless thanks to VersionLabs' deep understanding of bureaucratic workflows and administrative needs.",
+    quote: "Our transition to digital governance was seamless thanks to the platform's deep understanding of bureaucratic workflows and administrative needs.",
     author: "Tan Sri Ahmad",
     position: "Chief Secretary",
     organization: "Govt. Agency",
@@ -42,7 +42,7 @@ export const TESTIMONIALS = [
   },
   {
     id: "t5",
-    quote: "The personalized learning paths enabled by VersionLabs AI have significantly increased completion rates across our rural skill centers.",
+    quote: "The personalized learning paths enabled by our AI platform have significantly increased completion rates across our rural skill centers.",
     author: "Smt. Priya Singh",
     position: "Education Director",
     organization: "Skill India Mission",
@@ -51,7 +51,7 @@ export const TESTIMONIALS = [
   },
   {
     id: "t6",
-    quote: "Scalability was our biggest challenge until VersionLabs architected our citizen portal. It now handles peak traffic with zero latency issues.",
+    quote: "Scalability was our biggest challenge until the platform architected our citizen portal. It now handles peak traffic with zero latency issues.",
     author: "Linh Nguyen",
     position: "Digital Transformation Lead",
     organization: "NIC Vietnam",

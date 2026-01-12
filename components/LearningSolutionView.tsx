@@ -115,7 +115,7 @@ const LearningSolutionView: React.FC = () => {
                </svg>
              </div>
              <p className="text-obsidian-900 font-display text-2xl leading-relaxed italic font-light mb-12">
-               "VersionLabs' LMS wasn't just a software deployment; it was the infrastructure that allowed us to reach rural populations we thought were inaccessible."
+               "Our LMS platform wasn't just a software deployment; it was the infrastructure that allowed us to reach rural populations we thought were inaccessible."
              </p>
              <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center text-accent">

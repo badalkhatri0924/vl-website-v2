@@ -8,7 +8,7 @@ export const BLOG_POSTS: BlogPost[] = [
     content: "Full content would be a long-form article about sovereign AI architecture, data localization, and the shift from global LLMs to localized, fine-tuned models for national languages...",
     author: {
       name: "Chirag Gupta",
-      title: "Chief Architect, VersionLabs",
+      title: "Chief Architect",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
     },
     date: "MAR 12, 2024",
@@ -22,7 +22,7 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt: "Scaling a digital learning platform for a nation isn't just a technical challenge—it's a massive demographic and logistical mission.",
     content: "Details on microservices, high-availability clusters, and regional edge computing for low-latency education...",
     author: {
-      name: "VersionLabs Research",
+      name: "Research Team",
       title: "Infrastructure Division",
       avatar: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=200"
     },

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     default: 'VersionLabs',
     template: '%s | VersionLabs',
   },
-  description: 'Premium enterprise-grade platforms for government and national learning missions by VersionLabs, featuring AI-powered citizen services and secure digital solutions.',
+  description: 'Premium enterprise-grade platforms for government and national learning missions, featuring AI-powered citizen services and secure digital solutions.',
   keywords: [
     'VersionLabs',
     'government platforms',
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     url: 'https://versionlabs.co',
     siteName: 'VersionLabs',
     title: 'VersionLabs',
-    description: 'Premium enterprise-grade platforms for government and national learning missions by VersionLabs, featuring AI-powered citizen services and secure digital solutions.',
+    description: 'Premium enterprise-grade platforms for government and national learning missions, featuring AI-powered citizen services and secure digital solutions.',
     images: [
       {
         url: 'https://firebasestorage.googleapis.com/v0/b/versionlabs-official.firebasestorage.app/o/happy-new-year.webp?alt=media',
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'VersionLabs',
-    description: 'Premium enterprise-grade platforms for government and national learning missions by VersionLabs, featuring AI-powered citizen services and secure digital solutions.',
+    description: 'Premium enterprise-grade platforms for government and national learning missions, featuring AI-powered citizen services and secure digital solutions.',
     images: ['https://firebasestorage.googleapis.com/v0/b/versionlabs-official.firebasestorage.app/o/happy-new-year.webp?alt=media'],
     creator: '@versionlabs',
   },

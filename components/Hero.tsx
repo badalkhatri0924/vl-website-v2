@@ -77,7 +77,7 @@ const Hero: React.FC = () => {
 
           <div className="lg:col-span-4 flex flex-col items-start lg:pt-32">
             <p className="text-xl md:text-2xl text-slate-400 leading-relaxed font-light mb-12 text-balance max-w-sm">
-              Powering Government & Education with <span className="text-white font-black">Versionlabs.</span> No legacy bloat. No compromise. Just results.
+              Powering Government & Education with <span className="text-white font-black">Enterprise Technology.</span> No legacy bloat. No compromise. Just results.
             </p>
             
             {/* Signature Interactive Button */}

@@ -64,13 +64,13 @@ const PartnershipView: React.FC = () => {
                 <span className="text-accent italic font-light">The Future.</span>
               </h2>
               <p className="text-slate-600 text-xl font-light leading-relaxed mb-16">
-                VersionLabs collaborates with technology leaders, international NGOs, and regional governments to deliver impact that outpaces standard institutional speed.
+                We collaborate with technology leaders, international NGOs, and regional governments to deliver impact that outpaces standard institutional speed.
               </p>
 
               <div className="space-y-8">
                  {[
                    { t: "Technology Integration", d: "Merging your IP with our sovereign digital backbone." },
-                   { t: "Regional Representation", d: "Localizing VersionLabs platforms for new national markets." },
+                   { t: "Regional Representation", d: "Localizing our platforms for new national markets." },
                    { t: "Strategic Investment", d: "Exploring capital and mission-aligned growth synergies." }
                  ].map((item, i) => (
                    <div key={i} className="flex items-start space-x-5">
