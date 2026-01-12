@@ -164,17 +164,7 @@ const BlogView: React.FC<BlogViewProps> = ({ posts }) => {
               className="bg-white group cursor-pointer border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-300 overflow-hidden"
             >
               <div className="p-8 md:p-10">
-                {/* 1. Category and Date */}
-                <div className="mb-6 flex flex-col md:flex-row items-start md:justify-between gap-3 md:gap-4">
-                  <span className="text-accent text-base md:text-lg font-black uppercase tracking-ultra">
-                    {post.category}
-                  </span>
-                  <span className="text-slate-400 text-sm font-black uppercase tracking-ultra">
-                    {formatDate(post.publishedAt)}
-                  </span>
-                </div>
-
-                {/* 2. Thumbnail Image */}
+                {/* 1. Thumbnail Image */}
                 <div className="relative w-full h-56 md:h-64 mb-6 overflow-hidden bg-slate-100">
                   <img 
                     src={post.imageUrl || 'https://via.placeholder.com/800x450/4A5568/FFFFFF?text=Blog+Post'} 
@@ -187,27 +177,40 @@ const BlogView: React.FC<BlogViewProps> = ({ posts }) => {
                   />
                 </div>
 
-                {/* 3. Excerpt */}
-                <p className="text-slate-600 text-base md:text-lg font-light leading-relaxed mb-6">
+                {/* 2. Title & Category */}
+                <div className="mb-4">
+                  <p className="text-accent text-lg md:text-xl font-semibold leading-relaxed mb-2">
+                    {post.category}
+                  </p>
+                  {/* <h3 className="text-xl md:text-2xl font-display font-black text-obsidian-900 leading-snug tracking-tight group-hover:text-accent transition-colors">
+                    {post.title}
+                  </h3> */}
+                </div>
+
+                {/* 3. Excerpt / Description */}
+                <p className="text-slate-600 text-base md:text-lg font-light leading-relaxed mb-6 line-clamp-3">
                   {post.excerpt}
                 </p>
 
                 {/* 4. Author & Share */}
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 rounded-full overflow-hidden grayscale opacity-60 group-hover:opacity-100 group-hover:grayscale-0 transition-all">
-                        <img src={post.author.avatar} alt={post.author.name} className="w-full h-full object-cover" />
-                      </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-full overflow-hidden grayscale opacity-60 group-hover:opacity-100 group-hover:grayscale-0 transition-all">
+                      <img src={post.author.avatar} alt={post.author.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex flex-col">
                       <span className="text-sm md:text-base font-black uppercase tracking-ultra text-slate-400 group-hover:text-obsidian-900 transition-colors">
                         {post.author.name}
                       </span>
+                      <span className="text-xs md:text-sm font-black uppercase tracking-ultra text-slate-300 group-hover:text-slate-500 transition-colors">
+                        {formatDate(post.publishedAt)}
+                      </span>
                     </div>
-                    <div className="text-accent group-hover:translate-x-2 transition-transform">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </div>
+                  </div>
+                  <div className="text-accent group-hover:translate-x-2 transition-transform">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
                   </div>
                   {/* <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                     <ShareButton 
