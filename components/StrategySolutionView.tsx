@@ -69,7 +69,7 @@ const StrategySolutionView: React.FC = () => {
                  <h4 className="text-accent text-base font-black uppercase tracking-ultra mb-10">Phase 02: Building</h4>
                  <h3 className="text-3xl md:text-4xl font-display font-black text-obsidian-900 mb-8">Custom Copilots <br />& Secure LLMs.</h3>
                  <p className="text-slate-500 font-light text-lg mb-12">
-                   Once the roadmap is defined, our engineering core develops custom-built digital assets—ranging from specialized LLMs to national-scale portals.
+                   Once the roadmap is defined, our engineering core develops custom-built digital assets-ranging from specialized LLMs to national-scale portals.
                  </p>
                  <div className="grid grid-cols-2 gap-8">
                     <div>

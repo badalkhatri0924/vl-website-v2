@@ -33,7 +33,7 @@ export default function Home() {
               Transform at <span className="text-accent italic">Scale.</span>
             </h2>
             <p className="text-2xl text-slate-400 mb-20 leading-relaxed font-light max-w-3xl mx-auto text-balance">
-              Whether you are planning a national LMS, a government portal, or a digital governance platform — our team is ready to support your mission.
+              Whether you are planning a national LMS, a government portal, or a digital governance platform - our team is ready to support your mission.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-10">
               <Link 

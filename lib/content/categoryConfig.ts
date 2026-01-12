@@ -35,7 +35,7 @@ The post should:
 - Include actionable recommendations
 - Be well-structured with clear headings and subheadings
 
-Format the content in markdown with proper headings (##, ###), paragraphs, lists, and emphasis where appropriate. Do not use data separation symbols or generic AI markers such as \"--\" or \"---\"; keep the content clean and readable. Strictly do not use the em dash symbol \"—\" anywhere in the content.`,
+Format the content in markdown with proper headings (##, ###), paragraphs, lists, and emphasis where appropriate. Do not use data separation symbols or generic AI markers such as \"--\" or \"---\"; keep the content clean and readable. Strictly do not use the em dash symbol \"-\" anywhere in the content.`,
   },
   'LMS Scaling': {
     name: 'LMS Scaling',
@@ -64,7 +64,7 @@ The post should:
 - Include actionable implementation strategies
 - Be well-structured with clear headings and subheadings
 
-Format the content in markdown with proper headings (##, ###), paragraphs, lists, and emphasis where appropriate. Do not use data separation symbols or generic AI markers such as \"--\" or \"---\"; keep the content clean and readable. Strictly do not use the em dash symbol \"—\" anywhere in the content.`,
+Format the content in markdown with proper headings (##, ###), paragraphs, lists, and emphasis where appropriate. Do not use data separation symbols or generic AI markers such as \"--\" or \"---\"; keep the content clean and readable. Strictly do not use the em dash symbol \"-\" anywhere in the content.`,
   },
   'Product Design': {
     name: 'Product Design',
@@ -93,7 +93,7 @@ The post should:
 - Include actionable design guidelines
 - Be well-structured with clear headings and subheadings
 
-Format the content in markdown with proper headings (##, ###), paragraphs, lists, and emphasis where appropriate. Do not use data separation symbols or generic AI markers such as \"--\" or \"---\"; keep the content clean and readable. Strictly do not use the em dash symbol \"—\" anywhere in the content.`,
+Format the content in markdown with proper headings (##, ###), paragraphs, lists, and emphasis where appropriate. Do not use data separation symbols or generic AI markers such as \"--\" or \"---\"; keep the content clean and readable. Strictly do not use the em dash symbol \"-\" anywhere in the content.`,
   },
 }
 

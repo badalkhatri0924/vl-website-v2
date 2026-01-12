@@ -92,7 +92,7 @@ export const PROJECTS = [
     type: "State Initiative",
     title: "AI for All – Odisha",
     subtitle: "Govt. of Odisha",
-    desc: "Odisha for AI' is a self-learning online program designed to raise public awareness about Artificial Intelligence. It aims to demystify AI for people from all walks of life—students, stay-at-home parents, professionals from any field, senior citizens, and anyone interested in AI who wants to build a digital-first mindset.",
+    desc: "Odisha for AI' is a self-learning online program designed to raise public awareness about Artificial Intelligence. It aims to demystify AI for people from all walks of life-students, stay-at-home parents, professionals from any field, senior citizens, and anyone interested in AI who wants to build a digital-first mindset.",
     metrics: [
       { label: "Registered Users", value: "4146" },
       { label: "Indian Languages", value: "2" }
