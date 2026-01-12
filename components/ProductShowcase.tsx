@@ -56,10 +56,10 @@ const ProductShowcase: React.FC = () => {
               <div className="w-10 h-[2px] bg-accent"></div>
               <span>Our Product</span>
             </div>
-            <h3 className="text-5xl font-display font-black text-obsidian-900 mb-8">
+            <h2 className="text-5xl font-display font-black text-obsidian-900 mb-8">
               The Docxpert<br/>
               <span className="text-4xl text-accent italic">Document Processing Platform.</span>
-            </h3>
+            </h2>
             {/* Testimonial moved below title */}
             <div className="bg-slate-50 p-6 border-l-2 border-accent max-w-md shadow-sm">
               <p className="text-slate-600 text-base italic font-light leading-relaxed">

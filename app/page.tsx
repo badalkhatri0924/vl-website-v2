@@ -6,6 +6,21 @@ import CaseStudies from '@/components/CaseStudies'
 import PressSection from '@/components/PressSection'
 import Testimonials from '@/components/Testimonials'
 import Link from 'next/link'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Digital Infrastructure for Government | Version Labs',
+  description: 'Building enterprise-grade digital infrastructure for modern nations. National LMS platforms, AI-powered citizen services, and secure government portals. Transform at scale.',
+  openGraph: {
+    title: 'Digital Infrastructure for Government | Version Labs',
+    description: 'Building enterprise-grade digital infrastructure for modern nations. National LMS platforms, AI-powered citizen services, and secure government portals. Transform at scale.',
+    url: 'https://versionlabs.co',
+  },
+  twitter: {
+    title: 'Digital Infrastructure for Government | Version Labs',
+    description: 'Building enterprise-grade digital infrastructure for modern nations. National LMS platforms, AI-powered citizen services, and secure government portals. Transform at scale.',
+  },
+}
 
 export default function Home() {
   return (

@@ -23,11 +23,11 @@ const AutomationSolutionView: React.FC = () => {
 
         {/* Editorial Header */}
         <div className="max-w-4xl mb-32">
-          <h1 className="text-accent text-base font-black uppercase tracking-ultra mb-8">Solution Pillar 02</h1>
-          <h2 className="text-6xl md:text-9xl font-display font-black text-obsidian-900 leading-[0.85] tracking-tighter mb-12">
+          <h1 className="text-6xl md:text-9xl font-display font-black text-obsidian-900 leading-[0.85] tracking-tighter mb-12">
             AI & Process <br />
             <span className="text-accent italic font-light">Automation.</span>
-          </h2>
+          </h1>
+          <h2 className="text-accent text-base font-black uppercase tracking-ultra mb-8">Solution Pillar 02 - AI Integration & Process Automation</h2>
           <p className="text-slate-600 text-xl md:text-2xl font-light leading-relaxed max-w-2xl text-balance">
             Streamlining bureaucratic complexity with high-security AI agents and automated workflow orchestrators.
           </p>

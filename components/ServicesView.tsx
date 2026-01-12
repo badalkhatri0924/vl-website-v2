@@ -60,11 +60,11 @@ const ServicesView: React.FC = () => {
         </div>
 
         <div className="max-w-4xl mb-32">
-          <h1 className="text-accent text-base font-black uppercase tracking-ultra mb-8">Service Portfolio</h1>
-          <h2 className="text-6xl md:text-8xl font-display font-black text-obsidian-900 leading-[0.9] tracking-tighter mb-12">
+          <h1 className="text-6xl md:text-8xl font-display font-black text-obsidian-900 leading-[0.9] tracking-tighter mb-12">
             Mission-Ready <br />
             <span className="text-accent italic font-light">Digital Assets.</span>
-          </h2>
+          </h1>
+          <h2 className="text-accent text-base font-black uppercase tracking-ultra mb-8">Service Portfolio</h2>
           <p className="text-slate-600 text-xl font-light leading-relaxed max-w-2xl">
             We don't build websites. We build the digital infrastructure that defines a nation's relationship with its citizens.
           </p>
@@ -77,9 +77,9 @@ const ServicesView: React.FC = () => {
                 <span className="inline-block px-4 py-1.5 border border-accent/20 bg-accent/5 text-accent text-sm font-black uppercase tracking-ultra mb-8">
                   Capability {idx + 1}
                 </span>
-                <h3 className="text-4xl md:text-5xl font-display font-black text-obsidian-900 mb-6 tracking-tight">
+                <h2 className="text-4xl md:text-5xl font-display font-black text-obsidian-900 mb-6 tracking-tight">
                   {service.title}
-                </h3>
+                </h2>
                 <p className="text-accent text-sm font-black uppercase tracking-ultra mb-10">
                   {service.subtitle}
                 </p>
