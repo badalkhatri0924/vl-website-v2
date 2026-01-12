@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
               />
             </Link>
             <p className="text-lg text-slate-500 leading-relaxed font-light max-w-md">
-              We architect the digital foundation for Versionlabs governance. 
+              We architect the digital foundation for sovereign governance. 
               Designing mission-ready platforms for state and national initiatives.
             </p>
           </div>

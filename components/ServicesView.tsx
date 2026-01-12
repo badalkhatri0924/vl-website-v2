@@ -15,11 +15,11 @@ const ServicesView: React.FC = () => {
         { label: "Availability", value: "99.99% Tier-4" },
         { label: "Compliance", value: "WCAG 2.1 / GIGW" }
       ],
-      features: ["Multi-tenant Agency Support", "Regional Language AI", "Versionlabs Data Storage", "Cert-In Audited Portals"]
+      features: ["Multi-tenant Agency Support", "Regional Language AI", "Secure Data Storage", "Cert-In Audited Portals"]
     },
     {
       id: "ai",
-      title: "Versionlabs AI Integration",
+      title: "AI Integration",
       subtitle: "CITIZEN SERVICE AUTOMATION",
       desc: "Deploying secure, localized LLMs that assist citizens in their native languages while keeping data within national boundaries.",
       specs: [
@@ -63,7 +63,7 @@ const ServicesView: React.FC = () => {
           <h1 className="text-accent text-base font-black uppercase tracking-ultra mb-8">Service Portfolio</h1>
           <h2 className="text-6xl md:text-8xl font-display font-black text-obsidian-900 leading-[0.9] tracking-tighter mb-12">
             Mission-Ready <br />
-            <span className="text-accent italic font-light">Versionlabs Assets.</span>
+            <span className="text-accent italic font-light">Digital Assets.</span>
           </h2>
           <p className="text-slate-600 text-xl font-light leading-relaxed max-w-2xl">
             We don't build websites. We build the digital infrastructure that defines a nation's relationship with its citizens.
