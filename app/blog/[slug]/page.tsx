@@ -73,7 +73,7 @@ export async function generateMetadata({
     } catch (error) {
       console.error('Error building image URL with urlFor:', error)
       // Fallback to direct URL
-      ogImage = post.imageUrl || 'https://firebasestorage.googleapis.com/v0/b/versionlabs-official.firebasestorage.app/o/happy-new-year.webp?alt=media'
+      ogImage = post.imageUrl || 'https://firebasestorage.googleapis.com/v0/b/versionlabs-official.firebasestorage.app/o/versionlabs-meta-image.webp?alt=media'
     }
   } else if (post.imageUrl) {
     // Use direct imageUrl from Sanity and optimize it
@@ -105,7 +105,7 @@ export async function generateMetadata({
     }
   } else {
     // Final fallback to default image
-    ogImage = 'https://firebasestorage.googleapis.com/v0/b/versionlabs-official.firebasestorage.app/o/happy-new-year.webp?alt=media'
+    ogImage = 'https://firebasestorage.googleapis.com/v0/b/versionlabs-official.firebasestorage.app/o/versionlabs-meta-image.webp?alt=media'
   }
   
   // Ensure ogImage is an absolute URL
