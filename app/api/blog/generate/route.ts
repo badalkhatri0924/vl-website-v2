@@ -225,13 +225,21 @@ export async function GET() {
       }
     })
 
+    // Also return available authors so the admin UI can offer an author picker
+    const authors = await getAuthors()
+    const authorDetails = (authors || []).map(author => ({
+      id: author._id,
+      name: author.name,
+    }))
+
     return NextResponse.json({
       categories: categoryDetails,
       availableProviders: ['gemini'],
+      authors: authorDetails,
     })
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to fetch categories' },
+      { error: 'Failed to fetch categories and authors' },
       { status: 500 }
     )
   }

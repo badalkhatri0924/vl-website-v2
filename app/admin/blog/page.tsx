@@ -13,10 +13,19 @@ export default function BlogAdminPage() {
   const [selectedPost, setSelectedPost] = useState<PendingBlogPost | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [processing, setProcessing] = useState<string | null>(null) // Format: "postId-action" e.g., "post123-approve-draft"
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [isGenerateDialogOpen, setIsGenerateDialogOpen] = useState(false)
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
+  const [categories, setCategories] = useState<Array<{ name: string; description?: string; topics?: string[] }>>([])
+  const [authors, setAuthors] = useState<Array<{ id: string; name: string }>>([])
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false)
+  const [generateCategory, setGenerateCategory] = useState<string>('')
+  const [generateTopic, setGenerateTopic] = useState<string>('')
+  const [generateAuthorId, setGenerateAuthorId] = useState<string>('')
 
   useEffect(() => {
     fetchPendingPosts()
+    fetchCategories()
   }, [])
 
   const fetchPendingPosts = async () => {
@@ -31,6 +40,90 @@ export default function BlogAdminPage() {
       console.error('Error fetching pending posts:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchCategories = async () => {
+    try {
+      setIsLoadingCategories(true)
+      const response = await fetch('/api/blog/generate', {
+        method: 'GET',
+      })
+      const data = await response.json()
+      if (response.ok) {
+        if (Array.isArray(data.categories)) {
+          setCategories(data.categories)
+          if (!generateCategory && data.categories.length > 0) {
+            setGenerateCategory(data.categories[0].name)
+          }
+        }
+        if (Array.isArray(data.authors)) {
+          setAuthors(data.authors)
+          if (!generateAuthorId && data.authors.length > 0) {
+            setGenerateAuthorId(data.authors[0].id)
+          }
+        }
+      }      
+    } catch (error) {
+      console.error('Error fetching categories for generator:', error)
+    } finally {
+      setIsLoadingCategories(false)
+    }
+  }
+
+  const handleGenerate = async () => {
+    if (!generateCategory) {
+      setNotification({
+        message: 'Please select a category before generating.',
+        type: 'error',
+      })
+      setTimeout(() => setNotification(null), 3000)
+      return
+    }
+
+    try {
+      setIsGenerating(true)
+      const response = await fetch('/api/blog/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          category: generateCategory,
+          topic: generateTopic || undefined,
+          authorId: generateAuthorId || undefined,
+          // Always create as draft; publish is handled via Approve flow
+          publishStatus: 'draft',
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setNotification({
+          message: `New blog generated and added to pending review: "${data.title}"`,
+          type: 'success',
+        })
+        await fetchPendingPosts()
+        setIsGenerateDialogOpen(false)
+        setGenerateTopic('')
+        setTimeout(() => setNotification(null), 3000)
+      } else {
+        setNotification({
+          message: data?.error || data?.message || 'Failed to generate blog post',
+          type: 'error',
+        })
+        setTimeout(() => setNotification(null), 5000)
+      }
+    } catch (error) {
+      console.error('Error generating blog post:', error)
+      setNotification({
+        message: 'Unexpected error while generating blog post',
+        type: 'error',
+      })
+      setTimeout(() => setNotification(null), 5000)
+    } finally {
+      setIsGenerating(false)
     }
   }
 
@@ -126,6 +219,19 @@ export default function BlogAdminPage() {
         <h1 className="text-4xl font-display font-black mb-2">Blog Admin</h1>
         <p className="text-slate-400 mb-8">Review and manage pending blog posts</p>
 
+        <div className="mb-8 flex items-center justify-between gap-4">
+          <p className="text-sm text-slate-400">
+            Generate a new AI-written blog post as a draft and send it to the pending list for review.
+          </p>
+          <Button
+            variant="primary"
+            onClick={() => setIsGenerateDialogOpen(true)}
+            disabled={isGenerating}
+          >
+            {isGenerating ? 'Generating...' : 'Generate New Blog'}
+          </Button>
+        </div>
+
         {/* Notification Toast */}
         {notification && (
           <div className={`fixed top-24 right-8 z-[200] p-4 rounded-lg shadow-lg border flex items-center gap-3 ${
@@ -218,7 +324,10 @@ export default function BlogAdminPage() {
 
         {/* Details Dialog */}
         <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-          <DialogContent className="max-w-7xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogContent 
+            className="max-w-7xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+            onClose={() => setIsDetailsOpen(false)}
+          >
             <DialogHeader>
               <DialogTitle className="pr-8 break-words">{selectedPost?.title}</DialogTitle>
             </DialogHeader>
@@ -299,6 +408,117 @@ export default function BlogAdminPage() {
                 </div>
               </div>
             )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Generate Blog Dialog */}
+        <Dialog open={isGenerateDialogOpen} onOpenChange={setIsGenerateDialogOpen}>
+          <DialogContent className="max-w-xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+            <DialogHeader>
+              <DialogTitle className="pr-8 break-words">Generate New Blog Post</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-6 overflow-y-auto flex-1 pr-1 -mr-1">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-slate-200">
+                  Category
+                </label>
+                <select
+                  value={generateCategory}
+                  onChange={(e) => setGenerateCategory(e.target.value)}
+                  disabled={isGenerating || isLoadingCategories}
+                  className="w-full rounded-md bg-obsidian-900 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+                >
+                  {categories.length === 0 && (
+                    <option value="">
+                      {isLoadingCategories ? 'Loading categories...' : 'No categories available'}
+                    </option>
+                  )}
+                  {categories.map((cat) => (
+                    <option key={cat.name} value={cat.name}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+                {generateCategory && (
+                  <p className="text-xs text-slate-400">
+                    {categories.find((c) => c.name === generateCategory)?.description}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-slate-200">
+                  Author (optional)
+                </label>
+                <select
+                  value={generateAuthorId}
+                  onChange={(e) => setGenerateAuthorId(e.target.value)}
+                  disabled={isGenerating || authors.length === 0}
+                  className="w-full rounded-md bg-obsidian-900 border border-white/10 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+                >
+                  {authors.length === 0 && (
+                    <option value="">
+                      No authors found in Sanity (default author will be used)
+                    </option>
+                  )}
+                  {authors.length > 0 && (
+                    <>
+                      <option value="">
+                        Use default author from Sanity
+                      </option>
+                      {authors.map((author) => (
+                        <option key={author.id} value={author.id}>
+                          {author.name}
+                        </option>
+                      ))}
+                    </>
+                  )}
+                </select>
+                <p className="text-xs text-slate-400">
+                  If left empty, the default author configured in Sanity will be used.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-slate-200">
+                  Topic (optional)
+                </label>
+                <input
+                  type="text"
+                  value={generateTopic}
+                  onChange={(e) => setGenerateTopic(e.target.value)}
+                  placeholder="Let AI choose, or specify a topic..."
+                  disabled={isGenerating}
+                  className="w-full rounded-md bg-obsidian-900 border border-white/10 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+                />
+                {generateCategory && categories.find((c) => c.name === generateCategory)?.topics && (
+                  <p className="text-xs text-slate-400">
+                    Suggested topics:{' '}
+                    {categories
+                      .find((c) => c.name === generateCategory)
+                      ?.topics?.slice(0, 5)
+                      .join(', ')}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
+                <Button
+                  variant="secondary"
+                  onClick={() => setIsGenerateDialogOpen(false)}
+                  disabled={isGenerating}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={handleGenerate}
+                  disabled={isGenerating || !generateCategory}
+                >
+                  {isGenerating ? 'Generating...' : 'Generate Blog'}
+                </Button>
+              </div>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
