@@ -243,19 +243,19 @@ export default function BlogAdminPage() {
 
         {/* Notification Toast */}
         {notification && (
-          <div className={`fixed top-24 right-8 z-[200] p-4 rounded-lg shadow-lg border flex items-center gap-3 ${
+          <div className={`fixed bottom-8 right-8 z-[200] w-1/2 p-3 rounded-lg shadow-lg border flex items-center gap-3 ${
             notification.type === 'success' 
               ? 'bg-green-600/90 border-green-500 text-white' 
               : 'bg-red-600/90 border-red-500 text-white'
           } transition-all duration-300`}>
-            <p className="font-semibold">{notification.message}</p>
-            <button
+            <p className="text-sm">{notification.message}</p>
+            {/* <button
               onClick={() => setNotification(null)}
-              className="text-white/80 hover:text-white transition-colors"
+              className="text-white/80 hover:text-white transition-colors text-sm"
               aria-label="Close notification"
             >
               ×
-            </button>
+            </button> */}
           </div>
         )}
 
