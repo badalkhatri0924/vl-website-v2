@@ -1,5 +1,15 @@
-import { promises as fs } from 'fs'
-import path from 'path'
+import { 
+  collection, 
+  doc, 
+  getDocs, 
+  getDoc, 
+  addDoc, 
+  deleteDoc, 
+  query, 
+  orderBy,
+  Timestamp 
+} from 'firebase/firestore'
+import { db } from './firebase/config'
 
 export interface PendingBlogPost {
   id: string
@@ -18,35 +28,70 @@ export interface PendingBlogPost {
   publishStatus?: 'draft' | 'published'
 }
 
-const PENDING_BLOGS_FILE = path.join(process.cwd(), 'data', 'pending-blogs.json')
+const COLLECTION_NAME = 'pendingBlogs'
 
 /**
- * Ensure the data directory exists
- */
-async function ensureDataDirectory(): Promise<void> {
-  const dataDir = path.dirname(PENDING_BLOGS_FILE)
-  try {
-    await fs.access(dataDir)
-  } catch {
-    await fs.mkdir(dataDir, { recursive: true })
-  }
-}
-
-/**
- * Read all pending blog posts
+ * Read all pending blog posts from Firestore
  */
 export async function getPendingBlogPosts(): Promise<PendingBlogPost[]> {
   try {
-    await ensureDataDirectory()
-    const fileContent = await fs.readFile(PENDING_BLOGS_FILE, 'utf-8')
-    return JSON.parse(fileContent)
+    const q = query(collection(db, COLLECTION_NAME), orderBy('createdAt', 'desc'))
+    const querySnapshot = await getDocs(q)
+    
+    const posts: PendingBlogPost[] = []
+    querySnapshot.forEach((docSnapshot) => {
+      const data = docSnapshot.data()
+      // Convert Firestore Timestamp to ISO string if needed
+      let createdAt: string
+      if (data.createdAt?.toDate) {
+        createdAt = data.createdAt.toDate().toISOString()
+      } else if (data.createdAt instanceof Timestamp) {
+        createdAt = data.createdAt.toDate().toISOString()
+      } else if (typeof data.createdAt === 'string') {
+        createdAt = data.createdAt
+      } else {
+        createdAt = new Date().toISOString()
+      }
+      
+      posts.push({
+        id: docSnapshot.id,
+        ...data,
+        createdAt,
+      } as PendingBlogPost)
+    })
+    
+    return posts
   } catch (error) {
-    // File doesn't exist yet, return empty array
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+    console.error('Error reading pending blogs from Firestore:', error)
+    // If orderBy fails (e.g., no index), try without ordering
+    try {
+      const querySnapshot = await getDocs(collection(db, COLLECTION_NAME))
+      const posts: PendingBlogPost[] = []
+      querySnapshot.forEach((docSnapshot) => {
+        const data = docSnapshot.data()
+        let createdAt: string
+        if (data.createdAt?.toDate) {
+          createdAt = data.createdAt.toDate().toISOString()
+        } else if (data.createdAt instanceof Timestamp) {
+          createdAt = data.createdAt.toDate().toISOString()
+        } else if (typeof data.createdAt === 'string') {
+          createdAt = data.createdAt
+        } else {
+          createdAt = new Date().toISOString()
+        }
+        
+        posts.push({
+          id: docSnapshot.id,
+          ...data,
+          createdAt,
+        } as PendingBlogPost)
+      })
+      // Sort by createdAt descending manually
+      return posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    } catch (fallbackError) {
+      console.error('Error reading pending blogs from Firestore (fallback):', fallbackError)
       return []
     }
-    console.error('Error reading pending blogs:', error)
-    return []
   }
 }
 
@@ -54,42 +99,76 @@ export async function getPendingBlogPosts(): Promise<PendingBlogPost[]> {
  * Get a specific pending blog post by ID
  */
 export async function getPendingBlogPost(id: string): Promise<PendingBlogPost | null> {
-  const posts = await getPendingBlogPosts()
-  return posts.find(post => post.id === id) || null
+  try {
+    const docRef = doc(db, COLLECTION_NAME, id)
+    const docSnapshot = await getDoc(docRef)
+    
+    if (!docSnapshot.exists()) {
+      return null
+    }
+    
+    const data = docSnapshot.data()
+    // Convert Firestore Timestamp to ISO string if needed
+    let createdAt: string
+    if (data.createdAt?.toDate) {
+      createdAt = data.createdAt.toDate().toISOString()
+    } else if (data.createdAt instanceof Timestamp) {
+      createdAt = data.createdAt.toDate().toISOString()
+    } else if (typeof data.createdAt === 'string') {
+      createdAt = data.createdAt
+    } else {
+      createdAt = new Date().toISOString()
+    }
+    
+    return {
+      id: docSnapshot.id,
+      ...data,
+      createdAt,
+    } as PendingBlogPost
+  } catch (error) {
+    console.error('Error getting pending blog post from Firestore:', error)
+    return null
+  }
 }
 
 /**
- * Add a new pending blog post
+ * Add a new pending blog post to Firestore
  */
 export async function addPendingBlogPost(post: Omit<PendingBlogPost, 'id' | 'createdAt'>): Promise<PendingBlogPost> {
-  await ensureDataDirectory()
-  
-  const posts = await getPendingBlogPosts()
-  const newPost: PendingBlogPost = {
-    ...post,
-    id: `pending-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-    createdAt: new Date().toISOString(),
+  try {
+    const createdAt = Timestamp.now()
+    const docRef = await addDoc(collection(db, COLLECTION_NAME), {
+      ...post,
+      createdAt,
+    })
+    
+    return {
+      id: docRef.id,
+      ...post,
+      createdAt: createdAt.toDate().toISOString(),
+    } as PendingBlogPost
+  } catch (error) {
+    console.error('Error adding pending blog post to Firestore:', error)
+    throw error
   }
-  
-  posts.push(newPost)
-  await fs.writeFile(PENDING_BLOGS_FILE, JSON.stringify(posts, null, 2), 'utf-8')
-  
-  return newPost
 }
 
 /**
- * Remove a pending blog post by ID
+ * Remove a pending blog post by ID from Firestore
  */
 export async function removePendingBlogPost(id: string): Promise<boolean> {
-  await ensureDataDirectory()
-  
-  const posts = await getPendingBlogPosts()
-  const filteredPosts = posts.filter(post => post.id !== id)
-  
-  if (filteredPosts.length === posts.length) {
-    return false // Post not found
+  try {
+    const docRef = doc(db, COLLECTION_NAME, id)
+    const docSnapshot = await getDoc(docRef)
+    
+    if (!docSnapshot.exists()) {
+      return false // Post not found
+    }
+    
+    await deleteDoc(docRef)
+    return true
+  } catch (error) {
+    console.error('Error removing pending blog post from Firestore:', error)
+    return false
   }
-  
-  await fs.writeFile(PENDING_BLOGS_FILE, JSON.stringify(filteredPosts, null, 2), 'utf-8')
-  return true
 }
