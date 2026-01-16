@@ -100,7 +100,7 @@ export default function BlogAdminPage() {
 
       if (response.ok && data.success) {
         setNotification({
-          message: `New blog generated and added to pending review: "${data.title}"`,
+          message: `New blog generated and added to pending review`,
           type: 'success',
         })
         await fetchPendingPosts()

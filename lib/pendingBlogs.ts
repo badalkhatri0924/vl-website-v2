@@ -28,7 +28,7 @@ export interface PendingBlogPost {
   publishStatus?: 'draft' | 'published'
 }
 
-const COLLECTION_NAME = 'pendingBlogs'
+const COLLECTION_NAME = 'blogListings'
 
 /**
  * Read all pending blog posts from Firestore
