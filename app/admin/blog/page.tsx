@@ -215,7 +215,7 @@ export default function BlogAdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-obsidian-950 text-white pt-32 pb-8 px-8">
+    <div className="min-h-screen bg-obsidian-950 text-white pt-32 pb-32 px-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-display font-black mb-2">Blog Admin</h1>
         <p className="text-slate-400 mb-8">Review and manage pending blog posts</p>
