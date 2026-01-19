@@ -42,7 +42,7 @@ export const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children, cl
 
   return (
     <div 
-      className="fixed inset-0 z-[100] flex items-center justify-center"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-hidden"
       onClick={(e) => {
         if (closeOnClickOutside && e.target === e.currentTarget) {
           onOpenChange(false);
@@ -50,7 +50,7 @@ export const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children, cl
       }}
     >
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-      <div className="relative z-10">
+      <div className="relative z-10 w-full max-w-full overflow-hidden flex items-center justify-center">
         {children}
       </div>
     </div>
@@ -64,11 +64,11 @@ export const DialogContent: React.FC<DialogContentProps> = ({
   onClose
 }) => {
   return (
-    <div className={`bg-obsidian-950/95 backdrop-blur-3xl border border-white/10 rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 relative ${className}`}>
+    <div className={`bg-obsidian-950/95 backdrop-blur-3xl border border-white/10 rounded-2xl shadow-2xl p-8 mx-auto relative overflow-hidden ${className}`}>
       {showCloseButton && onClose && (
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-1 hover:bg-white/5"
+          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-1 hover:bg-white/5 z-10"
           aria-label="Close"
         >
           <X size={20} />

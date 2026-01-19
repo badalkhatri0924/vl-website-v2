@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateContent } from '@/services/aiContentService'
 import { markdownToPortableText } from '@/lib/sanity/portableTextConverter'
-import { createBlogPost, getDefaultAuthorId, getAuthors, uploadImageBufferToSanity, testSanityConnection } from '@/lib/sanity/writeClient'
+import { getDefaultAuthorId, getAuthors, uploadImageBufferToSanity, testSanityConnection } from '@/lib/sanity/writeClient'
 import { generateBlogImage, calculateReadTime, countWords } from '@/lib/content/imageHandler'
 import { getAllCategories, getCategoryConfig } from '@/lib/content/categoryConfig'
+import { addPendingBlogPost } from '@/lib/pendingBlogs'
 
 /**
  * Generate a slug from a title
@@ -38,7 +39,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const body = await request.json()
+    // Parse request body with error handling
+    let body
+    try {
+      body = await request.json()
+    } catch (jsonError) {
+      console.error('JSON parsing error:', jsonError)
+      return NextResponse.json(
+        { 
+          error: 'Invalid JSON in request body',
+          message: jsonError instanceof Error ? jsonError.message : 'Failed to parse request body',
+          hint: 'Please ensure the request body is valid JSON with required fields: category, topic (optional), authorId (optional), publishStatus (optional)'
+        },
+        { status: 400 }
+      )
+    }
+
     const {
       category,
       topic,
@@ -155,35 +171,31 @@ export async function POST(request: NextRequest) {
       imageUrl = undefined
     }
 
-    // Set published date based on publish status
-    const publishedAt = publishStatus === 'published' 
-      ? new Date().toISOString()
-      : undefined
-
-    // Create the post in Sanity
-    const postId = await createBlogPost({
+    // Save to pending instead of directly to Sanity
+    const pendingPost = await addPendingBlogPost({
       title: blogContent.title,
       slug,
       authorId: finalAuthorId,
       category,
       excerpt: blogContent.excerpt,
       readTime,
-      body: portableTextBody,
+      body: blogContent.body, // Store markdown for display
+      bodyPortableText: portableTextBody, // Store PortableText for Sanity
       tags: blogContent.tags,
-      publishedAt,
-      mainImageAssetId,
+      imageAssetId: mainImageAssetId,
+      imageUrl: imageUrl,
       publishStatus,
     })
 
     return NextResponse.json({
       success: true,
-      postId,
+      pendingId: pendingPost.id,
       slug,
       title: blogContent.title,
-      status: publishStatus,
+      status: 'pending',
       imageUrl: imageUrl || null,
       imageAssetId: mainImageAssetId || null,
-      message: `Blog post "${blogContent.title}" created successfully as ${publishStatus}`,
+      message: `Blog post "${blogContent.title}" generated and saved for review. Please approve or reject it from the admin page.`,
     })
   } catch (error) {
     console.error('Error generating blog post:', error)
@@ -213,13 +225,21 @@ export async function GET() {
       }
     })
 
+    // Also return available authors so the admin UI can offer an author picker
+    const authors = await getAuthors()
+    const authorDetails = (authors || []).map(author => ({
+      id: author._id,
+      name: author.name,
+    }))
+
     return NextResponse.json({
       categories: categoryDetails,
       availableProviders: ['gemini'],
+      authors: authorDetails,
     })
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to fetch categories' },
+      { error: 'Failed to fetch categories and authors' },
       { status: 500 }
     )
   }
