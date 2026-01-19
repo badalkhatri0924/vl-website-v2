@@ -4,8 +4,14 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Lock } from 'lucide-react'
 import { PendingBlogPost } from '@/lib/pendingBlogs'
 import ReactMarkdown from 'react-markdown'
+
+const BLOG_ADMIN_PASSWORD = 'vl@2025'
+const BLOG_ADMIN_AUTH_KEY = 'blog-admin-auth'
 
 export default function BlogAdminPage() {
   const [pendingPosts, setPendingPosts] = useState<PendingBlogPost[]>([])
@@ -22,11 +28,62 @@ export default function BlogAdminPage() {
   const [generateCategory, setGenerateCategory] = useState<string>('')
   const [generateTopic, setGenerateTopic] = useState<string>('')
   const [generateAuthorId, setGenerateAuthorId] = useState<string>('')
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [checkingAuth, setCheckingAuth] = useState(true)
+  const [showLoginDialog, setShowLoginDialog] = useState(false)
+  const [enteredPassword, setEnteredPassword] = useState('')
+  const [loginError, setLoginError] = useState('')
 
+  // On mount, check blog admin auth status from localStorage
   useEffect(() => {
-    fetchPendingPosts()
-    fetchCategories()
+    try {
+      const storedAuth =
+        typeof window !== 'undefined'
+          ? window.localStorage.getItem(BLOG_ADMIN_AUTH_KEY)
+          : null
+
+      if (storedAuth === 'authenticated') {
+        setIsAuthenticated(true)
+        setShowLoginDialog(false)
+      } else {
+        setShowLoginDialog(true)
+      }
+    } catch (error) {
+      console.error('Error reading blog admin auth from localStorage', error)
+      setShowLoginDialog(true)
+    } finally {
+      setCheckingAuth(false)
+    }
   }, [])
+
+  // Once authenticated, load pending posts and generator metadata
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchPendingPosts()
+      fetchCategories()
+    }
+  }, [isAuthenticated])
+
+  const handleLogin = () => {
+    if (!enteredPassword.trim()) {
+      setLoginError('Password is required.')
+      return
+    }
+
+    if (enteredPassword === BLOG_ADMIN_PASSWORD) {
+      setIsAuthenticated(true)
+      setShowLoginDialog(false)
+      setLoginError('')
+      try {
+        window.localStorage.setItem(BLOG_ADMIN_AUTH_KEY, 'authenticated')
+      } catch (error) {
+        console.error('Error saving blog admin auth to localStorage', error)
+      }
+    } else {
+      setLoginError('Incorrect password. Please try again.')
+      setEnteredPassword('')
+    }
+  }
 
   const fetchPendingPosts = async () => {
     try {
@@ -201,7 +258,20 @@ export default function BlogAdminPage() {
     return new Date(dateString).toLocaleString()
   }
 
-  if (loading) {
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen bg-obsidian-950 text-white pt-32 pb-8 px-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-4xl font-display font-black mb-8">Blog Admin</h1>
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="w-12 h-12 border-4 border-white/10 border-t-accent rounded-full animate-spin"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (loading && isAuthenticated) {
     return (
       <div className="min-h-screen bg-obsidian-950 text-white pt-32 pb-8 px-8">
         <div className="max-w-7xl mx-auto">
@@ -216,7 +286,50 @@ export default function BlogAdminPage() {
 
   return (
     <div className="min-h-screen bg-obsidian-950 text-white pt-32 pb-32 px-8">
-      <div className="max-w-7xl mx-auto">
+      {/* Password Dialog */}
+      {!checkingAuth && (
+        <Dialog open={showLoginDialog} onOpenChange={() => {}}>
+          <DialogContent className="max-w-md" showCloseButton={false}>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-center justify-center">
+                <Lock size={24} className="text-accent" />
+                <span>Enter Password</span>
+              </DialogTitle>
+            </DialogHeader>
+
+            <div className="space-y-6">
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={enteredPassword}
+                  onChange={(e) => setEnteredPassword(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleLogin()
+                    }
+                  }}
+                  placeholder="Enter password"
+                  autoFocus
+                />
+              </div>
+
+              {loginError && (
+                <p className="text-sm text-red-400 font-sans">{loginError}</p>
+              )}
+
+              <Button onClick={handleLogin} className="w-full">
+                Login
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Main content only visible when authenticated */}
+      {isAuthenticated && (
+        <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-display font-black mb-2">Blog Admin</h1>
         <p className="text-slate-400 mb-8">Review and manage pending blog posts</p>
 
@@ -536,6 +649,7 @@ export default function BlogAdminPage() {
           </DialogContent>
         </Dialog>
       </div>
+      )}
     </div>
   )
 }
