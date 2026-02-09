@@ -80,6 +80,7 @@ Writing Guidelines:
 - Use concrete examples that show what change looks like in the real world.
 - Avoid buzzwords like "paradigm shift", "optimization", and all banned words listed earlier.
 - Make sure the article is written in clean markdown with clear section headings using "##" and "###".
+- Punctuation: Use only a single hyphen/dash (-) in the body. Do not use em dashes (—) or en dashes (–).
 
 Final Answer Requirements:
 - Internally, you may think in tables and bullet lists, but the final response to the user MUST be a single JSON object with this exact structure:

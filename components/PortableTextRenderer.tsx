@@ -37,6 +37,11 @@ function getMarkdownFromContent(content: string): string {
   return content
 }
 
+// Replace typographic em/en dashes with a simple single dash for consistent style
+function normalizeDashes(text: string): string {
+  return text.replace(/[—–]/g, '-')
+}
+
 const markdownProseClasses = {
   h1: 'text-4xl font-display font-black text-obsidian-900 mt-16 mb-6',
   h2: 'text-3xl font-display font-black text-obsidian-900 mt-12 mb-6',
@@ -69,7 +74,17 @@ function transformSummaryBlocks(
   const transformed: Array<PortableTextBlockLike | SummaryListBlock> = []
 
   for (let i = 0; i < content.length; i++) {
-    const block = content[i] as PortableTextBlockLike
+    const originalBlock = content[i] as PortableTextBlockLike
+
+    // Normalize dashes in all text children for consistent display
+    const block: PortableTextBlockLike = originalBlock?.children
+      ? {
+          ...originalBlock,
+          children: originalBlock.children.map((child) =>
+            child?.text != null ? { ...child, text: normalizeDashes(child.text) } : child,
+          ),
+        }
+      : originalBlock
 
     const isH2Summary =
       block?._type === 'block' &&
@@ -121,7 +136,7 @@ function transformSummaryBlocks(
 const PortableTextRenderer: React.FC<PortableTextRendererProps> = ({ content }) => {
   // String content (e.g. markdown or JSON-with-body from API): render as formatted markdown
   if (typeof content === 'string') {
-    const markdown = getMarkdownFromContent(content)
+    const markdown = normalizeDashes(getMarkdownFromContent(content))
     return (
       <ReactMarkdown
         components={{
