@@ -195,13 +195,13 @@ const BlogView: React.FC<BlogViewProps> = ({ posts }) => {
                 {/* 4. Author & Share */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full overflow-hidden grayscale opacity-60 group-hover:opacity-100 group-hover:grayscale-0 transition-all">
+                    {/* <div className="w-8 h-8 rounded-full overflow-hidden grayscale opacity-60 group-hover:opacity-100 group-hover:grayscale-0 transition-all">
                       <img src={post.author.avatar} alt={post.author.name} className="w-full h-full object-cover" />
-                    </div>
+                    </div> */}
                     <div className="flex flex-col">
-                      <span className="text-sm md:text-base font-black uppercase tracking-ultra text-slate-400 group-hover:text-obsidian-900 transition-colors">
+                      {/* <span className="text-sm md:text-base font-black uppercase tracking-ultra text-slate-400 group-hover:text-obsidian-900 transition-colors">
                         {post.author.name}
-                      </span>
+                      </span> */}
                       <span className="text-xs md:text-sm font-black uppercase tracking-ultra text-slate-300 group-hover:text-slate-500 transition-colors">
                         {formatDate(post.publishedAt)}
                       </span>
