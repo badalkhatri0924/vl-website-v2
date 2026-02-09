@@ -287,7 +287,7 @@ export default function BlogAdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-obsidian-950 text-white pt-32 pb-32 px-8">
+  <div className="min-h-screen bg-obsidian-950 text-white pt-28 md:pt-32 pb-24 md:pb-32 px-4 md:px-8">
       {/* Password Dialog */}
       {!checkingAuth && (
         <Dialog open={showLoginDialog} onOpenChange={() => {}}>
@@ -332,17 +332,18 @@ export default function BlogAdminPage() {
       {/* Main content only visible when authenticated */}
       {isAuthenticated && (
         <div className="max-w-7xl mx-auto relative">
-        <h1 className="text-4xl font-display font-black mb-2">Blog Admin</h1>
-        <p className="text-slate-400 mb-8">Review and manage pending blog posts</p>
+        <h1 className="text-3xl md:text-4xl font-display font-black mb-2">Blog Admin</h1>
+        <p className="text-slate-400 mb-6 md:mb-8 text-sm md:text-base">Review and manage pending blog posts</p>
 
-        <div className="mb-8 flex items-center justify-between gap-4">
-          <p className="text-sm text-slate-400">
+        <div className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6">
+          <p className="text-sm text-slate-400 max-w-xl">
             Generate a new AI-written blog post as a draft and send it to the pending list for review.
           </p>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
             <Button
               variant="secondary"
               onClick={() => window.open('/studio', '_blank')}
+              className="w-full sm:w-auto"
             >
               Open Sanity Studio
             </Button>
@@ -350,6 +351,7 @@ export default function BlogAdminPage() {
               variant="primary"
               onClick={handleGenerate}
               disabled={isGenerating}
+              className="w-full sm:w-auto"
             >
               {isGenerating ? 'Generating...' : 'Generate New Blog'}
             </Button>
@@ -428,7 +430,7 @@ export default function BlogAdminPage() {
             {pendingPosts.map((post) => (
               <Card key={post.id}>
                 <CardContent className="p-6">
-                  <div className="flex items-start justify-between gap-4 flex-wrap">
+                  <div className="flex flex-col md:flex-row items-start justify-between gap-6">
                     <div className="flex-1 min-w-0">
                       <h2 className="text-2xl font-display font-bold mb-2">{post.title}</h2>
                       <p className="text-slate-300 mb-3">{post.excerpt}</p>
@@ -440,16 +442,16 @@ export default function BlogAdminPage() {
                         )}
                       </div>
                       {post.imageUrl && (
-                        <div className="mt-4">
+                      <div className="mt-4">
                           <img 
                             src={post.imageUrl} 
                             alt={post.title}
-                            className="max-w-xs rounded-lg border border-white/10"
+                            className="w-full max-w-xs md:max-w-sm rounded-lg border border-white/10"
                           />
                         </div>
                       )}
                     </div>
-                    <div className="flex flex-col gap-2 min-w-[200px] flex-shrink-0">
+                    <div className="flex flex-col gap-2 w-full md:w-[220px] flex-shrink-0 mt-4 md:mt-0">
                       <Button
                         variant="secondary"
                         onClick={() => handleViewDetails(post)}
@@ -520,7 +522,7 @@ export default function BlogAdminPage() {
                     <span className="text-slate-400">Read Time:</span>
                     <span className="ml-2 text-white">{selectedPost.readTime}</span>
                   </div>
-                  <div className="break-words">
+                  <div className="break-words col-span-2">
                     <span className="text-slate-400">Slug:</span>
                     <span className="ml-2 text-white break-all">{selectedPost.slug}</span>
                   </div>
