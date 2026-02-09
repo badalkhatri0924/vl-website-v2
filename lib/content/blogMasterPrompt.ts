@@ -61,7 +61,7 @@ Required Article Structure:
 - Headline: A clear, professional title that anyone can understand. It must not contain a colon.
 - Excerpt: A compelling 1-2 sentence hook that summarizes the article's main argument and makes people want to read more.
 - Reading Time: Estimate the reading time (for example "8 min read") based on a realistic reading speed.
-- Executive Summary: 3 bullet points summarizing the main insight in plain English.
+- Summary: A markdown unordered list (using "- " bullets) with exactly 3 bullet points, each a single concise sentence summarizing a distinct core insight in plain English.
 - The Big Picture: Explain why this issue matters to the global economy. Use everyday examples and clear cause-and-effect.
 - Why Current Approaches Fail: Analyze what is broken in simple terms. Avoid jargon—explain real-world problems people can relate to.
 - What Needs to Change: Outline the principles or strategies needed to fix the problem. Be specific but accessible.
@@ -86,7 +86,7 @@ Final Answer Requirements:
 {
   "title": "Deep dive article headline (no colon)",
   "excerpt": "1-2 sentence hook, max ~300 characters",
-  "body": "Full markdown article here, including Executive Summary, The Big Picture, Why Current Approaches Fail, What Needs to Change, and Looking Ahead sections, with clear headings and short paragraphs.",
+  "body": "Full markdown article here, including Summary, The Big Picture, Why Current Approaches Fail, What Needs to Change, and Looking Ahead sections, with clear headings and short paragraphs.",
   "tags": ["tag1", "tag2", "tag3"],
   "inputTopic": "Input Topic: [CATCHY_HEADLINE] - [CORE_INSIGHTS]",
   "imageConcept": "One-sentence abstract visual concept using the required visual keywords"

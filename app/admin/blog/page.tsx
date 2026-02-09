@@ -9,10 +9,39 @@ import { Label } from '@/components/ui/label'
 import { Lock } from 'lucide-react'
 import { PendingBlogPost } from '@/lib/pendingBlogs'
 import ReactMarkdown from 'react-markdown'
+import PortableTextRenderer from '@/components/PortableTextRenderer'
 import { Avatar } from './Avatar'
 
 const BLOG_ADMIN_PASSWORD = 'vl@2025'
 const BLOG_ADMIN_AUTH_KEY = 'blog-admin-auth'
+
+function getDisplayMarkdownFromBody(post: PendingBlogPost): string {
+  const rawBody = post.body
+  if (!rawBody) return ''
+
+  const trimmed = rawBody.trim()
+
+  // Handle legacy entries where the entire JSON payload was stored in `body`
+  if (trimmed.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(trimmed)
+
+      // If the parsed value itself is a markdown string
+      if (typeof parsed === 'string') {
+        return parsed
+      }
+
+      // If the JSON has a `body` field containing markdown
+      if (parsed && typeof parsed.body === 'string') {
+        return parsed.body
+      }
+    } catch {
+      // Fall through to returning the raw body below
+    }
+  }
+
+  return rawBody
+}
 
 export default function BlogAdminPage() {
   const [pendingPosts, setPendingPosts] = useState<PendingBlogPost[]>([])
@@ -478,7 +507,11 @@ export default function BlogAdminPage() {
                 <div>
                   <h3 className="text-lg font-semibold mb-2">Content</h3>
                   <div className="prose prose-invert max-w-none text-gray-400 break-words overflow-x-hidden [&>h1]:text-white [&>h2]:text-white [&>h3]:text-white [&>h4]:text-white [&>h5]:text-white [&>h6]:text-white [&>h1]:mt-6 [&>h2]:mt-6 [&>h3]:mt-4 [&>h4]:mt-4 [&>h5]:mt-3 [&>h6]:mt-3 [&>h1]:text-2xl [&>h2]:text-xl [&>h3]:text-lg [&>h1]:font-bold [&>h2]:font-semibold [&>h3]:font-semibold [&>p]:text-gray-400 [&>p]:break-words [&>ul]:text-gray-400 [&>ol]:text-gray-400 [&>li]:text-gray-400 [&>li]:break-words [&>code]:bg-slate-800 [&>code]:text-slate-200 [&>code]:px-1 [&>code]:py-0.5 [&>code]:rounded [&>code]:break-all [&>pre]:bg-slate-900 [&>pre]:p-4 [&>pre]:rounded-lg [&>pre]:overflow-x-auto [&>pre]:max-w-full [&>a]:text-blue-400 [&>a]:hover:text-blue-300 [&>a]:break-all">
-                    <ReactMarkdown>{selectedPost.body}</ReactMarkdown>
+                    {selectedPost.bodyPortableText && Array.isArray(selectedPost.bodyPortableText) && selectedPost.bodyPortableText.length > 0 ? (
+                      <PortableTextRenderer content={selectedPost.bodyPortableText} />
+                    ) : (
+                      <ReactMarkdown>{getDisplayMarkdownFromBody(selectedPost)}</ReactMarkdown>
+                    )}
                   </div>
                 </div>
 

@@ -104,14 +104,15 @@ const BlogPostView: React.FC<BlogPostViewProps> = ({ post }) => {
       </section>
 
       {/* Article Content */}
-      <section className="py-20 md:py-40">
+      <section className="pb-20 md:pb-20 md:pt-2 pt-2">
         <div className="container mx-auto px-5 md:px-8 lg:px-12">
           <div className="max-w-6xl mx-auto">
             <div className="prose prose-slate prose-xl font-light leading-relaxed text-slate-600">
+              {/* Intro excerpt paragraph hidden as requested
               <p className="text-xl md:text-2xl lg:text-3xl text-obsidian-900 font-medium mb-12 md:mb-16 leading-relaxed">
                 {post.excerpt}
               </p>
-              
+              */}
               <div className="space-y-8 md:space-y-12 text-base md:text-lg lg:text-xl">
                 <PortableTextRenderer content={post.content} />
               </div>
