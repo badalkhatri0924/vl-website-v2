@@ -73,14 +73,14 @@ const ProductPostView: React.FC<ProductPostViewProps> = ({ product }) => {
             )}
 
             {/* View product (external link) */}
-            {/* {product.link && (
+            {product.link && (
               <a
                 href={product.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group mt-4 inline-flex items-center gap-4 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-white/90 shadow-[0_12px_40px_rgba(15,23,42,0.6)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:bg-white hover:text-obsidian-900"
+                className="group mt-4 inline-flex items-center gap-4 border-white/20  text-white/90 shadow-[0_12px_40px_rgba(15,23,42,0.6)] backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:text-accent"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white transition-all duration-300 group-hover:bg-obsidian-900 group-hover:text-white">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full text-white transition-all duration-300 group-hover:bg-obsidian-900 group-hover:text-white">
                   <svg
                     className="h-4 w-4"
                     fill="none"
@@ -96,15 +96,15 @@ const ProductPostView: React.FC<ProductPostViewProps> = ({ product }) => {
                   </svg>
                 </span>
                 <div className="flex flex-col text-left">
-                  <span className="text-xs font-black uppercase tracking-[0.25em]">
+                  {/* <span className="text-xs font-black uppercase tracking-[0.25em]">
                     Visit website
-                  </span>
+                  </span> */}
                   <span className="text-sm font-semibold">
                     Explore {product.name} live
                   </span>
                 </div>
               </a>
-            )} */}
+            )}
           </div>
         </div>
       </section>
