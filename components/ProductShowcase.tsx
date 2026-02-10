@@ -107,17 +107,6 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
       </div>
   );
 
-  if (product.link) {
-    const isExternal = product.link.startsWith('http');
-    if (isExternal) {
-      return (
-        <a href={product.link} target="_blank" rel="noopener noreferrer" className="block">
-          {cardContent}
-        </a>
-      );
-    }
-    return <Link href={product.link} className="block">{cardContent}</Link>;
-  }
   return <Link href={`/products/${product.id}`} className="block">{cardContent}</Link>;
 };
 

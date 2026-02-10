@@ -15,12 +15,12 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+        {/* <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         <div className="absolute top-6 left-6">
           <div className="bg-white px-3 py-1 flex items-center space-x-2 text-sm font-black uppercase tracking-ultra text-obsidian-900 border border-slate-100 shadow-sm">
             <span>{product.category}</span>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Content Body */}
@@ -64,21 +64,6 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     </div>
   );
 
-  if (product.link) {
-    const isExternal = product.link.startsWith('http');
-    if (isExternal) {
-      return (
-        <a href={product.link} target="_blank" rel="noopener noreferrer" className="block">
-          {cardContent}
-        </a>
-      );
-    }
-    return (
-      <Link href={product.link} className="block">
-        {cardContent}
-      </Link>
-    );
-  }
   return (
     <Link href={`/products/${product.id}`} className="block">
       {cardContent}
