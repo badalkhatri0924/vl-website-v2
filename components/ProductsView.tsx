@@ -13,7 +13,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
         <img 
           src={product.imageUrl} 
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+          className="w-full h-full object-cover"
         />
         {/* <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         <div className="absolute top-6 left-6">
