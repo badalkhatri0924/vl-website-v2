@@ -56,8 +56,10 @@ const ProductShowcase: React.FC = () => {
 };
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
-  const cardContent = (
-    <div className="bg-white border border-slate-100 flex flex-col h-full transition-all duration-500 overflow-hidden hover:border-accent/40 hover:shadow-lg cursor-pointer group">
+  return (
+    <div className="bg-white border border-slate-100 flex flex-col h-full transition-all duration-500 overflow-hidden hover:border-accent/40 hover:shadow-lg group">
+      {/* Card content linking to internal product page */}
+      <Link href={`/products/${product.id}`} className="flex flex-col flex-grow cursor-pointer">
         <div className="h-60 relative overflow-hidden bg-slate-100">
           <img
             src={product.imageUrl}
@@ -66,11 +68,6 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
             loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-          {/* <div className="absolute top-4 left-4">
-            <span className="bg-white px-3 py-1 text-sm font-black uppercase tracking-ultra text-obsidian-900 border border-slate-100 shadow-sm">
-              {product.category}
-            </span>
-          </div> */}
         </div>
         <div className="p-6 md:p-8 flex flex-col flex-grow">
           <h3 className="text-xl font-display font-black text-obsidian-900 leading-tight mb-2 group-hover:text-accent transition-colors">
@@ -94,20 +91,27 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
               ))}
             </ul>
           </div>
-          {/* View Details button */}
-          <div className="pt-6 border-t border-slate-100">
-            <div className="inline-flex items-center space-x-3 bg-accent text-white px-6 py-3 text-sm font-black uppercase tracking-ultra group-hover:bg-obsidian-900 transition-all duration-300 w-fit">
-              <span>View Details</span>
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </div>
-          </div>
         </div>
-      </div>
-  );
+      </Link>
 
-  return <Link href={`/products/${product.id}`} className="block">{cardContent}</Link>;
+      {/* View Details button - opens product website in new tab using Next Link */}
+      <div className="pt-6 border-t border-slate-100 px-6 md:px-8 pb-8">
+        {product.link && (
+          <Link
+            href={product.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center space-x-3 bg-accent text-white px-6 py-3 text-sm font-black uppercase tracking-ultra group-hover:bg-obsidian-900 transition-all duration-300 w-fit"
+          >
+            <span>View Details</span>
+            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default ProductShowcase;
