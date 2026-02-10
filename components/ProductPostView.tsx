@@ -197,11 +197,11 @@ const ProductPostView: React.FC<ProductPostViewProps> = ({ product }) => {
             )}
 
             {/* Product Image */}
-            <div className="mb-20 relative h-96 md:h-[700px] overflow-hidden bg-slate-100 border border-slate-100 rounded-lg">
+            <div className="mb-20 relative h-96 md:h-[700px] overflow-hidden bg-slate-100 border border-slate-100 rounded-lg p-4">
               <img 
                 src={product.imageUrl} 
                 alt={product.name} 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover border border-slate-200 rounded-lg"
                 onError={(e) => {
                   console.error('Image failed to load:', product.imageUrl);
                 }}
