@@ -4,6 +4,7 @@ import { markdownToPortableText } from '@/lib/sanity/portableTextConverter'
 import { getDefaultAuthorId, getAuthors, uploadImageBufferToSanity, testSanityConnection } from '@/lib/sanity/writeClient'
 import { generateBlogImage, calculateReadTime, countWords } from '@/lib/content/imageHandler'
 import { addPendingBlogPost } from '@/lib/pendingBlogs'
+import { getNextIdeaIndex } from '@/lib/blogIdeaRotation'
 
 /**
  * Generate a slug from a title
@@ -74,8 +75,13 @@ export async function POST(request: NextRequest) {
 
     // Generate content using AI (deep-dive prompt flow)
     console.log(`Generating deep-dive blog content, provider: gemini`)
-    
-    const blogContent = await generateBlogContent('')
+
+    // Determine which of the 5 internally brainstormed ideas to use
+    // in a fixed rotation: 1 → 2 → 3 → 4 → 5 → 1 → ...
+    const preferredIdeaIndex = await getNextIdeaIndex()
+    const basePrompt = `PREFERRED_IDEA_INDEX: ${preferredIdeaIndex}`
+
+    const blogContent = await generateBlogContent(basePrompt)
 
     // Get or use default author
     let finalAuthorId = authorId

@@ -38,7 +38,24 @@ Visual Keywords for the Abstract Visual Concept:
 - Use: Ascending, Polished White Marble, Glowing Blue (#0564DF), Crystal, Flow, Light, Clean Lines, Transparent Glass, Gradient, Levitation.
 - Avoid: Dark backgrounds, shadows, heavy stone, people, text, cluttered scenes.
 
-From these five ideas, select the single strongest one for senior decision-makers in government, enterprise, or mission-driven organisations. Construct an Input Topic string using this exact format (this will be used for the deep-dive article and for image generation):
+SELECTION RULE (USE PROVIDED INDEX)
+----
+
+Internally, you will still brainstorm exactly five distinct ideas, and you must number them from 1 to 5 in the order you create them.
+
+At the top of this prompt, you may see a line of the form:
+
+PREFERRED_IDEA_INDEX: N
+
+Where:
+- N is an integer between 1 and 5, inclusive.
+
+Selection rules:
+- Do NOT select the “single strongest” idea based on your own judgement.
+- Instead, you MUST select the single idea whose index number exactly matches PREFERRED_IDEA_INDEX.
+- If PREFERRED_IDEA_INDEX is missing or invalid, default to using idea 1.
+
+Construct an Input Topic string from the selected idea using this exact format (this will be used for the deep-dive article and for image generation):
 
 Input Topic: [CATCHY_HEADLINE] - [CORE_INSIGHTS]
 
