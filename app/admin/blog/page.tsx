@@ -516,7 +516,7 @@ export default function BlogAdminPage() {
                         variant="secondary"
                         onClick={() => handleReject(post.id)}
                         disabled={processing === `${post.id}-reject`}
-                        className="flex-1 min-w-[120px] bg-red-600 hover:bg-red-700 text-white hover:text-white border-red-600"
+                        className="flex-1 min-w-[120px] bg-red-500 hover:bg-red-600 text-white hover:text-white border-red-600"
                       >
                         {processing === `${post.id}-reject` ? 'Processing...' : 'Reject'}
                       </Button>
