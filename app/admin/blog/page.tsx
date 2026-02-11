@@ -426,12 +426,24 @@ export default function BlogAdminPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
             {pendingPosts.map((post) => (
-              <Card key={post.id}>
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row items-start justify-between gap-6">
-                    <div className="flex-1 min-w-0">
+              <Card key={post.id} className="h-full">
+                <CardContent className="p-6 h-full flex flex-col">
+                  <div className="space-y-4">
+                    {/* Image on top */}
+                    {post.imageUrl && (
+                      <div className="w-full max-w-3xl mx-auto">
+                        <img 
+                          src={post.imageUrl} 
+                          alt={post.title}
+                          className="w-full max-h-[260px] object-cover rounded-lg border border-white/10"
+                        />
+                      </div>
+                    )}
+
+                    {/* Content */}
+                    <div>
                       <h2 className="text-2xl font-display font-bold mb-2">{post.title}</h2>
                       <p className="text-slate-300 mb-3">{post.excerpt}</p>
                       <div className="flex flex-wrap gap-4 text-sm text-slate-400">
@@ -441,46 +453,42 @@ export default function BlogAdminPage() {
                           <span>Tags: <span className="text-white">{post.tags.join(', ')}</span></span>
                         )}
                       </div>
-                      {post.imageUrl && (
-                      <div className="mt-4">
-                          <img 
-                            src={post.imageUrl} 
-                            alt={post.title}
-                            className="w-full max-w-xs md:max-w-sm rounded-lg border border-white/10"
-                          />
-                        </div>
-                      )}
                     </div>
-                    <div className="flex flex-col gap-2 w-full md:w-[220px] flex-shrink-0 mt-4 md:mt-0">
-                      <Button
-                        variant="secondary"
-                        onClick={() => handleViewDetails(post)}
-                        disabled={processing?.startsWith(`${post.id}-`)}
-                      >
-                        View Details
-                      </Button>
+
+                    {/* Buttons in one row */}
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      
                       <Button
                         variant="primary"
                         onClick={() => handleApprove(post.id, 'draft')}
                         disabled={processing === `${post.id}-approve-draft`}
+                        className="flex-1 min-w-[150px]"
                       >
-                        {processing === `${post.id}-approve-draft` ? 'Processing...' : 'Approve as Draft'}
+                        {processing === `${post.id}-approve-draft` ? 'Processing...' : 'Draft'}
                       </Button>
                       <Button
                         variant="primary"
                         onClick={() => handleApprove(post.id, 'published')}
                         disabled={processing === `${post.id}-approve-published`}
-                        className="bg-green-600 hover:bg-green-700"
+                        className="flex-1 min-w-[170px] bg-green-600 hover:bg-green-700"
                       >
-                        {processing === `${post.id}-approve-published` ? 'Processing...' : 'Approve & Publish'}
+                        {processing === `${post.id}-approve-published` ? 'Processing...' : 'Publish'}
                       </Button>
                       <Button
                         variant="secondary"
                         onClick={() => handleReject(post.id)}
                         disabled={processing === `${post.id}-reject`}
-                        className="bg-red-600/20 hover:bg-red-600/30 text-red-400 border-red-600/30"
+                        className="flex-1 min-w-[120px] bg-red-600 hover:bg-red-700 text-white border-red-600"
                       >
                         {processing === `${post.id}-reject` ? 'Processing...' : 'Reject'}
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        onClick={() => handleViewDetails(post)}
+                        disabled={processing?.startsWith(`${post.id}-`)}
+                        className="flex-1 min-w-[120px]"
+                      >
+                        View Details
                       </Button>
                     </div>
                   </div>
@@ -557,7 +565,7 @@ export default function BlogAdminPage() {
                     onClick={() => handleApprove(selectedPost.id, 'draft')}
                     disabled={processing === `${selectedPost.id}-approve-draft`}
                   >
-                    {processing === `${selectedPost.id}-approve-draft` ? 'Processing...' : 'Approve as Draft'}
+                    {processing === `${selectedPost.id}-approve-draft` ? 'Processing...' : 'Draft'}
                   </Button>
                   <Button
                     variant="primary"
@@ -565,13 +573,13 @@ export default function BlogAdminPage() {
                     disabled={processing === `${selectedPost.id}-approve-published`}
                     className="bg-green-600 hover:bg-green-700"
                   >
-                    {processing === `${selectedPost.id}-approve-published` ? 'Processing...' : 'Approve & Publish'}
+                    {processing === `${selectedPost.id}-approve-published` ? 'Processing...' : 'Publish'}
                   </Button>
                   <Button
                     variant="secondary"
                     onClick={() => handleReject(selectedPost.id)}
                     disabled={processing === `${selectedPost.id}-reject`}
-                    className="bg-red-600/20 hover:bg-red-600/30 text-red-400 border-red-600/30"
+                    className="bg-red-600 hover:bg-red-700 text-white border-red-600"
                   >
                     {processing === `${selectedPost.id}-reject` ? 'Processing...' : 'Reject'}
                   </Button>
