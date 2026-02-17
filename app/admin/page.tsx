@@ -107,6 +107,7 @@ export default function AdminPage() {
     }
     setGenerateError(null)
     setGenerating(true)
+    // Clear any in-modal preview; we show content in the main page instead
     setLinkedInPosts([])
     try {
       const res = await fetch('/api/linkedin/generate', {
@@ -133,7 +134,7 @@ export default function AdminPage() {
         })
         if (saveRes.ok) {
           await fetchBatches()
-          // Close the modal once content is successfully generated & saved
+          // Close the modal and reset the form once content is saved.
           setShowLinkedInForm(false)
           setProductName('')
           setProductUrl('')

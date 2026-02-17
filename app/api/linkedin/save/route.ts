@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
             content: typeof p?.content === 'string' ? p.content : '',
             hook: typeof p?.hook === 'string' ? p.hook : undefined,
           }))
-          .filter((p) => p.content.length > 0)
+          .filter((p: { content: string; hook?: string }) => p.content.length > 0)
       : []
 
     if (!productName || !productUrl || posts.length === 0) {
