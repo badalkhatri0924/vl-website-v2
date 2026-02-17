@@ -388,7 +388,7 @@ export default function AdminPage() {
                   Generate product post
                 </Button>
                 <p className="text-[11px] text-slate-400 max-w-xs md:text-right">
-                  No data is stored on third-party tools. Copies are saved only inside this admin for your team.
+                  Copies are saved only inside this admin for your team.
                 </p>
               </div>
             </CardContent>
