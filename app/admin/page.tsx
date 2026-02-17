@@ -546,9 +546,11 @@ export default function AdminPage() {
               />
             </div>
             {generateError && <p className="text-sm text-red-400">{generateError}</p>}
-            <Button type="submit" disabled={generating} className="w-full">
-              {generating ? 'Generating content…' : 'Generate 3–4 posts'}
-            </Button>
+            {!generating && (
+              <Button type="submit" className="w-full">
+                Generate 3–4 posts
+              </Button>
+            )}
           </form>
 
           {generating && (
