@@ -119,7 +119,6 @@ export default function AdminPage() {
       })
       const data = await res.json()
       if (res.ok && data.success && Array.isArray(data.posts)) {
-        setLinkedInPosts(data.posts)
         const saveRes = await fetch('/api/linkedin/save', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -131,6 +130,11 @@ export default function AdminPage() {
         })
         if (saveRes.ok) {
           await fetchBatches()
+          // Close the modal once content is successfully generated & saved
+          setShowLinkedInForm(false)
+          setProductName('')
+          setProductUrl('')
+          setLinkedInPosts([])
         }
       } else {
         setGenerateError(data?.error || 'Failed to generate content. Please try again.')
@@ -487,9 +491,12 @@ export default function AdminPage() {
       )}
 
       <Dialog open={showLinkedInForm} onOpenChange={setShowLinkedInForm}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" onClose={() => setShowLinkedInForm(false)}>
+        <DialogContent
+          className="w-full max-w-full md:max-w-xl max-h-[90vh] overflow-y-auto"
+          onClose={() => setShowLinkedInForm(false)}
+        >
           <DialogHeader>
-            <DialogTitle>Generate LinkedIn content</DialogTitle>
+            <DialogTitle>Generate content</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleGenerateLinkedIn} className="space-y-6">
             <div>
@@ -517,7 +524,7 @@ export default function AdminPage() {
             </div>
             {generateError && <p className="text-sm text-red-400">{generateError}</p>}
             <Button type="submit" disabled={generating} className="w-full">
-              {generating ? 'Analyzing URL & generating content…' : 'Generate 3–4 posts'}
+              {generating ? 'Generating content…' : 'Generate 3–4 posts'}
             </Button>
           </form>
 
