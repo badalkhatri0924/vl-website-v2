@@ -229,7 +229,7 @@ export default function AdminPage() {
         key={postKey}
         className={`relative overflow-hidden border-white/10 ${
           isClaimed
-            ? 'bg-slate-900/80 cursor-not-allowed hover:bg-slate-900/80'
+            ? 'bg-slate-900/80 cursor-not-allowed hover:bg-slate-900/80 select-none'
             : 'bg-slate/5 cursor-default hover:bg-slate/5'
         }`}
       >
