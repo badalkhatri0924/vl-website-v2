@@ -124,8 +124,8 @@ All examples are provided in the JSON file under `curlExamples` section.
 
 - [ ] Test Sanity connection works
 - [ ] Get categories returns all categories
-- [ ] Generate post with each category
-- [ ] Generate post with specific topic
+- [ ] Generate product post with each category
+- [ ] Generate product post with specific topic
 - [ ] Generate and publish immediately
 - [ ] Test error handling (invalid category, missing fields)
 - [ ] Verify images are uploaded and rendering
