@@ -14,14 +14,23 @@ import { db } from './firebase/config'
 export interface NewPostItem {
   content: string
   hook?: string
+  /** 0-based index into the batch's sourceArticles – which article this post is based on */
+  sourceArticleIndex?: number
   copiedBy?: string
   copiedAt?: string
+}
+
+export interface SourceArticle {
+  title: string
+  link: string
 }
 
 export interface NewPostBatch {
   id: string
   newsCategory: string
   newsUrl: string
+  /** Article sources used to generate posts – share these links to show where content came from */
+  sourceArticles?: SourceArticle[]
   posts: NewPostItem[]
   createdAt: string
 }
@@ -56,13 +65,31 @@ function normalizePosts(posts: unknown): NewPostItem[] {
   if (!Array.isArray(posts)) return []
   return posts.map((p) => {
     const item = p && typeof p === 'object' ? (p as Record<string, unknown>) : {}
+    const rawIndex = item.sourceArticleIndex
+    const sourceArticleIndex =
+      typeof rawIndex === 'number' && Number.isFinite(rawIndex) && rawIndex >= 0
+        ? Math.floor(rawIndex)
+        : undefined
     return {
       content: typeof item.content === 'string' ? item.content : '',
       hook: typeof item.hook === 'string' ? item.hook : undefined,
+      sourceArticleIndex,
       copiedBy: typeof item.copiedBy === 'string' ? item.copiedBy : undefined,
       copiedAt: parseCopiedAt(item.copiedAt),
     }
   })
+}
+
+function normalizeSourceArticles(raw: unknown): SourceArticle[] {
+  if (!Array.isArray(raw)) return []
+  return raw
+    .map((a) => {
+      const o = a && typeof a === 'object' ? (a as Record<string, unknown>) : {}
+      const title = typeof o.title === 'string' ? o.title : ''
+      const link = typeof o.link === 'string' ? o.link : ''
+      return title && link ? { title, link } : null
+    })
+    .filter((a): a is SourceArticle => a !== null)
 }
 
 /**
@@ -79,6 +106,7 @@ export async function getNewPostBatches(): Promise<NewPostBatch[]> {
         id: docSnap.id,
         newsCategory: (data.newsCategory ?? data.productName) ?? '',
         newsUrl: (data.newsUrl ?? data.productUrl) ?? '',
+        sourceArticles: normalizeSourceArticles(data.sourceArticles),
         posts: normalizePosts(data.posts),
         createdAt: parseCreatedAt(data),
       })
@@ -95,6 +123,7 @@ export async function getNewPostBatches(): Promise<NewPostBatch[]> {
           id: docSnap.id,
           newsCategory: (data.newsCategory ?? data.productName) ?? '',
           newsUrl: (data.newsUrl ?? data.productUrl) ?? '',
+          sourceArticles: normalizeSourceArticles(data.sourceArticles),
           posts: normalizePosts(data.posts),
           createdAt: parseCreatedAt(data),
         })
@@ -117,6 +146,7 @@ export async function addNewPostBatch(
   const docRef = await addDoc(collection(db, COLLECTION_NAME), {
     newsCategory: payload.newsCategory,
     newsUrl: payload.newsUrl,
+    sourceArticles: payload.sourceArticles ?? [],
     posts: payload.posts,
     createdAt,
   })
@@ -124,6 +154,7 @@ export async function addNewPostBatch(
     id: docRef.id,
     newsCategory: payload.newsCategory,
     newsUrl: payload.newsUrl,
+    sourceArticles: payload.sourceArticles,
     posts: payload.posts,
     createdAt: createdAt.toDate().toISOString(),
   }

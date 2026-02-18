@@ -13,13 +13,14 @@ import type { NewPostBatch } from '@/lib/newPosts'
 
 const ADMIN_USER_NAME_KEY = 'admin-user-name'
 
-const NEWS_OPTIONS: { id: 'ai-news' | 'tech-india' | 'tech-global'; label: string }[] = [
+const NEWS_OPTIONS: { id: 'ai-news' | 'tech-india' | 'tech-global' | 'trend-worldwide'; label: string }[] = [
   { id: 'ai-news', label: 'AI News' },
   { id: 'tech-india', label: 'Tech Industry – India' },
   { id: 'tech-global', label: 'Tech Industry – Global' },
+  { id: 'trend-worldwide', label: 'Latest Trend News – Worldwide' },
 ]
 
-type NewsCategoryId = 'ai-news' | 'tech-india' | 'tech-global'
+type NewsCategoryId = 'ai-news' | 'tech-india' | 'tech-global' | 'trend-worldwide'
 
 export default function NewsPostPage() {
   const [userName, setUserName] = useState('')
@@ -91,17 +92,23 @@ export default function NewsPostPage() {
       const data = await res.json()
       if (res.ok && data.success) {
         setNewsArticles(Array.isArray(data.news) ? data.news : [])
-        const posts = (data.posts || []).map((p: { content: string; hook?: string }) => ({
+        const posts = (data.posts || []).map((p: { content: string; hook?: string; sourceArticleIndex?: number }) => ({
           content: p.content,
           hook: p.hook,
+          sourceArticleIndex: p.sourceArticleIndex,
         }))
         if (posts.length > 0) {
+          const sourceArticles = (Array.isArray(data.news) ? data.news : []).slice(0, 12).map((a: { title?: string; link?: string }) => ({
+            title: typeof a?.title === 'string' ? a.title : '',
+            link: typeof a?.link === 'string' ? a.link : '',
+          })).filter((a: { title: string; link: string }) => a.title && a.link)
           const saveRes = await fetch('/api/news-posts/save', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               newsCategory: option?.label ?? category,
               newsUrl: `https://news.google.com?category=${category}`,
+              sourceArticles,
               posts,
             }),
           })
@@ -180,7 +187,7 @@ export default function NewsPostPage() {
   const renderPostCard = (
     post: LinkedInPostItem,
     postKey: string,
-    options?: { batchId: string; postIndex: number }
+    options?: { batchId: string; postIndex: number; sourceArticle?: { title: string; link: string } }
   ) => {
     const isClaimed = Boolean(post.copiedBy?.trim())
     const isJustCopied = copiedKey === postKey
@@ -203,6 +210,20 @@ export default function NewsPostPage() {
             <p className="text-slate-200 font-bold text-3xl mb-6">{post.hook}</p>
           )}
           <p className="text-slate-200 text-sm whitespace-pre-wrap mb-3">{post.content}</p>
+          {options?.sourceArticle && (
+            <div className="mb-3 rounded border border-sky-500/20 bg-slate-900/40 px-3 py-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 mb-1">Source for this post</p>
+              <a
+                href={options.sourceArticle.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent text-xs hover:underline line-clamp-2 flex items-start gap-1"
+              >
+                <ExternalLink size={10} className="shrink-0 mt-0.5" />
+                <span>{options.sourceArticle.title || options.sourceArticle.link}</span>
+              </a>
+            </div>
+          )}
           <div className="flex items-center gap-3 flex-wrap pt-4">
             {isClaimed ? (
               <span className="inline-flex items-center gap-2 rounded-full bg-sky-500/10 text-sky-100 px-3 py-2 text-[11px] font-medium border border-sky-400/40">
@@ -265,6 +286,7 @@ export default function NewsPostPage() {
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-400">
                 <span>✓ AI News</span>
                 <span>✓ Tech India / Global</span>
+                <span>✓ Latest Trend – Worldwide</span>
                 <span>✓ 3–4 variations</span>
               </div>
             </div>
@@ -397,20 +419,18 @@ export default function NewsPostPage() {
               return categoryBatches.map((batch) => (
                 <Card key={batch.id} className="bg-white/5 border-white/10 mb-4 last:mb-0">
                   <CardContent className="p-6">
-                    <a
-                      href={batch.newsUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-accent text-sm hover:underline flex items-center gap-1 mb-2"
-                    >
-                      {batch.newsUrl}
-                      <ExternalLink size={14} />
-                    </a>
-                    <p className="text-slate-500 text-xs mb-6">{formatDate(batch.createdAt)}</p>
+                    <p className="text-slate-500 text-xs mb-4">{formatDate(batch.createdAt)}</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {batch.posts.map((post, i) =>
-                        renderPostCard(post, `saved-${batch.id}-${i}`, { batchId: batch.id, postIndex: i })
-                      )}
+                      {batch.posts.map((post, i) => {
+                        const sourceArticles = batch.sourceArticles && batch.sourceArticles.length > 0 ? batch.sourceArticles : []
+                        const index = post.sourceArticleIndex ?? i % sourceArticles.length
+                        const sourceArticle = sourceArticles[index]
+                        return renderPostCard(post, `saved-${batch.id}-${i}`, {
+                          batchId: batch.id,
+                          postIndex: i,
+                          sourceArticle,
+                        })
+                      })}
                     </div>
                   </CardContent>
                 </Card>
@@ -454,12 +474,12 @@ export default function NewsPostPage() {
           </div>
         )}
 
-        {!loadingBatches && !newsGenerating && newsArticles.length === 0 && !newsError && batches.length === 0 && (
+        {/* {!loadingBatches && !newsGenerating && newsArticles.length === 0 && !newsError && batches.length === 0 && (
           <div className="flex flex-col items-center gap-3 text-center py-12 mb-8">
             <Avatar state="thinking" className="w-20 h-20" />
             <p className="text-slate-500 text-sm">Select a category above to fetch news and generate posts.</p>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   )
