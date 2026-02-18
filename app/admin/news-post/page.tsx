@@ -356,12 +356,12 @@ export default function NewsPostPage() {
         ) : (
           <div className="w-full mb-8">
             <div className="mb-4 flex flex-col gap-3">
-              <div className="relative md:hidden">
+              <div className={`relative md:hidden ${isCategoryDropdownOpen ? 'z-[100]' : ''}`}>
                 <label className="block text-xs font-medium text-slate-400 mb-1">Select category</label>
                 <button
                   type="button"
                   onClick={() => setIsCategoryDropdownOpen((o) => !o)}
-                  className="flex w-full items-center justify-between rounded-lg border border-sky-500/40 bg-slate-950/90 px-4 py-2.5 text-left text-[13px] text-slate-50"
+                  className="flex w-full items-center justify-between rounded-lg border border-sky-500/40 bg-slate-950 px-4 py-2.5 text-left text-[13px] text-slate-50"
                 >
                   <span className="truncate font-medium">
                     {NEWS_OPTIONS.find((o) => o.id === activeSavedCategory)?.label ?? 'Select'}
@@ -369,7 +369,7 @@ export default function NewsPostPage() {
                   <ChevronDown size={16} className={`ml-2 ${isCategoryDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {isCategoryDropdownOpen && (
-                  <div className="absolute z-20 mt-2 max-h-64 w-full overflow-y-auto rounded-lg border border-sky-500/30 bg-slate-950/98 shadow-xl">
+                  <div className="absolute z-[100] mt-2 max-h-64 w-full overflow-y-auto rounded-lg border border-sky-500/30 bg-slate-950 shadow-xl">
                     {NEWS_OPTIONS.map((opt) => (
                       <button
                         key={opt.id}
@@ -379,7 +379,9 @@ export default function NewsPostPage() {
                           setIsCategoryDropdownOpen(false)
                         }}
                         className={`flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] ${
-                          opt.id === activeSavedCategory ? 'bg-accent/15 text-accent' : 'text-slate-100 hover:bg-white/5'
+                          opt.id === activeSavedCategory
+                            ? 'bg-sky-500/20 text-accent font-medium'
+                            : 'bg-slate-950 text-slate-100 hover:bg-slate-800 active:bg-slate-700'
                         }`}
                       >
                         {opt.label}
@@ -394,7 +396,7 @@ export default function NewsPostPage() {
                     key={opt.id}
                     type="button"
                     onClick={() => setActiveSavedCategory(opt.id)}
-                    className={`px-4 py-3 font-display font-bold text-sm uppercase tracking-ultra border-b-2 -mb-px ${
+                    className={`px-4 py-3 font-display font-bold text-sm  tracking-wide border-b-2 -mb-px ${
                       opt.id === activeSavedCategory
                         ? 'text-accent border-accent bg-accent/5'
                         : 'text-slate-400 border-transparent hover:text-white hover:bg-white/5'
