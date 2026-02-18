@@ -1,6 +1,6 @@
 import { Product } from '@/types';
 
-/** Product IDs to show on the landing page (order preserved) — 4 cards in 2×2 grid */
+/** Product IDs to show on the landing page (order preserved) - 4 cards in 2×2 grid */
 export const LANDING_PRODUCT_IDS = ['docxpert', 'felloz', 'uncloud', 'clef'] as const;
 
 export const PRODUCTS: Product[] = [
@@ -423,6 +423,23 @@ export const PRODUCTS: Product[] = [
         question: 'Who is Clef for?',
         answer: 'Clef is for organizations that want to adopt AI at scale while maintaining oversight, safety, and compliance.'
       }
+    ]
+  },
+  {
+    id: 'memry',
+    name: 'Memry',
+    tagline: 'Save links once. Never forget why they mattered.',
+    description:
+      'Memry helps you save links once—and never forget why they mattered. Turn fleeting tabs and bookmarks into a searchable, contextual library you actually come back to.',
+    imageUrl: 'https://savememry.com/og-image.png',
+    category: 'Knowledge Management',
+    link: 'https://savememry.com/',
+    testimonial: 'Save links once. Never forget why they mattered.',
+    features: [
+      'Save and organize important links',
+      'Add context, notes, and highlights',
+      'Searchable personal knowledge base',
+      'Collections you actually revisit'
     ]
   }
   // {
