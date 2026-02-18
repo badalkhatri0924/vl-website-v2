@@ -454,8 +454,11 @@ export default function NewsPostPage() {
           </div>
         )}
 
-        {!newsGenerating && newsArticles.length === 0 && !newsError && batches.length === 0 && (
-          <p className="text-slate-500 text-sm mb-8">Select a category above to fetch news and generate posts.</p>
+        {!loadingBatches && !newsGenerating && newsArticles.length === 0 && !newsError && batches.length === 0 && (
+          <div className="flex flex-col items-center gap-3 text-center py-12 mb-8">
+            <Avatar state="thinking" className="w-20 h-20" />
+            <p className="text-slate-500 text-sm">Select a category above to fetch news and generate posts.</p>
+          </div>
         )}
       </div>
     </div>
