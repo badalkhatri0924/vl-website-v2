@@ -7,7 +7,7 @@ import { ExternalLink, FileText, Newspaper, ArrowRight, LayoutGrid, PenLine } fr
 const LINKS = [
   {
     href: '/admin/product-post',
-    label: 'LinkedIn product post',
+    label: 'LinkedIn Product post',
     description: 'Generate posts from any product URL. Analyze the page, get 3–4 variations, save for your team.',
     icon: FileText,
     accent: 'from-amber-500/20 to-orange-500/10',
