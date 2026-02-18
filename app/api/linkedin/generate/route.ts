@@ -2,19 +2,44 @@ import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenAI } from '@google/genai'
 import { buildLinkedInPrompt } from '@/lib/linkedinPrompt'
 
-/**
- * Extract meaningful content from a URL's HTML for context.
- * Uses meta tags and title; avoids heavy DOM parsing.
- */
-function extractContentFromHtml(html: string): { title: string; description: string; snippet: string } {
-  const safe = (s: string) => (s || '').trim().replace(/\s+/g, ' ').slice(0, 2000)
+const stripHtml = (s: string) => (s || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+const safe = (s: string, max = 2000) => (s || '').trim().replace(/\s+/g, ' ').slice(0, max)
 
+/** Extract text from all matches of a regex; strip HTML and dedupe. */
+function extractAll(html: string, tagRegex: RegExp, maxItems: number): string[] {
+  const seen = new Set<string>()
+  const out: string[] = []
+  let m: RegExpExecArray | null
+  const re = new RegExp(tagRegex.source, tagRegex.flags)
+  while ((m = re.exec(html)) !== null && out.length < maxItems) {
+    const text = stripHtml(m[1]).trim()
+    if (text && text.length > 2 && !seen.has(text)) {
+      seen.add(text)
+      out.push(text)
+    }
+  }
+  return out
+}
+
+/**
+ * Extract structured landing-page content for context.
+ * Uses meta, JSON-LD, and semantic sections (h1, h2, p, li) so each product type
+ * is represented by its actual headline, value prop, and features.
+ */
+function extractContentFromHtml(html: string): {
+  title: string
+  description: string
+  headline: string
+  subheadline: string
+  keyPoints: string[]
+  paragraphs: string[]
+  structuredContext: string
+} {
   let title = ''
   let description = ''
 
   const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)
-  if (titleMatch) title = titleMatch[1].replace(/<[^>]+>/g, '').trim()
-
+  if (titleMatch) title = stripHtml(titleMatch[1]).trim()
   const ogTitleMatch = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)
   if (ogTitleMatch) title = ogTitleMatch[1].trim() || title
 
@@ -23,17 +48,55 @@ function extractContentFromHtml(html: string): { title: string; description: str
   const ogDescMatch = html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)["']/i)
   if (ogDescMatch) description = ogDescMatch[1].trim() || description
 
-  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)
-  let snippet = ''
-  if (bodyMatch) {
-    const text = bodyMatch[1].replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<[^>]+>/g, ' ')
-    snippet = text.replace(/\s+/g, ' ').trim().slice(0, 1500)
+  // JSON-LD (many landing pages expose name/description here)
+  let jsonLdName = ''
+  let jsonLdDescription = ''
+  const jsonLdMatch = html.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i)
+  if (jsonLdMatch) {
+    try {
+      const raw = jsonLdMatch[1].trim()
+      const parsed = JSON.parse(raw.replace(/\/\*[\s\S]*?\*\//g, ''))
+      const obj = Array.isArray(parsed) ? parsed[0] : parsed
+      if (obj && typeof obj === 'object') {
+        if (typeof obj.name === 'string') jsonLdName = obj.name.trim()
+        if (typeof obj.description === 'string') jsonLdDescription = obj.description.trim()
+      }
+    } catch {
+      // ignore invalid JSON-LD
+    }
   }
+
+  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)
+  const body = bodyMatch ? bodyMatch[1] : html
+  const noScript = body.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '')
+
+  const h1s = extractAll(noScript, /<h1[^>]*>([\s\S]*?)<\/h1>/gi, 1)
+  const h2s = extractAll(noScript, /<h2[^>]*>([\s\S]*?)<\/h2>/gi, 5)
+  const ps = extractAll(noScript, /<p[^>]*>([\s\S]*?)<\/p>/gi, 6)
+  const lis = extractAll(noScript, /<li[^>]*>([\s\S]*?)<\/li>/gi, 12)
+
+  const headline = safe(h1s[0] || jsonLdName || title, 300)
+  const subheadline = safe(description || jsonLdDescription || ps[0], 500)
+  const keyPoints = lis.length > 0 ? lis : h2s
+  const paragraphs = ps.filter((p) => p.length > 20)
+
+  const structuredContext = [
+    headline && `Headline: ${headline}`,
+    subheadline && `Value proposition / description: ${subheadline}`,
+    keyPoints.length > 0 && `Key points or features:\n${keyPoints.map((k) => `- ${safe(k, 400)}`).join('\n')}`,
+    paragraphs.length > 0 && paragraphs.slice(0, 3).map((p) => safe(p, 350)).join('\n\n'),
+  ]
+    .filter(Boolean)
+    .join('\n\n')
 
   return {
     title: safe(title),
     description: safe(description),
-    snippet: safe(snippet),
+    headline,
+    subheadline,
+    keyPoints,
+    paragraphs,
+    structuredContext,
   }
 }
 
@@ -99,13 +162,13 @@ export async function POST(request: NextRequest) {
     }
 
     const extracted = extractContentFromHtml(html)
-    const context = [
-      extracted.title && `Page title: ${extracted.title}`,
-      extracted.description && `Meta description: ${extracted.description}`,
-      extracted.snippet && `Page content snippet: ${extracted.snippet}`,
-    ]
-      .filter(Boolean)
-      .join('\n\n')
+    const context = extracted.structuredContext
+      || [
+          extracted.title && `Page title: ${extracted.title}`,
+          extracted.description && `Value proposition: ${extracted.description}`,
+        ]
+          .filter(Boolean)
+          .join('\n\n')
 
     if (!process.env.API_KEY) {
       return NextResponse.json(
