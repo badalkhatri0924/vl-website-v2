@@ -10,9 +10,9 @@ const LINKS = [
     label: 'LinkedIn product post',
     description: 'Generate posts from any product URL. Analyze the page, get 3–4 variations, save for your team.',
     icon: FileText,
-    accent: 'from-sky-500/20 to-cyan-500/10',
+    accent: 'from-amber-500/20 to-orange-500/10',
     iconBg: 'bg-gradient-to-br from-amber-500/20 to-orange-500/10 text-amber-400',
-    borderHover: 'hover:border-sky-500/40',
+    borderHover: 'hover:border-amber-500/40',
   },
   {
     href: '/admin/news-post',
