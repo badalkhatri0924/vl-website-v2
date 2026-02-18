@@ -51,7 +51,7 @@ Example format:
 Return only the JSON array, no other text or markdown.`
 }
 
-export type NewsCategoryLabel = 'AI News' | 'Tech Industry – India' | 'Tech Industry – Global' | 'Latest Trend News – Worldwide'
+export type NewsCategoryLabel = 'AI News' | 'Tech Industry – India' | 'Tech Industry – Global' | 'Latest Trend News – Worldwide' | 'All about 12 hours in India' | 'All about 24 hours outside India – Worldwide'
 
 export interface LinkedInNewsPromptInput {
   category: NewsCategoryLabel

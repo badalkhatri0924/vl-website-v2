@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export type NewsCategory = 'ai-news' | 'tech-india' | 'tech-global' | 'trend-worldwide'
+export type NewsCategory = 'ai-news' | 'tech-india' | 'tech-global' | 'trend-worldwide' | 'news-12h-india' | 'news-24h-worldwide'
 
 export interface NewsArticle {
   title: string
@@ -19,6 +19,10 @@ const RSS_URLS: Record<NewsCategory, string> = {
     'https://news.google.com/rss/search?q=technology&hl=en-US&gl=US&ceid=US%3Aen',
   'trend-worldwide':
     'https://news.google.com/rss/search?q=trending+news+worldwide+latest&hl=en-US&gl=US&ceid=US%3Aen',
+  'news-12h-india':
+    'https://news.google.com/rss/search?q=India+news&hl=en-IN&gl=IN&ceid=IN%3Aen',
+  'news-24h-worldwide':
+    'https://news.google.com/rss/search?q=world+news+international&hl=en-US&gl=US&ceid=US%3Aen',
 }
 
 function stripHtml(s: string): string {
@@ -62,16 +66,16 @@ function parseRssItems(xml: string): NewsArticle[] {
 }
 
 /**
- * GET /api/news/feed?category=ai-news|tech-india|tech-global|trend-worldwide
+ * GET /api/news/feed?category=ai-news|tech-india|tech-global|trend-worldwide|news-12h-india|news-24h-worldwide
  * Returns latest news articles for the category.
  */
 export async function GET(request: NextRequest) {
   try {
     const category = request.nextUrl.searchParams.get('category') as NewsCategory | null
-    const valid: NewsCategory[] = ['ai-news', 'tech-india', 'tech-global', 'trend-worldwide']
+    const valid: NewsCategory[] = ['ai-news', 'tech-india', 'tech-global', 'trend-worldwide', 'news-12h-india', 'news-24h-worldwide']
     if (!category || !valid.includes(category)) {
       return NextResponse.json(
-        { error: 'Invalid category. Use: ai-news, tech-india, tech-global, trend-worldwide' },
+        { error: 'Invalid category. Use: ai-news, tech-india, tech-global, trend-worldwide, news-12h-india, news-24h-worldwide' },
         { status: 400 }
       )
     }

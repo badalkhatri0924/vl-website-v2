@@ -13,14 +13,16 @@ import type { NewPostBatch } from '@/lib/newPosts'
 
 const ADMIN_USER_NAME_KEY = 'admin-user-name'
 
-const NEWS_OPTIONS: { id: 'ai-news' | 'tech-india' | 'tech-global' | 'trend-worldwide'; label: string }[] = [
+const NEWS_OPTIONS: { id: 'ai-news' | 'tech-india' | 'tech-global' | 'trend-worldwide' | 'news-12h-india' | 'news-24h-worldwide'; label: string }[] = [
   { id: 'ai-news', label: 'AI News' },
   { id: 'tech-india', label: 'Tech Industry – India' },
   { id: 'tech-global', label: 'Tech Industry – Global' },
   { id: 'trend-worldwide', label: 'Latest Trend News – Worldwide' },
+  { id: 'news-12h-india', label: 'All about 12 hours in India' },
+  { id: 'news-24h-worldwide', label: 'All about 24 hours outside India – Worldwide' },
 ]
 
-type NewsCategoryId = 'ai-news' | 'tech-india' | 'tech-global' | 'trend-worldwide'
+type NewsCategoryId = 'ai-news' | 'tech-india' | 'tech-global' | 'trend-worldwide' | 'news-12h-india' | 'news-24h-worldwide'
 
 export default function NewsPostPage() {
   const [userName, setUserName] = useState('')
@@ -287,6 +289,7 @@ export default function NewsPostPage() {
                 <span>✓ AI News</span>
                 <span>✓ Tech India / Global</span>
                 <span>✓ Latest Trend – Worldwide</span>
+                <span>✓ 12h India / 24h Worldwide</span>
                 <span>✓ 3–4 variations</span>
               </div>
             </div>

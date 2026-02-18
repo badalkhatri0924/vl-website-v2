@@ -12,7 +12,7 @@ export interface LinkedInPostOption {
   sourceArticleIndex?: number
 }
 
-type NewsCategory = 'ai-news' | 'tech-india' | 'tech-global' | 'trend-worldwide'
+type NewsCategory = 'ai-news' | 'tech-india' | 'tech-global' | 'trend-worldwide' | 'news-12h-india' | 'news-24h-worldwide'
 
 interface NewsArticle {
   title: string
@@ -27,6 +27,8 @@ const CATEGORY_LABELS: Record<NewsCategory, NewsCategoryLabel> = {
   'tech-india': 'Tech Industry – India',
   'tech-global': 'Tech Industry – Global',
   'trend-worldwide': 'Latest Trend News – Worldwide',
+  'news-12h-india': 'All about 12 hours in India',
+  'news-24h-worldwide': 'All about 24 hours outside India – Worldwide',
 }
 
 function buildNewsContext(articles: NewsArticle[]): string {
@@ -48,10 +50,10 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}))
     const category = (typeof body.category === 'string' ? body.category.trim() : '') as NewsCategory
-    const valid: NewsCategory[] = ['ai-news', 'tech-india', 'tech-global', 'trend-worldwide']
+    const valid: NewsCategory[] = ['ai-news', 'tech-india', 'tech-global', 'trend-worldwide', 'news-12h-india', 'news-24h-worldwide']
     if (!valid.includes(category)) {
       return NextResponse.json(
-        { error: 'Invalid category. Use: ai-news, tech-india, tech-global, trend-worldwide' },
+        { error: 'Invalid category. Use: ai-news, tech-india, tech-global, trend-worldwide, news-12h-india, news-24h-worldwide' },
         { status: 400 }
       )
     }
