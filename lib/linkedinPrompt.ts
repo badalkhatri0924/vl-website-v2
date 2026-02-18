@@ -67,12 +67,12 @@ export function buildLinkedInNewsPrompt({ category, newsContext }: LinkedInNewsP
 
 Category: ${category}
 
-Latest news and headlines (use as the single source of truth for this batch):
+Top 4 latest news and headlines (use as the single source of truth for this batch):
 ${newsContext || '(No news items provided.)'}
 
 Generate exactly 4 different LinkedIn post options that comment on or share insights from this news. Rules:
 - Base every post on the actual headlines and stories above. Do not invent stories or facts.
-- Each post MUST be primarily based on ONE of the numbered news items (1–12) above. Set "sourceIndex" to that item's number so we can link the post to the correct article.
+- Each post MUST be primarily based on ONE of the numbered news items (1–4) above. Set "sourceIndex" to that item's number so we can link the post to the correct article.
 - 2 posts MUST include a short section of bullet points (2–5 bullets) summarizing key takeaways or trends from the news.
 - 2 posts MUST NOT use bullet points; use short, punchy lines and clear paragraph breaks.
 - Vary the angle: one post can lead with a single headline and your take, one with a trend summary, one with implications for tech/industry, one with a call to reflect or act.

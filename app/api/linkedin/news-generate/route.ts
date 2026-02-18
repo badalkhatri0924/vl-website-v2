@@ -33,7 +33,7 @@ const CATEGORY_LABELS: Record<NewsCategory, NewsCategoryLabel> = {
 
 function buildNewsContext(articles: NewsArticle[]): string {
   return articles
-    .slice(0, 12)
+    .slice(0, 4)
     .map(
       (a, i) =>
         `${i + 1}. ${a.title}${a.snippet ? ` — ${a.snippet}` : ''}${a.publishedAt ? ` (${a.publishedAt})` : ''}`

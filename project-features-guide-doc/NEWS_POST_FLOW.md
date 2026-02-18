@@ -17,7 +17,7 @@ This document explains how the **News Post** feature works: from picking a categ
 |------|--------------|----------------------|
 | 1 | User selects a category (AI News, Tech India, Tech Global, Latest Trend Worldwide) and clicks generate. | No |
 | 2 | App fetches **latest news** from **Google News RSS** for that category (up to 15 articles). | No |
-| 3 | App sends that news as context to **Gemini**; Gemini returns 3–4 LinkedIn post options. | **Yes** |
+| 3 | App sends the **top 4 news items** from that feed as context to **Gemini**; Gemini returns 3–4 LinkedIn post options. | **Yes** |
 | 4 | User can copy posts or save the batch (posts + source articles) to Firestore. | No |
 
 ---

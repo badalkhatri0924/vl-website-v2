@@ -366,7 +366,7 @@ export default function ProductPostPage() {
                         key={batch.id}
                         type="button"
                         onClick={() => setActiveTabBatchId(batch.id)}
-                        className={`px-4 py-3 font-display font-bold text-sm uppercase tracking-ultra border-b-2 -mb-px ${
+                        className={`px-4 py-3 font-display font-bold text-sm uppercase tracking-wide border-b-2 -mb-px ${
                           normalize(batch.productName) === activeKey
                             ? 'text-accent border-accent bg-accent/5'
                             : 'text-slate-400 border-transparent hover:text-white hover:bg-white/5'
