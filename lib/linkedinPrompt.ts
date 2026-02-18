@@ -51,3 +51,45 @@ Example format:
 Return only the JSON array, no other text or markdown.`
 }
 
+export type NewsCategoryLabel = 'AI News' | 'Tech Industry – India' | 'Tech Industry – Global'
+
+export interface LinkedInNewsPromptInput {
+  category: NewsCategoryLabel
+  newsContext: string
+}
+
+/**
+ * Prompt for generating LinkedIn posts from latest news in a category.
+ * Used when the admin selects AI News, Tech India, or Tech Global.
+ */
+export function buildLinkedInNewsPrompt({ category, newsContext }: LinkedInNewsPromptInput) {
+  return `You are a professional LinkedIn content writer for a B2B / government tech company (Version Labs).
+
+Category: ${category}
+
+Latest news and headlines (use as the single source of truth for this batch):
+${newsContext || '(No news items provided.)'}
+
+Generate exactly 4 different LinkedIn post options that comment on or share insights from this news. Rules:
+- Base every post on the actual headlines and stories above. Do not invent stories or facts.
+- 2 posts MUST include a short section of bullet points (2–5 bullets) summarizing key takeaways or trends from the news.
+- 2 posts MUST NOT use bullet points; use short, punchy lines and clear paragraph breaks.
+- Vary the angle: one post can lead with a single headline and your take, one with a trend summary, one with implications for tech/industry, one with a call to reflect or act.
+- Keep tone professional and engaging, suitable for LinkedIn. Add value (insight, trend, or question) rather than just repeating headlines.
+- Include a short hook or opening line when relevant. Stay under ~1,300 characters per post.
+- Use only standard hyphens "-" and never use em dashes or en dashes.
+
+Respond with a valid JSON array of 4 objects. Each object must have:
+- "content": string (the full post text)
+- "hook": string (optional, the first line or hook used)
+
+Example format:
+[
+  { "content": "Full post text here...", "hook": "Opening line" },
+  { "content": "Second post...", "hook": "..." },
+  ...
+]
+
+Return only the JSON array, no other text or markdown.`
+}
+
