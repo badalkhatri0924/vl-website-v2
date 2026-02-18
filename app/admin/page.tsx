@@ -1,641 +1,110 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Lock, FileText, Copy, Check, ExternalLink, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
-import { Avatar } from './blog/Avatar'
-import type { LinkedInPostBatch, LinkedInPostItem } from '@/lib/linkedinPosts'
+import { Card, CardContent } from '@/components/ui/card'
+import { ExternalLink, FileText, Newspaper, ArrowRight, LayoutGrid, PenLine } from 'lucide-react'
 
-const ADMIN_PASSWORD = 'vl@2025'
-const ADMIN_AUTH_KEY = 'admin-auth'
-const ADMIN_USER_NAME_KEY = 'admin-user-name'
+const LINKS = [
+  {
+    href: '/admin/product-post',
+    label: 'LinkedIn product post',
+    description: 'Generate posts from any product URL. Analyze the page, get 3–4 variations, save for your team.',
+    icon: FileText,
+    accent: 'from-amber-500/20 to-orange-500/10',
+    iconBg: 'bg-gradient-to-br from-amber-500/20 to-orange-500/10 text-amber-400',
+    borderHover: 'hover:border-amber-500/40',
+  },
+  {
+    href: '/admin/news-post',
+    label: 'LinkedIn News post',
+    description: 'Generate LinkedIn posts from latest news. Pick AI News, Tech India, or Tech Global.',
+    icon: Newspaper,
+    accent: 'from-amber-500/20 to-orange-500/10',
+    iconBg: 'bg-gradient-to-br from-amber-500/20 to-orange-500/10 text-amber-400',
+    borderHover: 'hover:border-amber-500/40',
+  },
+  {
+    href: '/admin/blog',
+    label: 'Blog Admin',
+    description: 'Review, approve, or reject AI-generated blog posts.',
+    icon: PenLine,
+    accent: 'from-emerald-500/20 to-teal-500/10',
+    iconBg: 'bg-gradient-to-br from-emerald-500/20 to-teal-500/10 text-emerald-400',
+    borderHover: 'hover:border-emerald-500/40',
+  },
+  {
+    href: '/studio',
+    label: 'Open Sanity Studio',
+    description: 'Edit content in Sanity CMS.',
+    icon: ExternalLink,
+    external: true,
+    accent: 'from-violet-500/20 to-purple-500/10',
+    iconBg: 'bg-gradient-to-br from-violet-500/20 to-purple-500/10 text-violet-400',
+    borderHover: 'hover:border-violet-500/40',
+  },
+]
 
 export default function AdminPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [checkingAuth, setCheckingAuth] = useState(true)
-  const [showLoginDialog, setShowLoginDialog] = useState(false)
-  const [enteredName, setEnteredName] = useState('')
-  const [enteredPassword, setEnteredPassword] = useState('')
-  const [loginError, setLoginError] = useState('')
-  const [userName, setUserName] = useState('')
+  return (
+    <div className="min-h-screen bg-obsidian-950 text-white pt-28 md:pt-32 pb-24 px-4 md:px-8 relative overflow-hidden">
+      {/* Subtle background */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(56,189,248,0.08),transparent)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_80%_50%,rgba(139,92,246,0.05),transparent)]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-slate-900/50 to-transparent" />
 
-  const [batches, setBatches] = useState<LinkedInPostBatch[]>([])
-  const [loadingBatches, setLoadingBatches] = useState(false)
-  const [showLinkedInForm, setShowLinkedInForm] = useState(false)
-  const [productName, setProductName] = useState('')
-  const [productUrl, setProductUrl] = useState('')
-  const [generating, setGenerating] = useState(false)
-  const [linkedInPosts, setLinkedInPosts] = useState<LinkedInPostItem[]>([])
-  const [generateError, setGenerateError] = useState<string | null>(null)
-  const [copiedKey, setCopiedKey] = useState<string | null>(null)
-  const [copyErrorKey, setCopyErrorKey] = useState<string | null>(null)
-  const [claimingKey, setClaimingKey] = useState<string | null>(null)
-  const [activeTabBatchId, setActiveTabBatchId] = useState<string | null>(null)
-  const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false)
+      <div className="relative w-full max-w-5xl mx-auto">
+        {/* Header */}
+        <header className="mb-12 md:mb-16">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-1.5 mb-6">
+            <LayoutGrid size={14} className="text-sky-400" />
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">Dashboard</span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-display font-black tracking-tight mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-slate-300">
+            Admin
+          </h1>
+          <p className="text-slate-400 text-lg max-w-xl">
+            Content management tools. Choose a section to get started.
+          </p>
+        </header>
 
-  useEffect(() => {
-    try {
-      const stored = typeof window !== 'undefined' ? window.localStorage.getItem(ADMIN_AUTH_KEY) : null
-      const name = typeof window !== 'undefined' ? window.localStorage.getItem(ADMIN_USER_NAME_KEY) : null
-      if (stored === 'authenticated') {
-        setIsAuthenticated(true)
-        setShowLoginDialog(false)
-        setUserName(name || '')
-      } else {
-        setShowLoginDialog(true)
-      }
-    } catch {
-      setShowLoginDialog(true)
-    } finally {
-      setCheckingAuth(false)
-    }
-  }, [])
-
-  const fetchBatches = async () => {
-    setLoadingBatches(true)
-    try {
-      const res = await fetch('/api/linkedin/list')
-      const data = await res.json()
-      if (data.success && Array.isArray(data.batches)) {
-        setBatches(data.batches)
-      }
-    } finally {
-      setLoadingBatches(false)
-    }
-  }
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchBatches()
-    }
-  }, [isAuthenticated])
-
-  const handleLogin = () => {
-    const name = enteredName.trim()
-    if (!name) {
-      setLoginError('Name is required.')
-      return
-    }
-    if (!enteredPassword.trim()) {
-      setLoginError('Password is required.')
-      return
-    }
-    if (enteredPassword === ADMIN_PASSWORD) {
-      setIsAuthenticated(true)
-      setShowLoginDialog(false)
-      setLoginError('')
-      setUserName(name)
-      try {
-        window.localStorage.setItem(ADMIN_AUTH_KEY, 'authenticated')
-        window.localStorage.setItem(ADMIN_USER_NAME_KEY, name)
-      } catch {}
-    } else {
-      setLoginError('Incorrect password. Please try again.')
-      setEnteredPassword('')
-    }
-  }
-
-  const handleGenerateLinkedIn = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!productName.trim() || !productUrl.trim()) {
-      setGenerateError('Please fill in both Product name and Product URL.')
-      return
-    }
-    setGenerateError(null)
-    setGenerating(true)
-    // Clear any in-modal preview; we show content in the main page instead
-    setLinkedInPosts([])
-    try {
-      const res = await fetch('/api/linkedin/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          productName: productName.trim(),
-          productUrl: productUrl.trim(),
-        }),
-      })
-      const data = await res.json()
-      if (res.ok && data.success && Array.isArray(data.posts)) {
-        // Log all generated posts for debugging / review
-        console.log('Generated LinkedIn posts:', data.posts)
-
-        const saveRes = await fetch('/api/linkedin/save', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            productName: productName.trim(),
-            productUrl: productUrl.trim(),
-            posts: data.posts,
-          }),
-        })
-        if (saveRes.ok) {
-          await fetchBatches()
-          // Close the modal and reset the form once content is saved.
-          setShowLinkedInForm(false)
-          setProductName('')
-          setProductUrl('')
-          setLinkedInPosts([])
-        }
-      } else {
-        setGenerateError(data?.error || 'Failed to generate content. Please try again.')
-      }
-    } catch (err) {
-      setGenerateError('Network error. Please try again.')
-    } finally {
-      setGenerating(false)
-    }
-  }
-
-  const copyPost = async (
-    text: string,
-    key: string,
-    options?: { batchId: string; postIndex: number }
-  ) => {
-    setCopyErrorKey(null)
-    if (options) {
-      setClaimingKey(key)
-      try {
-        const res = await fetch('/api/linkedin/copy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            batchId: options.batchId,
-            postIndex: options.postIndex,
-            copiedBy: userName,
-          }),
-        })
-        const data = await res.json()
-        if (res.status === 409) {
-          setCopyErrorKey(key)
-          setTimeout(() => setCopyErrorKey(null), 4000)
-          return
-        }
-        if (!res.ok) {
-          setCopyErrorKey(key)
-          setTimeout(() => setCopyErrorKey(null), 4000)
-          return
-        }
-        await navigator.clipboard.writeText(text)
-        console.log('Copied LinkedIn post with claim:', {
-          copiedBy: userName,
-          batchId: options.batchId,
-          postIndex: options.postIndex,
-          content: text,
-        })
-        setCopiedKey(key)
-        setTimeout(() => setCopiedKey(null), 3000)
-        await fetchBatches()
-      } catch {
-        setCopyErrorKey(key)
-        setTimeout(() => setCopyErrorKey(null), 4000)
-      } finally {
-        setClaimingKey(null)
-      }
-    } else {
-      await navigator.clipboard.writeText(text)
-      console.log('Copied LinkedIn post:', {
-        copiedBy: userName || 'unknown',
-        content: text,
-      })
-      setCopiedKey(key)
-      setTimeout(() => setCopiedKey(null), 3000)
-    }
-  }
-
-  const formatDate = (iso: string) => {
-    try {
-      return new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
-    } catch {
-      return iso
-    }
-  }
-
-  const renderPostCard = (
-    post: LinkedInPostItem,
-    postKey: string,
-    options?: { batchId: string; postIndex: number }
-  ) => {
-    const isClaimed = Boolean(post.copiedBy?.trim())
-    const isJustCopied = copiedKey === postKey
-    const isClaiming = claimingKey === postKey
-    const showClaimError = copyErrorKey === postKey
-    return (
-      <Card
-        key={postKey}
-        className={`relative overflow-hidden border-white/10 ${
-          isClaimed
-            ? 'bg-slate-900/80 cursor-not-allowed hover:bg-slate-900/80 select-none'
-            : 'bg-slate/5 cursor-default hover:bg-slate/5'
-        }`}
-      >
-        {isClaimed && (
-          <div className="pointer-events-none absolute inset-0 bg-red-950/60 backdrop-blur-[1px]"></div>
-        )}
-        <CardContent className="relative p-4">
-          {post.hook && (
-            <p className="text-slate-200 font-bold text-3xl mb-6">{post.hook}</p>
-          )}
-          <p className="text-slate-200 text-sm whitespace-pre-wrap mb-3">{post.content}</p>
-          <div className="flex items-center gap-3 flex-wrap pt-4">
-            {isClaimed ? (
-              <span className="inline-flex items-center gap-2 rounded-full bg-sky-500/10 text-sky-100 px-3 py-2 text-[11px] font-medium border border-sky-400/40">
-                <span className="font-semibold">
-                  Copied by {post.copiedBy}
-                </span>
-                {post.copiedAt && (
-                  <span className="text-sky-200/80 text-[10px]">
-                    {formatDate(post.copiedAt)}
-                  </span>
-                )}
-              </span>
-            ) : (
-              <Button
-                variant="secondary"
-                className="flex items-center gap-2 py-2 px-4 text-xs"
-                disabled={isClaiming}
-                onClick={() =>
-                  copyPost(
-                    post.content,
-                    postKey,
-                    options ? { batchId: options.batchId, postIndex: options.postIndex } : undefined
-                  )
-                }
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+          {LINKS.map((item, i) => {
+            const Icon = item.icon
+            const content = (
+              <Card
+                className={`group relative overflow-hidden border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] ${item.borderHover} transition-all duration-300 hover:shadow-xl hover:shadow-black/20 hover:-translate-y-0.5`}
               >
-                {isClaiming ? (
-                  'Claiming…'
-                ) : isJustCopied ? (
-                  <><Check size={14} /> Copied</>
-                ) : (
-                  <><Copy size={14} /> Copy</>
-                )}
-              </Button>
-            )}
-            {isJustCopied && userName && !isClaimed && (
-              <span className="text-xs text-slate-400">Copied by {userName}</span>
-            )}
-            {showClaimError && (
-              <span className="text-xs text-amber-400">
-                Already used by another team member.
-              </span>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  if (checkingAuth) {
-    return (
-      <div className="min-h-screen bg-obsidian-950 text-white pt-32 pb-8 px-8">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-display font-black mb-8">Admin</h1>
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="flex flex-col items-center gap-4 text-center">
-              <Avatar state="thinking" className="w-48 h-48" />
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-slate-100">
-                  Checking admin access…
-                </p>
-                <p className="text-xs text-slate-400 max-w-sm">
-                  Verifying your secure session before loading the LinkedIn tools.
-                </p>
-              </div>
-            </div>
-          </div>
+                <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br ${item.accent}`} />
+                <CardContent className="relative p-6 md:p-7 flex items-start gap-5">
+                  <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl ${item.iconBg} ring-1 ring-white/5`}>
+                    <Icon size={24} strokeWidth={1.75} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h2 className="font-display font-bold text-white text-lg mb-2 flex items-center gap-2">
+                      {item.label}
+                      <ArrowRight size={18} className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 shrink-0" />
+                    </h2>
+                    <p className="text-slate-400 text-sm leading-relaxed">{item.description}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            )
+            if (item.external) {
+              return (
+                <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className="block">
+                  {content}
+                </a>
+              )
+            }
+            return (
+              <Link key={item.href} href={item.href}>
+                {content}
+              </Link>
+            )
+          })}
         </div>
       </div>
-    )
-  }
-
-  return (
-    <div className="min-h-screen bg-obsidian-950 text-white pt-28 md:pt-32 pb-24 px-4 md:px-8">
-      <Dialog open={showLoginDialog} onOpenChange={() => {}}>
-        <DialogContent className="w-full min-w-[320px] max-w-[400px]" showCloseButton={false}>
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-center justify-center">
-              <Lock size={24} className="text-accent" />
-              Admin login
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-6">
-            <div>
-              <Label htmlFor="adminName">Name</Label>
-              <Input
-                id="adminName"
-                type="text"
-                value={enteredName}
-                onChange={(e) => setEnteredName(e.target.value)}
-                placeholder="Your name with surname"
-                autoComplete="name"
-              />
-            </div>
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={enteredPassword}
-                onChange={(e) => setEnteredPassword(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-                placeholder="Enter password"
-                autoComplete="current-password"
-              />
-            </div>
-            {loginError && <p className="text-sm text-red-400">{loginError}</p>}
-            <Button onClick={handleLogin} className="w-full">
-              Login
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {isAuthenticated && (
-        <div className="w-full max-w-full px-4 md:px-32">
-          <h1 className="text-3xl md:text-4xl font-display font-black mb-2">Admin</h1>
-          <p className="text-slate-400 mb-8">Content management tools</p>
-
-          <Card className="relative overflow-hidden mb-8 border border-sky-500/20 bg-gradient-to-r from-slate-900/80 via-slate-900/60 to-slate-900/40">
-            <div className="pointer-events-none absolute inset-0 opacity-40 mix-blend-screen bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.18),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.22),transparent_55%)]" />
-            <CardContent className="relative p-6 md:p-7 flex flex-col md:flex-row items-start md:items-center gap-6">
-              <div className="flex-1">
-                <h2 className="text-xl md:text-2xl font-display font-bold text-white mb-2">
-                  Generate on-brand LinkedIn content in one click
-                </h2>
-                <p className="text-slate-300 text-sm md:text-[13px] mb-3 max-w-2xl">
-                  Turn any product URL into 3–4 ready-to-post LinkedIn updates. We analyze the page, pull the key value props, and save approved copies for your whole team.
-                </p>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-400">
-                  <span>✓ URL analysis</span>
-                  <span>✓ 3–4 variations</span>
-                  <span>✓ Team copy tracking</span>
-                </div>
-              </div>
-              <div className="flex flex-col items-stretch md:items-end gap-3 w-full md:w-auto">
-                <Button
-                  variant="primary"
-                  className="w-auto px-5 py-2 text-xs md:text-[11px]"
-                  onClick={() => {
-                    setShowLinkedInForm(true)
-                    setLinkedInPosts([])
-                    setGenerateError(null)
-                  }}
-                >
-                  Generate product post
-                </Button>
-                <p className="text-[11px] text-slate-400 max-w-xs md:text-right">
-                  Copies are saved only inside this admin for your team.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="mb-6 flex flex-wrap gap-3">
-            <Link href="/admin/blog">
-              <Button variant="secondary">Blog Admin</Button>
-            </Link>
-            <a href="/studio" target="_blank" rel="noopener noreferrer">
-              <Button variant="secondary" className="flex items-center gap-2">
-                Open Sanity Studio
-                <ExternalLink size={14} />
-              </Button>
-            </a>
-          </div>
-
-          <h2 className="text-xl font-display font-bold mb-4">Saved LinkedIn content</h2>
-          {loadingBatches ? (
-            <div className="flex items-center justify-center min-h-[160px]">
-              <div className="flex flex-col items-center gap-3 text-center">
-                <Avatar state="thinking" className="w-20 h-20" />
-                <p className="text-xs text-slate-400">Loading saved LinkedIn content…</p>
-              </div>
-            </div>
-          ) : batches.length === 0 ? (
-            <p className="text-slate-500 text-sm">
-              No saved content yet. Generate posts above to see them here.
-            </p>
-          ) : (
-            <div className="w-full">
-              {/*
-                Group batches by product name so that each product
-                shows up as a single tab, even if it has multiple
-                generated batches. Inside each tab we now show posts
-                from **all** batches for that product.
-              */}
-              {(() => {
-                const normalize = (name: string) => name.trim().toLowerCase()
-
-                // Use the most recent batch per product for the tab label and active id,
-                // but keep all batches so we can render every post for that product.
-                const productMap: Record<string, typeof batches[number]> = {}
-                for (const batch of batches) {
-                  const key = normalize(batch.productName)
-                  const existing = productMap[key]
-                  if (
-                    !existing ||
-                    new Date(batch.createdAt).getTime() > new Date(existing.createdAt).getTime()
-                  ) {
-                    productMap[key] = batch
-                  }
-                }
-                const productTabs = Object.values(productMap)
-                const activeBatch =
-                  (activeTabBatchId && productTabs.find((b) => b.id === activeTabBatchId)) ||
-                  productTabs[0]
-                if (!activeBatch) return null
-
-                const activeKey = normalize(activeBatch.productName)
-
-                return (
-                  <>
-                    <div className="mb-6 flex flex-col gap-3">
-                      {/* Mobile: custom dropdown selector */}
-                      <div className="relative md:hidden">
-                        <div className="mb-1 flex items-center justify-between gap-2">
-                          <label className="block text-xs font-medium text-slate-400">
-                            Select product
-                          </label>
-                          <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-medium text-accent">
-                            {productTabs.length} live products
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setIsProductDropdownOpen((open) => !open)}
-                          className="flex w-full items-center justify-between rounded-lg border border-sky-500/40 bg-gradient-to-r from-slate-950/90 via-slate-900/90 to-slate-950/90 px-4 py-2.5 text-left text-[13px] text-slate-50 shadow-[0_0_0_1px_rgba(15,23,42,0.9),0_18px_45px_rgba(15,23,42,0.9)] transition hover:border-accent hover:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-accent/80"
-                        >
-                          <div className="flex min-w-0 items-center gap-2">
-                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent/15 text-[11px] font-semibold text-accent/90 uppercase tracking-wide">
-                              {activeBatch.productName.charAt(0)}
-                            </span>
-                            <span className="truncate font-medium">{activeBatch.productName}</span>
-                          </div>
-                          <ChevronDown
-                            size={16}
-                            className={`ml-2 transition-transform ${
-                              isProductDropdownOpen ? 'rotate-180' : 'rotate-0'
-                            }`}
-                          />
-                        </button>
-                        {isProductDropdownOpen && (
-                          <div className="absolute z-20 mt-2 max-h-64 w-full overflow-y-auto rounded-lg border border-sky-500/30 bg-gradient-to-b from-slate-950/95 via-slate-950/98 to-slate-900/98 backdrop-blur-md shadow-[0_22px_55px_rgba(15,23,42,0.95)]">
-                            {productTabs.map((batch) => {
-                              const isActive = normalize(batch.productName) === activeKey
-                              return (
-                                <button
-                                  key={batch.id}
-                                  type="button"
-                                  onClick={() => {
-                                    setActiveTabBatchId(batch.id)
-                                    setIsProductDropdownOpen(false)
-                                  }}
-                                  className={`flex w-full items-center gap-2 px-4 py-2.5 text-left text-[13px] transition ${
-                                    isActive
-                                      ? 'bg-accent/15 text-accent'
-                                      : 'text-slate-100 hover:bg-white/5'
-                                  }`}
-                                >
-                                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-800/80 text-[11px] font-semibold uppercase text-slate-200">
-                                    {batch.productName.charAt(0)}
-                                  </span>
-                                  <span className="truncate">{batch.productName}</span>
-                                </button>
-                              )
-                            })}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Desktop / tablet: horizontal tabs */}
-                      <div className="hidden md:flex flex-wrap gap-1 border-b border-white/10">
-                        {productTabs.map((batch) => {
-                          const isActive = normalize(batch.productName) === activeKey
-                          return (
-                            <button
-                              key={batch.id}
-                              type="button"
-                              onClick={() => setActiveTabBatchId(batch.id)}
-                              className={`px-4 py-3 font-display font-bold text-sm uppercase tracking-ultra transition-colors border-b-2 -mb-px ${
-                                isActive
-                                  ? 'text-accent border-accent bg-accent/5'
-                                  : 'text-slate-400 border-transparent hover:text-white hover:bg-white/5'
-                              }`}
-                            >
-                              {batch.productName}
-                            </button>
-                          )
-                        })}
-                      </div>
-                    </div>
-                    {/*
-                      Show posts from all batches that share the active
-                      product name, newest batches first.
-                    */}
-                    {batches
-                      .filter((batch) => normalize(batch.productName) === activeKey)
-                      .sort(
-                        (a, b) =>
-                          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-                      )
-                      .map((batch) => (
-                        <Card key={batch.id} className="bg-white/5 border-white/10 mb-4 last:mb-0">
-                          <CardContent className="p-6">
-                            <a
-                              href={batch.productUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-accent text-sm hover:underline flex items-center gap-1 mb-2"
-                            >
-                              {batch.productUrl}
-                              <ExternalLink size={14} />
-                            </a>
-                            <p className="text-slate-500 text-xs mb-6">
-                              {formatDate(batch.createdAt)}
-                            </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              {batch.posts.map((post, i) =>
-                                renderPostCard(post, `${batch.id}-${i}`, {
-                                  batchId: batch.id,
-                                  postIndex: i,
-                                })
-                              )}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                  </>
-                )
-              })()}
-            </div>
-          )}
-        </div>
-      )}
-
-      <Dialog open={showLinkedInForm} onOpenChange={setShowLinkedInForm}>
-        <DialogContent
-          className="w-full max-w-full md:max-w-xl max-h-[90vh] overflow-y-auto"
-          onClose={() => setShowLinkedInForm(false)}
-        >
-          <DialogHeader>
-            <DialogTitle>Generate content</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleGenerateLinkedIn} className="space-y-6">
-            <div>
-              <Label htmlFor="productName">Product name</Label>
-              <Input
-                id="productName"
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
-                placeholder="e.g. UnCloud"
-                className="mt-2 bg-white/5 border-white/10"
-                disabled={generating}
-              />
-            </div>
-            <div>
-              <Label htmlFor="productUrl">Product URL</Label>
-              <Input
-                id="productUrl"
-                type="url"
-                value={productUrl}
-                onChange={(e) => setProductUrl(e.target.value)}
-                placeholder="https://example.com/product"
-                className="mt-2 bg-white/5 border-white/10"
-                disabled={generating}
-              />
-            </div>
-            {generateError && <p className="text-sm text-red-400">{generateError}</p>}
-            {!generating && (
-              <Button type="submit" className="w-full">
-                Generate 3–4 posts
-              </Button>
-            )}
-          </form>
-
-          {generating && (
-            <div className="mt-6 flex items-center justify-center">
-              <div className="flex flex-col items-center gap-3 text-center">
-                <Avatar state="thinking" className="w-20 h-20" />
-                <p className="text-xs text-slate-400">
-                  We’re analyzing the page and drafting your LinkedIn posts…
-                </p>
-              </div>
-            </div>
-          )}
-
-          {linkedInPosts.length > 0 && (
-            <div className="mt-8 pt-6 border-t border-white/10">
-              <h3 className="text-lg font-display font-bold mb-4">Generated posts ({linkedInPosts.length}) — saved below</h3>
-              <div className="space-y-4">
-                {linkedInPosts.map((post, i) => renderPostCard(post, `modal-${i}`))}
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }
