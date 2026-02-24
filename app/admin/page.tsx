@@ -2,23 +2,32 @@
 
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
-import { ExternalLink, FileText, Newspaper, ArrowRight, LayoutGrid, PenLine } from 'lucide-react'
+import { ExternalLink, FileText, Newspaper, ArrowRight, LayoutGrid, PenLine, MessageCircle, Linkedin, Twitter, X } from 'lucide-react'
 
 const LINKS = [
   {
     href: '/admin/product-post',
     label: 'LinkedIn Product post',
     description: 'Generate posts from any product URL. Analyze the page, get 3–4 variations, save for your team.',
-    icon: FileText,
+    icon: Linkedin,
     accent: 'from-amber-500/20 to-orange-500/10',
     iconBg: 'bg-gradient-to-br from-amber-500/20 to-orange-500/10 text-amber-400',
     borderHover: 'hover:border-amber-500/40',
   },
   {
+    href: '/admin/twitter-product-post',
+    label: 'Twitter Product post',
+    description: 'Generate tweets from any product URL. Problem/solution style, 3–4 variations, copy tracking for your team.',
+    icon: X,
+    accent: 'from-sky-500/20 to-blue-500/10',
+    iconBg: 'bg-gradient-to-br from-sky-500/20 to-blue-500/10 text-sky-400',
+    borderHover: 'hover:border-sky-500/40',
+  },
+  {
     href: '/admin/news-post',
     label: 'LinkedIn News post',
     description: 'Generate LinkedIn posts from latest news. Pick AI News, Tech India, or Tech Global.',
-    icon: Newspaper,
+    icon: Linkedin,
     accent: 'from-amber-500/20 to-orange-500/10',
     iconBg: 'bg-gradient-to-br from-amber-500/20 to-orange-500/10 text-amber-400',
     borderHover: 'hover:border-amber-500/40',
