@@ -53,12 +53,11 @@ CRITICAL – Impactful content format (follow this structure):
    - Use ${handle} when mentioning the product. You may also use "Try: ${domain}" or "at ${domain}" in the CTA.
    - Keep each tweet under 280 characters total (including newlines and hashtags). If the full structure does not fit, shorten lines or drop one benefit line, but keep the hook + problem + solution + CTA + hashtags.
    - Use only standard hyphens "-" and never em dashes or en dashes.
-   - One of the 4 variants MAY use a short bullet-style list (e.g. "Now in [Product]:\\n- Feature one\\n- Feature two") for variety; still use newlines.
+   - When you use bullet-style lists, start lines with "- " (dash + space), similar to: "- Recent searches for instant recall". Follow the UnCloud / Memry examples: a short header line like "Now in [Product]:" followed by 2–5 bullet lines.
 
-Generate exactly 4 different Twitter post options. Vary:
-- 2 posts: Classic problem/solution ("lie" or pain → "${handle} exist to close that gap" or "fixes this").
-- 1 post: Hook that names the problem (e.g. "Your X is where Y go to die") then short problem lines → product → benefits → CTA.
-- 1 post: Can use a bullet-style list of features (with - ) plus punchy CTA and hashtags.
+Generate exactly 4 different Twitter post options. Vary them like this:
+- 2 posts MUST be classic problem/solution with ONLY plain lines (no "- " bullet prefixes anywhere). Think of the SaveMemry examples with just short sentences on each line, no bullets.
+- 2 posts MUST include a short bullet-style feature section, like the UnCloud / Memry examples. Use a header line (e.g. "Now in ${productName}:" or "What you get:") followed by 2–5 lines starting with "- " to highlight concrete features or benefits, then CTA and hashtags.
 
 Respond with a valid JSON array of 4 objects. Each object must have:
 - "content": string (the full tweet with REAL newlines \\n between each line for visual impact; max 280 characters)
