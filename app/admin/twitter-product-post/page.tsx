@@ -192,6 +192,15 @@ export default function TwitterProductPostPage() {
           <div className="pointer-events-none absolute inset-0 bg-red-950/60 backdrop-blur-[1px]" />
         )}
         <CardContent className="relative p-4">
+          {post.imageUrl && (
+            <div className="mb-4 overflow-hidden rounded-md border border-slate-800/60 bg-slate-900/80 flex items-center justify-center">
+              <img
+                src={post.imageUrl}
+                alt={post.hook || 'Twitter post image'}
+                className="w-full h-56 md:h-80 object-cover"
+              />
+            </div>
+          )}
           {post.hook && (
             <p className="text-slate-200 font-bold text-lg mb-3">{post.hook}</p>
           )}

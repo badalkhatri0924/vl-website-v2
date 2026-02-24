@@ -1,5 +1,5 @@
 /**
- * Image handling utilities for blog posts
+ * Image handling utilities for content
  * Supports Gemini image generation, Unsplash, and placeholders
  */
 
@@ -211,6 +211,57 @@ export async function generateBlogImage(
   } catch (error) {
     console.error('Error in generateBlogImage:', error)
     return null
+  }
+}
+
+/**
+ * Generate an AI image URL for short-form content (currently used for Twitter posts).
+ * NEVER uploads to Sanity – returns a data URL from Gemini or falls back to Unsplash/placeholder.
+ */
+export async function generateImageForShortContent(
+  text: string,
+  options?: { contextLabel?: string }
+): Promise<string | null> {
+  const trimmed = (text || '').trim()
+  if (!trimmed) return null
+
+  const apiKey = process.env.API_KEY
+  // If we don't have Gemini configured, fall back to Unsplash helper
+  if (!apiKey) {
+    const fallbackQuery = options?.contextLabel ? `${options.contextLabel} ${trimmed}` : trimmed
+    return await getImageForCategory(fallbackQuery, trimmed, trimmed)
+  }
+
+  try {
+    const maxExcerpt = trimmed.slice(0, 280)
+    const label = options?.contextLabel || 'social post'
+
+    const prompt = `Create a high-quality, wide 16:9 landscape image that visually represents the following ${label}.
+The image must not contain any text or logos. It should feel modern, professional, and suitable for a technology and policy audience.
+
+Post content:
+"${maxExcerpt}"
+
+Focus on the core idea of the post and illustrate it metaphorically or contextually.`
+
+    const result = await generateImageWithGemini(prompt)
+    if (!result || !result.imageData) {
+      console.warn('Gemini Imagen did not return image data for short content, falling back to Unsplash.')
+      const fallbackQuery = options?.contextLabel ? `${options.contextLabel} ${trimmed}` : trimmed
+      return await getImageForCategory(fallbackQuery, trimmed, trimmed)
+    }
+
+    // Return a data URL only – no Sanity upload for short content
+    const base64 = result.imageData.toString('base64')
+    return `data:${result.mimeType};base64,${base64}`
+  } catch (error) {
+    console.error('Error generating Gemini image for short content, falling back to Unsplash:', error)
+    const fallbackQuery = options?.contextLabel ? `${options.contextLabel} ${text}` : text
+    try {
+      return await getImageForCategory(fallbackQuery, text, text)
+    } catch {
+      return getPlaceholderImage()
+    }
   }
 }
 
