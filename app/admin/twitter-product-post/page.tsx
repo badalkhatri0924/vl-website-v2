@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Copy, Check, ExternalLink, ChevronDown, ArrowLeft, Download } from 'lucide-react'
+import { Copy, Check, ExternalLink, ChevronDown, ArrowLeft, Download, Eye } from 'lucide-react'
 import { Avatar } from '../blog/Avatar'
 import type { TwitterPostBatch, TwitterPostItem } from '@/lib/twitterPosts'
 
@@ -202,14 +202,13 @@ export default function TwitterProductPostPage() {
                 />
                 <a
                   href={post.imageUrl}
-                  download
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute top-2 right-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-950/80 border border-slate-600/70 text-slate-100 hover:bg-slate-800/90 hover:text-white transition"
-                  title="Download image"
+                  className="absolute top-3 right-3 inline-flex items-center justify-center rounded-full bg-slate-950/95 px-3 py-1 text-[11px] font-semibold tracking-wide text-white shadow-lg shadow-black/50 backdrop-blur-md hover:bg-slate-900 hover:text-white transition-colors"
+                  title="View image"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <Download size={16} />
+                  View
                 </a>
               </div>
             </div>
