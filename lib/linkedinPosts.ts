@@ -14,6 +14,8 @@ import { db } from './firebase/config'
 export interface LinkedInPostItem {
   content: string
   hook?: string
+  /** Optional image for this LinkedIn-style post */
+  imageUrl?: string
   copiedBy?: string
   copiedAt?: string
 }
@@ -59,6 +61,7 @@ function normalizePosts(posts: unknown): LinkedInPostItem[] {
     return {
       content: typeof item.content === 'string' ? item.content : '',
       hook: typeof item.hook === 'string' ? item.hook : undefined,
+      imageUrl: typeof item.imageUrl === 'string' ? item.imageUrl : undefined,
       copiedBy: typeof item.copiedBy === 'string' ? item.copiedBy : undefined,
       copiedAt: parseCopiedAt(item.copiedAt),
     }
