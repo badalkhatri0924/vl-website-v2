@@ -9,7 +9,7 @@ const LINKS = [
   {
     href: '/admin/product-post',
     label: 'LinkedIn Product post',
-    description: 'Generate posts from any product URL. Analyze the page, get 3–4 variations, save for your team.',
+    description: 'Generate posts from any product URL. Analyze the page, get 4–6 variations, save for your team.',
     iconSrc: '/linkedin.png',
     iconAlt: 'LinkedIn logo',
     accent: 'from-sky-500/20 to-blue-500/10',
@@ -19,7 +19,7 @@ const LINKS = [
   {
     href: '/admin/twitter-product-post',
     label: 'Twitter Product post',
-    description: 'Generate tweets from any product URL. Problem/solution style, 3–4 variations, copy tracking for your team.',
+    description: 'Generate posts from any product URL. Analyze the page, get 3–4 variations, save for your team.',
     iconSrc: '/twitter.png',
     iconAlt: 'Twitter logo',
     accent: 'from-sky-500/20 to-blue-500/10',
@@ -36,6 +36,7 @@ const LINKS = [
     iconBg: 'bg-gradient-to-br from-sky-500/20 to-blue-500/10 text-sky-400',
     borderHover: 'hover:border-sky-500/40',
   },
+  
   {
     href: '/admin/blog',
     label: 'Blog Admin',
@@ -55,6 +56,7 @@ const LINKS = [
     iconBg: 'bg-gradient-to-br from-violet-500/20 to-purple-500/10 text-violet-400',
     borderHover: 'hover:border-violet-500/40',
   },
+
 ]
 
 export default function AdminPage() {
