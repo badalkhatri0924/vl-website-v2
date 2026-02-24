@@ -1,37 +1,42 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/card'
-import { ExternalLink, FileText, Newspaper, ArrowRight, LayoutGrid, PenLine, MessageCircle, Linkedin, Twitter, X } from 'lucide-react'
+import { ExternalLink, ArrowRight, LayoutGrid, PenLine } from 'lucide-react'
 
 const LINKS = [
   {
     href: '/admin/product-post',
     label: 'LinkedIn Product post',
-    description: 'Generate posts from any product URL. Analyze the page, get 3–4 variations, save for your team.',
-    icon: Linkedin,
-    accent: 'from-amber-500/20 to-orange-500/10',
-    iconBg: 'bg-gradient-to-br from-amber-500/20 to-orange-500/10 text-amber-400',
-    borderHover: 'hover:border-amber-500/40',
+    description: 'Generate posts from any product URL. Analyze the page, get 4–6 variations, save for your team.',
+    iconSrc: '/linkedin.png',
+    iconAlt: 'LinkedIn logo',
+    accent: 'from-sky-500/20 to-blue-500/10',
+    iconBg: 'bg-gradient-to-br from-sky-500/20 to-blue-500/10 text-sky-400',
+    borderHover: 'hover:border-sky-500/40',
   },
   {
     href: '/admin/twitter-product-post',
     label: 'Twitter Product post',
-    description: 'Generate tweets from any product URL. Problem/solution style, 3–4 variations, copy tracking for your team.',
-    icon: X,
+    description: 'Generate posts from any product URL. Analyze the page, get 3–4 variations, save for your team.',
+    iconSrc: '/twitter.png',
+    iconAlt: 'Twitter logo',
     accent: 'from-sky-500/20 to-blue-500/10',
-    iconBg: 'bg-gradient-to-br from-sky-500/20 to-blue-500/10 text-sky-400',
+    iconBg: 'bg-white',
     borderHover: 'hover:border-sky-500/40',
   },
   {
     href: '/admin/news-post',
     label: 'LinkedIn News post',
     description: 'Generate LinkedIn posts from latest news. Pick AI News, Tech India, or Tech Global.',
-    icon: Linkedin,
-    accent: 'from-amber-500/20 to-orange-500/10',
-    iconBg: 'bg-gradient-to-br from-amber-500/20 to-orange-500/10 text-amber-400',
-    borderHover: 'hover:border-amber-500/40',
+    iconSrc: '/linkedin.png',
+    iconAlt: 'LinkedIn logo',
+    accent: 'from-sky-500/20 to-blue-500/10',
+    iconBg: 'bg-gradient-to-br from-sky-500/20 to-blue-500/10 text-sky-400',
+    borderHover: 'hover:border-sky-500/40',
   },
+  
   {
     href: '/admin/blog',
     label: 'Blog Admin',
@@ -51,6 +56,7 @@ const LINKS = [
     iconBg: 'bg-gradient-to-br from-violet-500/20 to-purple-500/10 text-violet-400',
     borderHover: 'hover:border-violet-500/40',
   },
+
 ]
 
 export default function AdminPage() {
@@ -87,7 +93,17 @@ export default function AdminPage() {
                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br ${item.accent}`} />
                 <CardContent className="relative p-6 md:p-7 flex items-start gap-5">
                   <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl ${item.iconBg} ring-1 ring-white/5`}>
-                    <Icon size={24} strokeWidth={1.75} />
+                    {item.iconSrc ? (
+                      <Image
+                        src={item.iconSrc}
+                        alt={item.iconAlt || item.label}
+                        width={28}
+                        height={28}
+                        className="object-contain"
+                      />
+                    ) : (
+                      Icon && <Icon size={24} strokeWidth={1.75} />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h2 className="font-display font-bold text-white text-lg mb-2 flex items-center gap-2">

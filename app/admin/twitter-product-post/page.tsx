@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Copy, Check, ExternalLink, ChevronDown, ArrowLeft } from 'lucide-react'
+import { Copy, Check, ExternalLink, ChevronDown, ArrowLeft, Download, Eye } from 'lucide-react'
 import { Avatar } from '../blog/Avatar'
 import type { TwitterPostBatch, TwitterPostItem } from '@/lib/twitterPosts'
 
@@ -192,6 +192,27 @@ export default function TwitterProductPostPage() {
           <div className="pointer-events-none absolute inset-0 bg-red-950/60 backdrop-blur-[1px]" />
         )}
         <CardContent className="relative p-4">
+          {post.imageUrl && (
+            <div className="mb-4 overflow-hidden rounded-md border border-slate-800/60 bg-slate-900/80">
+              <div className="relative">
+                <img
+                  src={post.imageUrl}
+                  alt={post.hook || 'Twitter post image'}
+                  className="w-full h-56 md:h-80 object-cover"
+                />
+                <a
+                  href={post.imageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute top-3 right-3 inline-flex items-center justify-center rounded-full bg-slate-950/95 px-3 py-1 text-[11px] font-semibold tracking-wide text-white shadow-lg shadow-black/50 backdrop-blur-md hover:bg-slate-900 hover:text-white transition-colors"
+                  title="View image"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  View
+                </a>
+              </div>
+            </div>
+          )}
           {post.hook && (
             <p className="text-slate-200 font-bold text-lg mb-3">{post.hook}</p>
           )}
