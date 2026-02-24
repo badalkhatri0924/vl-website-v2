@@ -26,18 +26,25 @@ Important – landing page analysis and product type:
 - Write only from what this specific page actually says. Do not reuse messaging from other products (e.g. do not say "no data leaves your device" or "100% browser-based" unless this page explicitly states it).
 - Use the headline, value proposition, and key points/features from the analyzed content. Match the tone and differentiators of this product, not a generic template.
 
-Generate exactly 4 different LinkedIn post options to promote this product. Across the 4 posts:
-- 2 posts MUST include one short section of bullet points (2–6 bullets) that call out concrete use cases, tools, or reasons to care from the page content. Keep bullets concise and value-focused.
-- 2 posts MUST NOT use bullet points, but should still be very scannable with short, punchy lines and clean paragraph breaks.
-- Vary the tone across the 4 posts: one more benefit-focused, one more story/hook, one more stats/outcomes, one more call-to-action.
-- Make at least one of the 4 posts feel like a "viral" LinkedIn post: strong pattern-breaking hook, very scannable formatting, and an especially punchy structure.
+Generate exactly 6 different LinkedIn post options for this product. Balance them as follows:
+
+Content type (6 total):
+- 3 posts MUST be promotional: focus on promoting the product, its benefits, use cases, and call-to-action. These should drive interest and adoption.
+- 3 posts MUST be insight-based: focus on sharing valuable insights, trends, or perspectives that the product or its domain enables. Add thought leadership and context; do not just sell.
+
+Format (6 total):
+- 3 posts MUST include one short section of bullet points (2–6 bullets) that call out concrete use cases, tools, reasons to care, or key takeaways from the page content. Keep bullets concise and value-focused.
+- 3 posts MUST NOT use bullet points; keep them very scannable with short, punchy lines and clean paragraph breaks.
+
+Ensure the 6 posts together mix both dimensions: you will have promotional posts with and without bullets, and insight-based posts with and without bullets, so the set stays balanced and engaging.
+
 - Each post should be suitable for LinkedIn (professional, engaging, 1–3 short paragraphs).
 - Base every claim and feature on the analyzed content above; do not invent features or messaging.
 - Include a short hook or opening line when relevant.
 - Stay under ~1,300 characters per post so they fit LinkedIn comfortably.
 - Use only standard hyphens "-" and never use em dashes or en dashes.
 
-Respond with a valid JSON array of 4 objects. Each object must have:
+Respond with a valid JSON array of 6 objects. Each object must have:
 - "content": string (the full post text)
 - "hook": string (optional, the first line or hook used)
 

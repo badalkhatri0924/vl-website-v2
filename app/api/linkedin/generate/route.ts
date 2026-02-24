@@ -108,7 +108,7 @@ export interface LinkedInPostOption {
 /**
  * POST /api/linkedin/generate
  * Body: { productName: string, productUrl: string }
- * Returns: { success: true, posts: LinkedInPostOption[] } (3–4 variations)
+ * Returns: { success: true, posts: LinkedInPostOption[] } (6 variations)
  */
 export async function POST(request: NextRequest) {
   try {
@@ -195,7 +195,7 @@ export async function POST(request: NextRequest) {
 
     const posts: LinkedInPostOption[] = Array.isArray(rawPosts)
       ? rawPosts
-          .slice(0, 4)
+          .slice(0, 6)
           .map((p: { content?: string; hook?: string }) => ({
             content: typeof p?.content === 'string' ? p.content : String(p?.content || ''),
             hook: typeof p?.hook === 'string' ? p.hook : undefined,
