@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { addNewPostBatch, type SourceArticle } from '@/lib/newPosts'
+import { generateImageForShortContent } from '@/lib/content/imageHandler'
+import { uploadNewsPostImage } from '@/lib/firebase/storage'
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,7 +36,56 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const batch = await addNewPostBatch({ newsCategory, newsUrl, sourceArticles, posts })
+    // Generate one image per news-based LinkedIn post, based on its own content, and upload to Storage.
+    const postsWithImages = await Promise.all(
+      posts.map(async (post: { content: string; hook?: string; sourceArticleIndex?: number }) => {
+        let imageUrl: string | null = null
+        try {
+          const baseText = post.hook || (post.content ? String(post.content).slice(0, 120) : undefined)
+          if (baseText) {
+            const generatedUrl = await generateImageForShortContent(baseText, {
+              contextLabel: 'News LinkedIn post',
+            })
+
+            if (generatedUrl && generatedUrl.startsWith('data:')) {
+              const [meta, base64Data] = generatedUrl.split(',')
+              const mimeMatch = meta.match(/data:(.+);base64/)
+              const mimeType = mimeMatch?.[1] || 'image/png'
+              const buffer = Buffer.from(base64Data, 'base64')
+
+              imageUrl = await uploadNewsPostImage(buffer, mimeType)
+            } else {
+              imageUrl = generatedUrl
+            }
+          }
+        } catch (imageError) {
+          console.warn('Failed to generate image for news post:', imageError)
+        }
+
+        const safePost: {
+          content: string
+          hook?: string
+          sourceArticleIndex?: number
+          imageUrl?: string
+        } = {
+          content: post.content,
+        }
+
+        if (post.hook && post.hook.trim()) {
+          safePost.hook = post.hook.trim()
+        }
+        if (typeof post.sourceArticleIndex === 'number' && Number.isFinite(post.sourceArticleIndex)) {
+          safePost.sourceArticleIndex = Math.floor(post.sourceArticleIndex)
+        }
+        if (imageUrl && imageUrl.trim()) {
+          safePost.imageUrl = imageUrl.trim()
+        }
+
+        return safePost
+      })
+    )
+
+    const batch = await addNewPostBatch({ newsCategory, newsUrl, sourceArticles, posts: postsWithImages })
     return NextResponse.json({ success: true, batch })
   } catch (err) {
     console.error('Error saving news posts:', err)

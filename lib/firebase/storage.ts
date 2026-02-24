@@ -47,3 +47,18 @@ export async function uploadLinkedInPostImage(buffer: Buffer, mimeType: string):
   return stripTokenFromDownloadUrl(fullUrl)
 }
 
+/**
+ * Upload a raw image buffer for a News/LinkedIn-style post to Firebase Storage and return its download URL.
+ * Images are stored under the `news-post-images/` prefix.
+ */
+export async function uploadNewsPostImage(buffer: Buffer, mimeType: string): Promise<string> {
+  const timestamp = Date.now()
+  const extension = mimeType.split('/')[1] || 'png'
+  const path = `news-post-images/post-${timestamp}-${Math.random().toString(36).slice(2)}.${extension}`
+  const storageRef = ref(storage, path)
+
+  await uploadBytes(storageRef, buffer, { contentType: mimeType })
+  const fullUrl = await getDownloadURL(storageRef)
+  return stripTokenFromDownloadUrl(fullUrl)
+}
+

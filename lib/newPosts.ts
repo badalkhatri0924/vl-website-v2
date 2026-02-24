@@ -16,6 +16,8 @@ export interface NewPostItem {
   hook?: string
   /** 0-based index into the batch's sourceArticles – which article this post is based on */
   sourceArticleIndex?: number
+  /** Optional image generated from this news post content */
+  imageUrl?: string
   copiedBy?: string
   copiedAt?: string
 }
@@ -74,6 +76,7 @@ function normalizePosts(posts: unknown): NewPostItem[] {
       content: typeof item.content === 'string' ? item.content : '',
       hook: typeof item.hook === 'string' ? item.hook : undefined,
       sourceArticleIndex,
+      imageUrl: typeof item.imageUrl === 'string' ? item.imageUrl : undefined,
       copiedBy: typeof item.copiedBy === 'string' ? item.copiedBy : undefined,
       copiedAt: parseCopiedAt(item.copiedAt),
     }
