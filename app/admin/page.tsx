@@ -7,7 +7,7 @@ import { ExternalLink, ArrowRight, LayoutGrid, PenLine } from 'lucide-react'
 
 const LINKS = [
   {
-    href: '/admin/product-post',
+    href: '/admin/linkedin-product-post',
     label: 'LinkedIn Product post',
     description: 'Generate posts from any product URL. Analyze the page, get 4–6 variations, save for your team.',
     iconSrc: '/linkedin.png',

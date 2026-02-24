@@ -302,7 +302,7 @@ export default function TwitterProductPostPage() {
         </Card>
 
         <div className="mb-6 flex flex-wrap gap-3 items-center">
-          <Link href="/admin/product-post">
+          <Link href="/admin/linkedin-product-post">
             <Button variant="secondary">LinkedIn Product post</Button>
           </Link>
           <Link href="/admin/blog">
