@@ -478,6 +478,11 @@ export default function BlogAdminPage() {
                     <li><span className="font-semibold text-red-400">Reject</span> – delete the pending post if you do not want to use it.</li>
                   </ul>
                 </li>
+                <li>
+                  <span className="font-semibold text-white">LinkedIn content (after Publish)</span> – once a post is published, use{' '}
+                  <span className="font-semibold text-sky-400">LinkedIn Content</span> to generate an AI-written LinkedIn post from the blog.
+                  Then <span className="font-semibold text-white">Copy</span> it to share on LinkedIn. Only one team member can copy each post (tracked to avoid duplicates).
+                </li>
               </ol>
               <p className="text-xs text-slate-500">
                 Changes only go live on the public site when you choose{' '}
@@ -683,7 +688,7 @@ export default function BlogAdminPage() {
                               variant="primary"
                               onClick={() => handleGenerateLinkedInContent(post.id)}
                               disabled={generatingLinkedInPostId === post.id}
-                              className="flex-1 min-w-[200px] bg-sky-600 hover:bg-sky-700"
+                              className="flex-1 min-w-[200px] rounded-lg bg-sky-600 hover:bg-sky-700"
                             >
                               {generatingLinkedInPostId === post.id ? (
                                 'Generating...'
@@ -891,7 +896,7 @@ export default function BlogAdminPage() {
                           variant="primary"
                           onClick={() => handleGenerateLinkedInContent(selectedPost.id)}
                           disabled={generatingLinkedInPostId === selectedPost.id}
-                          className="bg-sky-600 hover:bg-sky-700"
+                          className="rounded-lg bg-sky-600 hover:bg-sky-700"
                         >
                           {generatingLinkedInPostId === selectedPost.id ? (
                             'Generating...'
