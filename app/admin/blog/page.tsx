@@ -655,7 +655,7 @@ export default function BlogAdminPage() {
                               </Button>
                             )}
                             {post.copiedBy && (
-                              <span className="inline-flex items-center rounded-lg border border-gray-600/50 bg-gray-800/80 px-4 py-2 text-xs text-slate-200">
+                              <span className="inline-flex items-center justify-center rounded-lg border border-gray-600/50 bg-gray-800/80 px-4 py-2 text-sm font-medium text-slate-200 min-h-[2.5rem]">
                                 Copied by {post.copiedBy}
                                 {post.copiedAt && (
                                   <span className="ml-1 text-slate-400">
@@ -864,7 +864,7 @@ export default function BlogAdminPage() {
                           </Button>
                         )}
                         {selectedPost.copiedBy && (
-                          <span className="inline-flex items-center rounded-lg border border-gray-600/50 bg-gray-800/80 px-4 py-2 text-xs text-slate-200">
+                          <span className="inline-flex items-center justify-center rounded-lg border border-gray-600/50 bg-gray-800/80 px-4 py-2 text-sm font-medium text-slate-200 min-h-[2.5rem]">
                             Copied by {selectedPost.copiedBy}
                             {selectedPost.copiedAt && (
                               <span className="ml-1 text-slate-400">
