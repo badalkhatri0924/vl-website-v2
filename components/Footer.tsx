@@ -64,38 +64,75 @@ const Footer: React.FC = () => {
             <p className="text-base font-light text-slate-500 leading-relaxed">
               Our team operates with the highest level of administrative discretion for sensitive public sector projects.
             </p>
-            <Link 
-              href="/enquiry"
-              className="p-8 border border-slate-100 bg-slate-50/50 cursor-pointer hover:border-accent/40 transition-colors block"
-            >
-              <div className="flex items-center space-x-4 mb-3">
-                 <div className="w-8 h-px bg-accent"></div>
-                 <span className="text-base font-black uppercase tracking-ultra text-accent">Secure Line</span>
+            <div className="p-8 border border-slate-100 bg-slate-50/50 hover:border-accent/40 transition-colors">
+              <Link
+                href="/enquiry"
+                className="flex items-center space-x-4 mb-3 group"
+              >
+                 <div className="w-8 h-px bg-accent group-hover:bg-accent/80 transition-colors"></div>
+                 <span className="text-base font-black uppercase tracking-ultra text-accent group-hover:text-obsidian-900 transition-colors">
+                  Secure Line
+                 </span>
+              </Link>
+              <a
+                href="mailto:contact@versionlabs.co"
+                className="text-obsidian-900 font-display text-base mb-3 hover:text-accent transition-colors"
+              >
+                contact@versionlabs.co
+              </a>
+              <div className="flex items-center justify-between gap-4 mt-4">
+                {/* <Link 
+                  href="/enquiry"
+                  className="text-sm font-black uppercase tracking-ultra text-obsidian-900 hover:text-accent transition-colors"
+                >
+                  Contact Us
+                </Link> */}
+                <div className="flex items-center space-x-3">
+                  {/* LinkedIn */}
+                  <a
+                    href="https://www.linkedin.com/company/version-labs"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Version Labs on LinkedIn"
+                    className="p-2 rounded-full border border-slate-200 hover:border-accent/60 hover:bg-white transition-colors group"
+                  >
+                    <svg
+                      className="w-4 h-4 text-slate-500 group-hover:text-[#0077B5] transition-colors"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003zM7.118 20.452H3.56V9h3.559v11.452zM5.34 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zm15.11 13.019h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.353V9h3.414v1.561h.047c.476-.9 1.636-1.85 3.369-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286z" />
+                    </svg>
+                  </a>
+
+                  {/* X (formerly Twitter) */}
+                  <a
+                    href="https://x.com/versionlabs?s=20"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Version Labs on X"
+                    className="p-2 rounded-full border border-slate-200 hover:border-accent/60 hover:bg-white transition-colors group"
+                  >
+                    <svg
+                      className="w-4 h-4 text-slate-500 group-hover:text-black transition-colors"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                  </a>
+                </div>
               </div>
-              <p className="text-obsidian-900 font-display text-base">contact@versionlabs.co</p>
-            </Link>
+            </div>
           </div>
         </div>
         
         {/* Bottom Institutional Strip */}
         <div className="pt-12 border-t border-slate-100">
-          <div className="flex flex-col lg:flex-row justify-center items-center gap-10">
-            <div className="flex items-center space-x-8">
-              <p className="text-base font-black uppercase tracking-[0.2em] text-slate-300">
-                © 2025 Version Labs LLP. All rights reserved.
-              </p>
-              <div className="hidden lg:block h-5 w-px bg-slate-200"></div>
-              {/* <div className="flex items-center space-x-3 text-base font-black text-accent/60 uppercase tracking-widest">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
-                <span>Certified Versionlabs Platform</span>
-              </div> */}
-            </div>
-
-            {/* <div className="flex flex-wrap justify-center gap-x-8 gap-y-5 text-base font-black uppercase tracking-ultra text-slate-300">
-              <button className="hover:text-accent transition-colors">DIGITAL PRIVACY ACT</button>
-              <span className="hidden lg:block text-slate-200">•</span>
-              <button className="hover:text-accent transition-colors">STANDARD PROTOCOLS</button>
-            </div> */}
+          <div className="flex justify-center">
+            <p className="text-base font-black uppercase tracking-[0.2em] text-slate-300 text-center">
+              © 2025 Version Labs LLP. All rights reserved.
+            </p>
           </div>
         </div>
       </div>
