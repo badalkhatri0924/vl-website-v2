@@ -5,6 +5,7 @@ import WhyUs from '@/components/WhyUs'
 import CaseStudies from '@/components/CaseStudies'
 import PressSection from '@/components/PressSection'
 import Testimonials from '@/components/Testimonials'
+import { getBlogPosts, formatDate } from '@/lib/sanity/utils'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -32,7 +33,10 @@ export const metadata: Metadata = {
   },
 }
 
-export default function Home() {
+export default async function Home() {
+  const allPosts = await getBlogPosts()
+  const posts = allPosts.slice(0, 3)
+
   return (
     <>
       <Hero />
@@ -42,6 +46,73 @@ export default function Home() {
       <CaseStudies />
       <PressSection />
       {/* <Testimonials /> */}
+
+      {/* Blog preview section */}
+      <section className="py-24 bg-[#FDFDFD]">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-12">
+            <div>
+              <h2 className="text-accent text-sm font-black uppercase tracking-ultra mb-4">
+                Insights
+              </h2>
+              <p className="text-3xl md:text-4xl font-display font-black text-obsidian-900 tracking-tight max-w-xl">
+                Strategic commentary on national digital infrastructure.
+              </p>
+            </div>
+            <Link
+              href="/blog"
+              className="inline-flex items-center space-x-3 px-6 py-3 bg-obsidian-900 text-white text-xs md:text-sm font-black uppercase tracking-ultra hover:bg-accent transition-colors duration-300"
+            >
+              <span>View more</span>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {posts.map((post) => (
+              <article
+                key={post._id}
+                className="flex flex-col bg-white border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-300 overflow-hidden"
+              >
+                <div className="relative w-full h-56 overflow-hidden bg-slate-100">
+                  <img
+                    src={post.imageUrl || 'https://via.placeholder.com/800x450/4A5568/FFFFFF?text=Blog+Post'}
+                    alt={post.title}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  />
+                </div>
+                <div className="p-6 flex flex-col flex-1">
+                  <p className="text-[11px] font-black uppercase tracking-ultra text-slate-400 mb-3">
+                    {post.category}
+                  </p>
+                  <h3 className="text-lg md:text-xl font-display font-black text-obsidian-900 leading-snug tracking-tight mb-3">
+                    {post.title}
+                  </h3>
+                  <p className="text-slate-600 text-sm leading-relaxed mb-6 line-clamp-3">
+                    {post.excerpt}
+                  </p>
+                  <div className="mt-auto flex items-center justify-between text-[11px] font-black uppercase tracking-ultra text-slate-400">
+                    <span>{formatDate(post.publishedAt)}</span>
+                    <span className="text-slate-500">{post.readTime}</span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
       
       {/* High-Impact Bottom Call to Action */}
       <section className="py-36 bg-obsidian-950 relative overflow-hidden">
