@@ -173,7 +173,7 @@ export async function updatePendingBlogPost(
       return false
     }
 
-    await updateDoc(docRef, updates as Record<string, unknown>)
+    await updateDoc(docRef, updates as Record<string, any>)
     return true
   } catch (error) {
     console.error('Error updating pending blog post in Firestore:', error)
