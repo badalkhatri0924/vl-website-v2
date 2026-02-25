@@ -6,6 +6,15 @@ import { PressItem } from '@/types';
 
 export const PRESS_ITEMS: PressItem[] = [
   {
+    id: "p_ai_impact",
+    region: "INDIA",
+    headline: "AI Impact Summit 2026: India Creates Guinness World Record With 2.5 Lakh AI Pledges",
+    publisher: "ANALYTICS INSIGHT",
+    imageUrl: "https://firebasestorage.googleapis.com/v0/b/versionlabs-official.firebasestorage.app/o/press-thumbnail%2Fanalyticsinsight_2026-02-19_f4ra7u5n_Somatirtha-Project-3.avif?alt=media",
+    date: "Feb 19, 2026",
+    link: "https://www.analyticsinsight.net/news/ai-impact-summit-2026-india-creates-guinness-world-record-with-25-lakh-ai-pledges"
+  },
+  {
     id: "p1",
     region: "MALAYSIA",
     headline: "Rafizi: Govt launches AI Untuk Rakyat programme to boost AI literacy among Malaysians",
