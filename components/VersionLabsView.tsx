@@ -351,7 +351,7 @@ const VersionLabsView: React.FC = () => {
         <div className="mt-32 flex flex-col items-center">
           <Link 
             href="/"
-            className="group px-12 py-6 bg-transparent border border-white/10 text-white text-[11px] font-black uppercase tracking-ultra hover:bg-white hover:text-obsidian-900 transition-all duration-500 flex items-center space-x-6"
+            className="group px-6 py-3 bg-transparent border border-white/10 text-white text-[11px] font-black uppercase tracking-ultra hover:bg-white hover:text-obsidian-900 transition-all duration-500 flex items-center space-x-6"
           >
             <svg className="w-4 h-4 transition-transform group-hover:-translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M10 19l-7-7m0 0l7-7m-7 7h18" />

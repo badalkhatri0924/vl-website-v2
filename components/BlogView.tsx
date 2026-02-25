@@ -239,7 +239,7 @@ const BlogView: React.FC<BlogViewProps> = ({ posts }) => {
            </p>
            <div className="flex justify-center space-x-6">
              <button 
-              className="px-12 py-6 bg-obsidian-900 text-white text-sm font-black uppercase tracking-ultra hover:bg-accent transition-all duration-300 shadow-sm"
+              className="px-6 py-3 bg-obsidian-900 text-white text-sm font-black uppercase tracking-ultra hover:bg-accent transition-all duration-300 shadow-sm"
              >
                 Subscribe to Insights
              </button>
