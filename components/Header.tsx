@@ -99,7 +99,7 @@ const Header: React.FC = () => {
             {/* Inquire Now Button */}
             <Link 
               href="/enquiry"
-              className={`group/btn relative px-10 py-5 font-black uppercase tracking-[0.35em] text-[11px] transition-all duration-300 flex items-center space-x-4 border-2 ${
+              className={`group/btn relative px-6 py-3 font-black uppercase tracking-[0.35em] text-[11px] transition-all duration-300 flex items-center space-x-4 border-2 ${
                 pathname === '/enquiry' 
                 ? 'border-accent bg-accent text-white hover:bg-accent-600 hover:border-accent-600' 
                 : useWhiteHeader 
@@ -181,7 +181,7 @@ const Header: React.FC = () => {
           <Link
             href="/enquiry"
             onClick={() => setIsMobileMenuOpen(false)}
-            className={`mt-8 group/btn relative w-full px-8 py-5 font-black uppercase tracking-[0.35em] text-[11px] transition-all duration-300 flex items-center justify-center space-x-4 border-2 ${
+            className={`mt-8 group/btn relative w-full px-6 py-3 font-black uppercase tracking-[0.35em] text-[11px] transition-all duration-300 flex items-center justify-center space-x-4 border-2 ${
               pathname === '/enquiry'
                 ? 'border-accent bg-accent text-white hover:bg-accent-600 hover:border-accent-600'
                 : useWhiteHeader

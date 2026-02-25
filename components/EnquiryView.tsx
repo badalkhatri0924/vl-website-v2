@@ -169,7 +169,7 @@ const EnquiryView: React.FC = () => {
                 <div className="pt-10">
                   <button 
                     disabled={formState === 'submitting'}
-                    className="w-full md:w-auto px-16 py-7 bg-obsidian-900 text-white text-sm font-black uppercase tracking-ultra flex items-center justify-center space-x-6 hover:bg-accent transition-all duration-300 shadow-xl disabled:opacity-50 group"
+                    className="w-full md:w-auto px-6 py-4 bg-obsidian-900 text-white text-sm font-black uppercase tracking-ultra flex items-center justify-center space-x-6 hover:bg-accent transition-all duration-300 shadow-xl disabled:opacity-50 group"
                   >
                     <span>{formState === 'submitting' ? 'Submitting Request...' : 'Submit Request'}</span>
                     <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

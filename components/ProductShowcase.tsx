@@ -43,7 +43,7 @@ const ProductShowcase: React.FC = () => {
             className="inline-flex items-center space-x-4 bg-accent hover:bg-accent-600 transition-all duration-500 p-1 shadow-[0_10px_40px_rgba(0,100,224,0.2)] group"
           >
             <div className="bg-accent-400 p-4 text-white group-hover:scale-110 transition-transform">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
