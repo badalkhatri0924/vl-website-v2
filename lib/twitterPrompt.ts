@@ -54,6 +54,7 @@ CRITICAL – Impactful content format (follow this structure):
    - Keep each tweet under 280 characters total (including newlines and hashtags). If the full structure does not fit, shorten lines or drop one benefit line, but keep the hook + problem + solution + CTA + hashtags.
    - Use only standard hyphens "-" and never em dashes or en dashes.
    - When you use bullet-style lists, start lines with "- " (dash + space), similar to: "- Recent searches for instant recall". Follow the UnCloud / Memry examples: a short header line like "Now in [Product]:" followed by 2–5 bullet lines.
+   - All 6 tweets in the JSON array must be clearly distinct from each other (different hooks, angles, and line wording). Do not reuse full lines or copy/paste structure across tweets, except for the product handle, URL, or domain in the CTA and the hashtags.
 
 Generate exactly 6 different Twitter post options. Vary them like this:
 - 3 posts MUST be classic problem/solution with ONLY plain lines (no "- " bullet prefixes anywhere). Think of the SaveMemry examples with just short sentences on each line, no bullets.
