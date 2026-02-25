@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getPendingBlogPost, removePendingBlogPost } from '@/lib/pendingBlogs'
+import { getPendingBlogPost, removePendingBlogPost, updatePendingBlogPost } from '@/lib/pendingBlogs'
 import { createBlogPost } from '@/lib/sanity/writeClient'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://versionlabs.co'
 
 /**
  * POST endpoint to approve a pending blog post and send it to Sanity
@@ -46,8 +48,17 @@ export async function POST(request: NextRequest) {
       publishStatus: publishStatus as 'draft' | 'published',
     })
 
-    // Remove from pending
-    await removePendingBlogPost(pendingId)
+    if (publishStatus === 'published') {
+      // Keep in list: update Firestore with published status and URL
+      const publishedUrl = `${SITE_URL}/blog/${pendingPost.slug}`
+      await updatePendingBlogPost(pendingId, {
+        publishStatus: 'published',
+        publishedUrl,
+      })
+    } else {
+      // Draft: remove from pending (current behavior)
+      await removePendingBlogPost(pendingId)
+    }
 
     return NextResponse.json({
       success: true,

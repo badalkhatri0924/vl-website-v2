@@ -5,6 +5,7 @@ import {
   getDoc, 
   addDoc, 
   deleteDoc, 
+  updateDoc,
   query, 
   orderBy,
   Timestamp 
@@ -26,6 +27,10 @@ export interface PendingBlogPost {
   imageUrl?: string
   createdAt: string
   publishStatus?: 'draft' | 'published'
+  publishedUrl?: string // Full URL when published (e.g. https://versionlabs.co/blog/slug)
+  linkedInContent?: string // Generated LinkedIn post content
+  copiedBy?: string // Username from localStorage when user copies LinkedIn content
+  copiedAt?: string // ISO date when copied
 }
 
 const COLLECTION_NAME = 'blogListings'
@@ -150,6 +155,29 @@ export async function addPendingBlogPost(post: Omit<PendingBlogPost, 'id' | 'cre
   } catch (error) {
     console.error('Error adding pending blog post to Firestore:', error)
     throw error
+  }
+}
+
+/**
+ * Update a pending blog post (e.g. mark as published, store LinkedIn content)
+ */
+export async function updatePendingBlogPost(
+  id: string,
+  updates: Partial<Pick<PendingBlogPost, 'publishStatus' | 'publishedUrl' | 'linkedInContent' | 'copiedBy' | 'copiedAt'>>
+): Promise<boolean> {
+  try {
+    const docRef = doc(db, COLLECTION_NAME, id)
+    const docSnapshot = await getDoc(docRef)
+
+    if (!docSnapshot.exists()) {
+      return false
+    }
+
+    await updateDoc(docRef, updates as Record<string, unknown>)
+    return true
+  } catch (error) {
+    console.error('Error updating pending blog post in Firestore:', error)
+    return false
   }
 }
 

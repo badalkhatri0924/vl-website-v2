@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Lock } from 'lucide-react'
+import { Lock, Linkedin, CheckCircle2, Copy, Check } from 'lucide-react'
 import { PendingBlogPost } from '@/lib/pendingBlogs'
 import ReactMarkdown from 'react-markdown'
 import PortableTextRenderer from '@/components/PortableTextRenderer'
@@ -14,6 +14,7 @@ import { Avatar } from './Avatar'
 
 const BLOG_ADMIN_PASSWORD = 'vl@2025'
 const BLOG_ADMIN_AUTH_KEY = 'blog-admin-auth'
+const ADMIN_USER_NAME_KEY = 'admin-user-name'
 
 function getDisplayMarkdownFromBody(post: PendingBlogPost): string {
   const rawBody = post.body
@@ -58,6 +59,9 @@ export default function BlogAdminPage() {
   const [enteredPassword, setEnteredPassword] = useState('')
   const [loginError, setLoginError] = useState('')
   const [showHowItWorks, setShowHowItWorks] = useState(false)
+  const [generatingLinkedInPostId, setGeneratingLinkedInPostId] = useState<string | null>(null)
+  const [copiedPostId, setCopiedPostId] = useState<string | null>(null)
+  const [userName, setUserName] = useState('')
 
   // On mount, check blog admin auth status from localStorage
   useEffect(() => {
@@ -79,6 +83,14 @@ export default function BlogAdminPage() {
     } finally {
       setCheckingAuth(false)
     }
+  }, [])
+
+  // Load admin username from localStorage (set by main admin layout login)
+  useEffect(() => {
+    try {
+      const name = typeof window !== 'undefined' ? window.localStorage.getItem(ADMIN_USER_NAME_KEY) : null
+      setUserName(name || '')
+    } catch {}
   }, [])
 
   // Once authenticated, load pending posts and generator metadata
@@ -235,6 +247,68 @@ export default function BlogAdminPage() {
   const handleViewDetails = (post: PendingBlogPost) => {
     setSelectedPost(post)
     setIsDetailsOpen(true)
+  }
+
+  const handleCopyLinkedInContent = async (post: PendingBlogPost) => {
+    if (!post.linkedInContent) return
+    const copyUserName = userName?.trim() ?? ''
+    if (!copyUserName) {
+      setNotification({ message: 'Please log in with your name (admin layout) to copy content.', type: 'error' })
+      setTimeout(() => setNotification(null), 4000)
+      return
+    }
+    try {
+      const res = await fetch('/api/blog/linkedin-copy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId: post.id, copiedBy: copyUserName.trim() }),
+      })
+      const data = await res.json()
+      if (res.status === 409) {
+        setNotification({ message: 'This content was already copied by another team member.', type: 'error' })
+        setTimeout(() => setNotification(null), 4000)
+        return
+      }
+      if (!res.ok) {
+        setNotification({ message: data?.error || 'Failed to save copy record', type: 'error' })
+        setTimeout(() => setNotification(null), 4000)
+        return
+      }
+      await navigator.clipboard.writeText(post.linkedInContent)
+      setCopiedPostId(post.id)
+      setTimeout(() => setCopiedPostId(null), 3000)
+      await fetchPendingPosts()
+    } catch (error) {
+      console.error('Error copying LinkedIn content:', error)
+      setNotification({ message: 'Failed to copy', type: 'error' })
+      setTimeout(() => setNotification(null), 4000)
+    }
+  }
+
+  const handleGenerateLinkedInContent = async (postId: string) => {
+    try {
+      setGeneratingLinkedInPostId(postId)
+      const response = await fetch('/api/blog/linkedin-generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId }),
+      })
+      const data = await response.json()
+      if (data.success) {
+        setNotification({ message: 'LinkedIn content generated successfully', type: 'success' })
+        await fetchPendingPosts()
+        setTimeout(() => setNotification(null), 3000)
+      } else {
+        setNotification({ message: data?.error || 'Failed to generate LinkedIn content', type: 'error' })
+        setTimeout(() => setNotification(null), 5000)
+      }
+    } catch (error) {
+      console.error('Error generating LinkedIn content:', error)
+      setNotification({ message: 'Failed to generate LinkedIn content', type: 'error' })
+      setTimeout(() => setNotification(null), 5000)
+    } finally {
+      setGeneratingLinkedInPostId(null)
+    }
   }
 
   const formatDate = (dateString: string) => {
@@ -482,9 +556,14 @@ export default function BlogAdminPage() {
           </Card>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
-            {pendingPosts.map((post) => (
-              <Card key={post.id} className="h-full">
-                <CardContent className="p-6 h-full flex flex-col">
+            {pendingPosts.map((post) => {
+              const isCopied = Boolean(post.copiedBy?.trim())
+              return (
+              <Card
+                key={post.id}
+                className="h-full relative overflow-hidden"
+              >
+                <CardContent className="relative p-6 h-full flex flex-col">
                   <div className="space-y-4">
                     {/* Image on top */}
                     {post.imageUrl && (
@@ -499,7 +578,15 @@ export default function BlogAdminPage() {
 
                     {/* Content */}
                     <div>
-                      <h2 className="text-2xl font-display font-bold mb-2">{post.title}</h2>
+                      <div className="flex items-center gap-2 mb-2">
+                        <h2 className="text-2xl font-display font-bold">{post.title}</h2>
+                        {post.publishStatus === 'published' && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-600/30 text-green-400 border border-green-500/40">
+                            <CheckCircle2 size={14} />
+                            Published
+                          </span>
+                        )}
+                      </div>
                       <p className="text-slate-300 mb-3">{post.excerpt}</p>
                       <div className="flex flex-wrap gap-4 text-sm text-slate-400">
                         <span>Read Time: <span className="text-white">{post.readTime}</span></span>
@@ -510,45 +597,146 @@ export default function BlogAdminPage() {
                       </div>
                     </div>
 
+                    {/* Generated LinkedIn content (shown when published) */}
+                    {post.publishStatus === 'published' && post.linkedInContent && (
+                      <div
+                        className={`rounded-lg border p-4 ${
+                          isCopied
+                            ? 'border-red-600 bg-red-900/80'
+                            : 'border-sky-500/30 bg-sky-950/20'
+                        }`}
+                      >
+                        <h3 className="text-sm font-semibold text-sky-300 mb-2 flex items-center gap-2">
+                          <Linkedin size={16} />
+                          Generated LinkedIn Post
+                        </h3>
+                        <p className="text-slate-300 text-sm whitespace-pre-wrap break-words">{post.linkedInContent}</p>
+                      </div>
+                    )}
+
                     {/* Buttons in one row */}
-                    <div className="flex flex-wrap gap-2 pt-2">
-                      <Button
-                        variant="secondary"
-                        onClick={() => handleReject(post.id)}
-                        disabled={processing === `${post.id}-reject`}
-                        className="flex-1 min-w-[120px] bg-red-500 hover:bg-red-600 text-white hover:text-white border-red-600"
-                      >
-                        {processing === `${post.id}-reject` ? 'Processing...' : 'Reject'}
-                      </Button>
-                      <Button
-                        variant="primary"
-                        onClick={() => handleApprove(post.id, 'draft')}
-                        disabled={processing === `${post.id}-approve-draft`}
-                        className="flex-1 min-w-[150px] bg-amber-500 hover:bg-amber-600"
-                      >
-                        {processing === `${post.id}-approve-draft` ? 'Processing...' : 'Draft'}
-                      </Button>
-                      <Button
-                        variant="primary"
-                        onClick={() => handleApprove(post.id, 'published')}
-                        disabled={processing === `${post.id}-approve-published`}
-                        className="flex-1 min-w-[170px] bg-green-600 hover:bg-green-700"
-                      >
-                        {processing === `${post.id}-approve-published` ? 'Processing...' : 'Publish'}
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        onClick={() => handleViewDetails(post)}
-                        disabled={processing?.startsWith(`${post.id}-`)}
-                        className="flex-1 min-w-[120px]"
-                      >
-                        View Details
-                      </Button>
+                    <div className="flex flex-wrap gap-2 pt-2 items-center">
+                      {post.publishStatus === 'published' ? (
+                        post.linkedInContent ? (
+                          /* Content generated: View blog + Copy (hide Copy when already copied) */
+                          <>
+                            {post.publishedUrl && (
+                              <a
+                                href={post.publishedUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center rounded-lg border border-gray-600/50 bg-gray-800/80 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-gray-700/80 hover:text-white transition-colors"
+                              >
+                                View blog
+                              </a>
+                            )}
+                            {!isCopied && (
+                              <Button
+                                variant="secondary"
+                                onClick={() => handleCopyLinkedInContent(post)}
+                                className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-600/50 bg-gray-800/80 text-slate-200 hover:bg-gray-700/80 hover:text-white"
+                              >
+                                {copiedPostId === post.id ? (
+                                  <>
+                                    <Check size={16} />
+                                    Copied!
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy size={16} />
+                                    Copy
+                                  </>
+                                )}
+                              </Button>
+                            )}
+                            {post.copiedBy && (
+                              <span className="inline-flex items-center rounded-lg border border-gray-600/50 bg-gray-800/80 px-4 py-2 text-xs text-slate-200">
+                                Copied by {post.copiedBy}
+                                {post.copiedAt && (
+                                  <span className="ml-1 text-slate-400">
+                                    {new Date(post.copiedAt).toLocaleDateString(undefined, {
+                                      day: 'numeric',
+                                      month: 'short',
+                                      year: 'numeric',
+                                      hour: '2-digit',
+                                      minute: '2-digit',
+                                    })}
+                                  </span>
+                                )}
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          /* Content not yet generated: View blog and Generate LinkedIn Content */
+                          <>
+                            {post.publishedUrl && (
+                              <a
+                                href={post.publishedUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center rounded-lg border border-gray-600/50 bg-gray-800/80 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-gray-700/80 hover:text-white transition-colors"
+                              >
+                                View blog
+                              </a>
+                            )}
+                            <Button
+                              variant="primary"
+                              onClick={() => handleGenerateLinkedInContent(post.id)}
+                              disabled={generatingLinkedInPostId === post.id}
+                              className="flex-1 min-w-[200px] bg-sky-600 hover:bg-sky-700"
+                            >
+                              {generatingLinkedInPostId === post.id ? (
+                                'Generating...'
+                              ) : (
+                                <>
+                                  LinkedIn Content
+                                </>
+                              )}
+                            </Button>
+                          </>
+                        )
+                      ) : (
+                        <>
+                          <Button
+                            variant="secondary"
+                            onClick={() => handleReject(post.id)}
+                            disabled={processing === `${post.id}-reject`}
+                            className="flex-1 min-w-[120px] bg-red-500 hover:bg-red-600 text-white hover:text-white border-red-600"
+                          >
+                            {processing === `${post.id}-reject` ? 'Processing...' : 'Reject'}
+                          </Button>
+                          <Button
+                            variant="primary"
+                            onClick={() => handleApprove(post.id, 'draft')}
+                            disabled={processing === `${post.id}-approve-draft`}
+                            className="flex-1 min-w-[150px] bg-amber-500 hover:bg-amber-600"
+                          >
+                            {processing === `${post.id}-approve-draft` ? 'Processing...' : 'Draft'}
+                          </Button>
+                          <Button
+                            variant="primary"
+                            onClick={() => handleApprove(post.id, 'published')}
+                            disabled={processing === `${post.id}-approve-published`}
+                            className="flex-1 min-w-[170px] bg-green-600 hover:bg-green-700"
+                          >
+                            {processing === `${post.id}-approve-published` ? 'Processing...' : 'Publish'}
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            onClick={() => handleViewDetails(post)}
+                            disabled={processing?.startsWith(`${post.id}-`)}
+                            className="flex-1 min-w-[120px]"
+                          >
+                            View Details
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            );
+            })}
           </div>
         )}
 
@@ -559,7 +747,15 @@ export default function BlogAdminPage() {
             onClose={() => setIsDetailsOpen(false)}
           >
             <DialogHeader>
-              <DialogTitle className="pr-8 break-words">{selectedPost?.title}</DialogTitle>
+              <div className="flex items-center gap-2 flex-wrap pr-8">
+                <DialogTitle className="break-words">{selectedPost?.title}</DialogTitle>
+                {selectedPost?.publishStatus === 'published' && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-600/30 text-green-400 border border-green-500/40">
+                    <CheckCircle2 size={14} />
+                    Published
+                  </span>
+                )}
+              </div>
             </DialogHeader>
             {selectedPost && (
               <div className="space-y-6 overflow-y-auto flex-1 pr-2 -mr-2">
@@ -613,38 +809,136 @@ export default function BlogAdminPage() {
                   </div>
                 )}
 
-                <div className="flex gap-4 pt-4 border-t border-white/10 flex-wrap">
-                  <Button
-                    variant="secondary"
-                    onClick={() => handleReject(selectedPost.id)}
-                    disabled={processing === `${selectedPost.id}-reject`}
-                    className="bg-red-600 hover:bg-red-700 text-white hover:text-white border-red-600"
+                {selectedPost.publishStatus === 'published' && selectedPost.linkedInContent && (
+                  <div
+                    className={`rounded-lg border p-4 ${
+                      selectedPost.copiedBy?.trim()
+                        ? 'border-red-600 bg-red-900/80'
+                        : 'border-sky-500/30 bg-sky-950/20'
+                    }`}
                   >
-                    {processing === `${selectedPost.id}-reject` ? 'Processing...' : 'Reject'}
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={() => handleApprove(selectedPost.id, 'draft')}
-                    disabled={processing === `${selectedPost.id}-approve-draft`}
-                    className="bg-amber-500 hover:bg-amber-600"
-                  >
-                    {processing === `${selectedPost.id}-approve-draft` ? 'Processing...' : 'Draft'}
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={() => handleApprove(selectedPost.id, 'published')}
-                    disabled={processing === `${selectedPost.id}-approve-published`}
-                    className="bg-green-600 hover:bg-green-700"
-                  >
-                    {processing === `${selectedPost.id}-approve-published` ? 'Processing...' : 'Publish'}
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={() => handleViewDetails(selectedPost)}
-                    disabled={processing?.startsWith(`${selectedPost.id}-`)}
-                  >
-                    View Details
-                  </Button>
+                    <h3 className="text-sm font-semibold text-sky-300 mb-2 flex items-center gap-2">
+                      <Linkedin size={16} />
+                      Generated LinkedIn Post
+                    </h3>
+                    <p className="text-slate-300 text-sm whitespace-pre-wrap break-words">{selectedPost.linkedInContent}</p>
+                  </div>
+                )}
+
+                <div className="flex gap-4 pt-4 border-t border-white/10 flex-wrap items-center">
+                  {selectedPost.publishStatus === 'published' ? (
+                    selectedPost.linkedInContent ? (
+                      <>
+                        {selectedPost.publishedUrl && (
+                          <a
+                            href={selectedPost.publishedUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center rounded-lg border border-gray-600/50 bg-gray-800/80 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-gray-700/80 hover:text-white transition-colors"
+                          >
+                            View blog
+                          </a>
+                        )}
+                        {!selectedPost.copiedBy?.trim() && (
+                          <Button
+                            variant="secondary"
+                            onClick={() => handleCopyLinkedInContent(selectedPost)}
+                            className="inline-flex items-center gap-2 rounded-lg border border-gray-600/50 bg-gray-800/80 text-slate-200 hover:bg-gray-700/80 hover:text-white"
+                          >
+                            {copiedPostId === selectedPost.id ? (
+                              <>
+                                <Check size={16} />
+                                Copied!
+                              </>
+                            ) : (
+                              <>
+                                <Copy size={16} />
+                                Copy
+                              </>
+                            )}
+                          </Button>
+                        )}
+                        {selectedPost.copiedBy && (
+                          <span className="inline-flex items-center rounded-lg border border-gray-600/50 bg-gray-800/80 px-4 py-2 text-xs text-slate-200">
+                            Copied by {selectedPost.copiedBy}
+                            {selectedPost.copiedAt && (
+                              <span className="ml-1 text-slate-400">
+                                {new Date(selectedPost.copiedAt).toLocaleDateString(undefined, {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                })}
+                              </span>
+                            )}
+                          </span>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {selectedPost.publishedUrl && (
+                          <a
+                            href={selectedPost.publishedUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center rounded-lg border border-gray-600/50 bg-gray-800/80 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-gray-700/80 hover:text-white transition-colors"
+                          >
+                            View blog
+                          </a>
+                        )}
+                        <Button
+                          variant="primary"
+                          onClick={() => handleGenerateLinkedInContent(selectedPost.id)}
+                          disabled={generatingLinkedInPostId === selectedPost.id}
+                          className="bg-sky-600 hover:bg-sky-700"
+                        >
+                          {generatingLinkedInPostId === selectedPost.id ? (
+                            'Generating...'
+                          ) : (
+                            <>
+                              <Linkedin size={16} className="mr-2 inline" />
+                              Generate LinkedIn Content
+                            </>
+                          )}
+                        </Button>
+                      </>
+                    )
+                  ) : (
+                    <>
+                      <Button
+                        variant="secondary"
+                        onClick={() => handleReject(selectedPost.id)}
+                        disabled={processing === `${selectedPost.id}-reject`}
+                        className="bg-red-600 hover:bg-red-700 text-white hover:text-white border-red-600"
+                      >
+                        {processing === `${selectedPost.id}-reject` ? 'Processing...' : 'Reject'}
+                      </Button>
+                      <Button
+                        variant="primary"
+                        onClick={() => handleApprove(selectedPost.id, 'draft')}
+                        disabled={processing === `${selectedPost.id}-approve-draft`}
+                        className="bg-amber-500 hover:bg-amber-600"
+                      >
+                        {processing === `${selectedPost.id}-approve-draft` ? 'Processing...' : 'Draft'}
+                      </Button>
+                      <Button
+                        variant="primary"
+                        onClick={() => handleApprove(selectedPost.id, 'published')}
+                        disabled={processing === `${selectedPost.id}-approve-published`}
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        {processing === `${selectedPost.id}-approve-published` ? 'Processing...' : 'Publish'}
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        onClick={() => handleViewDetails(selectedPost)}
+                        disabled={processing?.startsWith(`${selectedPost.id}-`)}
+                      >
+                        View Details
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             )}

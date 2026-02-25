@@ -58,6 +58,47 @@ Example format:
 Return only the JSON array, no other text or markdown.`
 }
 
+export interface LinkedInBlogPromptInput {
+  title: string
+  excerpt: string
+  bodySummary: string
+  blogUrl: string
+  tags?: string[]
+}
+
+/**
+ * Prompt for generating a LinkedIn post from a published blog article.
+ * Used when the admin clicks "Generate LinkedIn Content" on a published blog.
+ */
+export function buildLinkedInBlogPrompt({ title, excerpt, bodySummary, blogUrl, tags }: LinkedInBlogPromptInput) {
+  return `You are a professional LinkedIn content writer.
+
+We have published a blog article and need a short LinkedIn post to promote it.
+
+Blog title: ${title}
+Blog excerpt: ${excerpt}
+${tags && tags.length > 0 ? `Tags: ${tags.join(', ')}` : ''}
+
+Summary of the blog content (use as the ONLY source of truth – do not add anything that is not in this content):
+${bodySummary || excerpt}
+
+Blog URL (MUST be included at the end of the post): ${blogUrl}
+
+Generate exactly 1 LinkedIn post that:
+- Contains ONLY content derived from the blog above. Do not mention any company name, brand, or organization unless it explicitly appears in the blog content.
+- Is short, professional, and suitable for LinkedIn (1–3 short paragraphs)
+- MUST include the blog link at the end (use the exact URL: ${blogUrl})
+- Teases the key insight or value of the article with a compelling hook
+- Stays under ~1,300 characters so it fits LinkedIn comfortably
+- Uses only standard hyphens "-" and never em dashes or en dashes
+- Does not invent facts or add promotional branding; base everything strictly on the blog content above
+
+Respond with a valid JSON object:
+{ "content": "Full post text including the blog URL at the end..." }
+
+Return only the JSON object, no other text or markdown.`
+}
+
 export type NewsCategoryLabel = 'AI News' | 'Tech Industry – India' | 'Tech Industry – Global' | 'Latest Trend News – Worldwide' | 'All about 12 hours in India' | 'All about 24 hours outside India – Worldwide'
 
 export interface LinkedInNewsPromptInput {
