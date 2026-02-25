@@ -274,11 +274,11 @@ export default function TwitterProductPostPage() {
                 Generate Twitter-ready product tweets in one click
               </h2>
               <p className="text-slate-300 text-sm md:text-[13px] mb-3 max-w-2xl">
-                Turn any product URL into 3–4 ready-to-post Twitter updates. We analyze the page, use a problem/solution style (“Tools like X exist to close that gap”), and save copies with team tracking.
+                Turn any product URL into 6 ready-to-post Twitter updates. We analyze the page, use a problem/solution style (“Tools like X exist to close that gap”), and save copies with team tracking.
               </p>
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-400">
                 <span>✓ URL analysis</span>
-                <span>✓ 3–4 variations</span>
+                <span>✓ 6 variations</span>
                 <span>✓ Team copy tracking</span>
               </div>
             </div>
@@ -458,7 +458,7 @@ export default function TwitterProductPostPage() {
               />
             </div>
             {generateError && <p className="text-sm text-red-400">{generateError}</p>}
-            {!generating && <Button type="submit" className="w-full">Generate 3–4 tweets</Button>}
+            {!generating && <Button type="submit" className="w-full">Generate 6 tweets</Button>}
           </form>
           {generating && (
             <div className="mt-6 flex flex-col items-center gap-3 text-center">

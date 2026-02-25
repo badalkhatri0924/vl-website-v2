@@ -55,11 +55,11 @@ CRITICAL – Impactful content format (follow this structure):
    - Use only standard hyphens "-" and never em dashes or en dashes.
    - When you use bullet-style lists, start lines with "- " (dash + space), similar to: "- Recent searches for instant recall". Follow the UnCloud / Memry examples: a short header line like "Now in [Product]:" followed by 2–5 bullet lines.
 
-Generate exactly 4 different Twitter post options. Vary them like this:
-- 2 posts MUST be classic problem/solution with ONLY plain lines (no "- " bullet prefixes anywhere). Think of the SaveMemry examples with just short sentences on each line, no bullets.
-- 2 posts MUST include a short bullet-style feature section, like the UnCloud / Memry examples. Use a header line (e.g. "Now in ${productName}:" or "What you get:") followed by 2–5 lines starting with "- " to highlight concrete features or benefits, then CTA and hashtags.
+Generate exactly 6 different Twitter post options. Vary them like this:
+- 3 posts MUST be classic problem/solution with ONLY plain lines (no "- " bullet prefixes anywhere). Think of the SaveMemry examples with just short sentences on each line, no bullets.
+- 3 posts MUST include a short bullet-style feature section, like the UnCloud / Memry examples. Use a header line (e.g. "Now in ${productName}:" or "What you get:") followed by 2–5 lines starting with "- " to highlight concrete features or benefits, then CTA and hashtags.
 
-Respond with a valid JSON array of 4 objects. Each object must have:
+Respond with a valid JSON array of 6 objects. Each object must have:
 - "content": string (the full tweet with REAL newlines \\n between each line for visual impact; max 280 characters)
 - "hook": string (the first line / opening hook only)
 

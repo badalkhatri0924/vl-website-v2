@@ -101,7 +101,7 @@ export interface TwitterPostOption {
 /**
  * POST /api/twitter/generate
  * Body: { productName: string, productUrl: string }
- * Returns: { success: true, posts: TwitterPostOption[] } (4 variations)
+ * Returns: { success: true, posts: TwitterPostOption[] } (6 variations)
  */
 export async function POST(request: NextRequest) {
   try {
@@ -188,7 +188,7 @@ export async function POST(request: NextRequest) {
 
     const posts: TwitterPostOption[] = Array.isArray(rawPosts)
       ? rawPosts
-          .slice(0, 4)
+          .slice(0, 6)
           .map((p: { content?: string; hook?: string }) => ({
             content: typeof p?.content === 'string' ? p.content.slice(0, 280) : String(p?.content || '').slice(0, 280),
             hook: typeof p?.hook === 'string' ? p.hook : undefined,
