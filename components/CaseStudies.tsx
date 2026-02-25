@@ -22,6 +22,22 @@ export const PROJECTS = [
     projectLink: "https://ai-for-all.in",
   },
   {
+    id: "ai-impact-pledge",
+    region: "India",
+    flag: "🇮🇳",
+    type: "National Initiative",
+    title: "AI Impact Pledge",
+    subtitle: "IndiaAI, Govt. of India",
+    desc: "The AI Impact Pledge is a nationwide initiative encouraging organisations to adopt responsible and ethical AI practices that align with India's vision for safe, inclusive, and transparent AI deployment.",
+    metrics: [
+      { label: "Registered Users", value: "2.8M+" },
+      { label: "Badge Earned", value: "2.5M+" }
+    ],
+    tags: ["Responsible AI", "Ethical AI", "IndiaAI"],
+    imageUrl: "https://firebasestorage.googleapis.com/v0/b/versionlabs-official.firebasestorage.app/o/project-thumbnail%2Faipledge.webp?alt=media",
+    projectLink: "https://aipledge.indiaai.gov.in/",
+  },
+  {
     id: "g20",
     region: "Global Initiative",
     flag: "🌍",
@@ -164,7 +180,7 @@ export const PROJECTS = [
     tags: ["Accessibility", "Inclusion", "AI for Accessibility"],
     imageUrl: "https://firebasestorage.googleapis.com/v0/b/versionlabs-official.firebasestorage.app/o/project-thumbnail%2Fai-for-accessibility.webp?alt=media",
     projectLink: "https://ai4accessibility.digitalreadiness.org/",
-  }
+  },
 ];
 
 interface CountUpProps {
@@ -446,7 +462,7 @@ const CompactProjectCard: React.FC<{ project: any }> = ({ project }) => {
 };
 
 const CaseStudies: React.FC = () => {
-  const featuredProjects = PROJECTS.slice(0, 3);
+  const featuredProjects = PROJECTS.slice(0, 4);
 
   // Partners data with Logo Images from public folder
   const partners = [

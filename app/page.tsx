@@ -55,9 +55,9 @@ export default async function Home() {
               <h2 className="text-accent text-sm font-black uppercase tracking-ultra mb-4">
                 Insights
               </h2>
-              <p className="text-3xl md:text-4xl font-display font-black text-obsidian-900 tracking-tight max-w-xl">
-                Strategic commentary on national digital infrastructure.
-              </p>
+              <h1 className="text-[8vw] font-display font-extralight text-accent italic leading-none tracking-tighter mb-10">
+                Blogs
+              </h1>
             </div>
             <Link
               href="/blog"
