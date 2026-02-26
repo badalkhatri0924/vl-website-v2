@@ -50,7 +50,8 @@ CRITICAL – Impactful content format (follow this structure):
 
 3. **Rules:**
    - Base every claim on the analyzed page content. Do not invent features.
-   - Use ${handle} when mentioning the product. You may also use "Try: ${domain}" or "at ${domain}" in the CTA.
+   - Use ${handle} when mentioning the product. You may also use "Try: ${domain}" or "at ${domain}" in the CTA **except in posts 2, 4 and 6**.
+   - Posts 2, 4 and 6 must NOT mention the Product URL or ${domain} at all (no "Try: ${domain}", no raw link, no "at ${domain}"). They can only mention the product name or ${handle}.
    - Keep each tweet under 280 characters total (including newlines and hashtags). If the full structure does not fit, shorten lines or drop one benefit line, but keep the hook + problem + solution + CTA + hashtags.
    - Use only standard hyphens "-" and never em dashes or en dashes.
    - When you use bullet-style lists, start lines with "- " (dash + space), similar to: "- Recent searches for instant recall". Follow the UnCloud / Memry examples: a short header line like "Now in [Product]:" followed by 2–5 bullet lines.
