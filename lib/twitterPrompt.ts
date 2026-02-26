@@ -38,7 +38,7 @@ ${context || '(No content could be extracted from the URL. Use the product name 
 
 CRITICAL – Impactful content format (follow this structure):
 
-1. **Use line breaks for impact.** Every short phrase or sentence must be on its own line. In your "content" string, use real newline characters (\\n) between lines. No long paragraphs.
+1. **Use line breaks for impact.** Every short phrase or sentence must be on its own line. In your "content" string, use **two** newline characters (\\n\\n) between lines so there is a blank line after every line. No long paragraphs.
 
 2. **Structure each tweet like this:**
    - **Hook (1 line):** One strong, attention-grabbing opening. Examples: "Your bookmark folder is where great ideas go to die." or "One of the biggest lies in productivity culture is 'consume more.'" or "Stop compromising on data privacy for simple file conversions."
@@ -57,15 +57,15 @@ CRITICAL – Impactful content format (follow this structure):
    - All 6 tweets in the JSON array must be clearly distinct from each other (different hooks, angles, and line wording). Do not reuse full lines or copy/paste structure across tweets, except for the product handle, URL, or domain in the CTA and the hashtags.
 
 Generate exactly 6 different Twitter post options. Vary them like this:
-- 3 posts MUST be classic problem/solution with ONLY plain lines (no "- " bullet prefixes anywhere). Think of the SaveMemry examples with just short sentences on each line, no bullets.
-- 3 posts MUST include a short bullet-style feature section, like the UnCloud / Memry examples. Use a header line (e.g. "Now in ${productName}:" or "What you get:") followed by 2–5 lines starting with "- " to highlight concrete features or benefits, then CTA and hashtags.
+- Posts 1, 2 and 3 MUST be **classic problem/solution line-by-line posts**. Every short phrase or sentence goes on its own line with double newlines (\\n\\n) between lines, like the SaveMemry examples in the screenshot.
+- Posts 4, 5 and 6 MUST be **compact paragraph-style posts**, written as 2–3 longer lines total (each line can contain multiple sentences). These paragraph-style posts must NOT use any "- " bullet prefixes.
 
 Respond with a valid JSON array of 6 objects. Each object must have:
-- "content": string (the full tweet with REAL newlines \\n between each line for visual impact; max 280 characters)
+- "content": string (the full tweet with REAL double newlines \\n\\n between each line for visual impact; max 280 characters)
 - "hook": string (the first line / opening hook only)
 
-Example content format (show newlines as \\n in your output):
-"One of the biggest lies in productivity culture is \\"consume more.\\"\\nReading more doesn't make you smarter.\\nRemembering and connecting does.\\nThat gap kills momentum.\\nTools like ${handle} exist to close that gap.\\nBecause forgotten knowledge is wasted work.\\n#Productivity #bookmark"
+Example content format (show newlines as \\n\\n in your output):
+"One of the biggest lies in productivity culture is \\"consume more.\\"\\n\\nReading more doesn't make you smarter.\\n\\nRemembering and connecting does.\\n\\nThat gap kills momentum.\\n\\nTools like ${handle} exist to close that gap.\\n\\nBecause forgotten knowledge is wasted work.\\n\\n#Productivity #bookmark"
 
 Return only the JSON array, no other text or markdown.`
 }
