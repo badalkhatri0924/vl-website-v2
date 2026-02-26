@@ -73,7 +73,7 @@ export interface LinkedInBlogPromptInput {
 export function buildLinkedInBlogPrompt({ title, excerpt, bodySummary, blogUrl, tags }: LinkedInBlogPromptInput) {
   return `You are a professional LinkedIn content writer.
 
-We have published a blog article and need a short LinkedIn post to promote it.
+We have published a blog article and need a short, skimmable LinkedIn post to promote it.
 
 Blog title: ${title}
 Blog excerpt: ${excerpt}
@@ -86,15 +86,16 @@ Blog URL (MUST be included at the end of the post): ${blogUrl}
 
 Generate exactly 1 LinkedIn post that:
 - Contains ONLY content derived from the blog above. Do not mention any company name, brand, or organization unless it explicitly appears in the blog content.
-- Is short, professional, and suitable for LinkedIn (1–3 short paragraphs)
-- MUST include the blog link at the end (use the exact URL: ${blogUrl})
-- Teases the key insight or value of the article with a compelling hook
-- Stays under ~1,300 characters so it fits LinkedIn comfortably
-- Uses only standard hyphens "-" and never em dashes or en dashes
-- Does not invent facts or add promotional branding; base everything strictly on the blog content above
+- Starts with 1 very short hook or setup line (1–2 short sentences max).
+- Then uses a short bullet list (2–5 bullets) to highlight the key ideas, takeaways, or reasons to read the blog.
+- Ends with a final line that includes the blog link (use the exact URL: ${blogUrl}).
+- Is short, professional, and suitable for LinkedIn, very easy to skim.
+- Stays under ~1,300 characters so it fits LinkedIn comfortably.
+- Uses only standard hyphens "-" and never em dashes or en dashes.
+- Does not invent facts or add promotional branding; base everything strictly on the blog content above.
 
 Respond with a valid JSON object:
-{ "content": "Full post text including the blog URL at the end..." }
+{ "content": "Full post text including the bullet points and the blog URL at the end..." }
 
 Return only the JSON object, no other text or markdown.`
 }
