@@ -52,6 +52,7 @@ export default function BlogAdminPage() {
   const [generatingLinkedInPostId, setGeneratingLinkedInPostId] = useState<string | null>(null)
   const [copiedPostId, setCopiedPostId] = useState<string | null>(null)
   const [userName, setUserName] = useState('')
+  const [statusFilter, setStatusFilter] = useState<'non-published' | 'published'>('non-published')
 
   // Load admin username from localStorage (set by main admin layout login)
   useEffect(() => {
@@ -266,6 +267,10 @@ export default function BlogAdminPage() {
     return new Date(dateString).toLocaleString()
   }
 
+  const filteredPosts = pendingPosts.filter((post) =>
+    statusFilter === 'published' ? post.publishStatus === 'published' : post.publishStatus !== 'published'
+  )
+
   if (loading) {
     return (
       <div className="min-h-screen bg-obsidian-950 text-white pt-32 pb-8 px-8">
@@ -323,6 +328,34 @@ export default function BlogAdminPage() {
             </Button>
           </div>
         </div>
+
+        {/* Published / Non-published tabs (match LinkedIn saved-content tabs) */}
+        {pendingPosts.length > 0 && (
+          <div className="mb-6 flex flex-wrap gap-1 border-b border-white/10">
+            <button
+              type="button"
+              onClick={() => setStatusFilter('non-published')}
+              className={`px-4 py-3 font-display font-bold text-sm uppercase tracking-wide border-b-2 -mb-px ${
+                statusFilter === 'non-published'
+                  ? 'text-accent border-accent bg-accent/5'
+                  : 'text-slate-400 border-transparent hover:text-white hover:bg-white/5'
+              }`}
+            >
+              Non Published
+            </button>
+            <button
+              type="button"
+              onClick={() => setStatusFilter('published')}
+              className={`px-4 py-3 font-display font-bold text-sm uppercase tracking-wide border-b-2 -mb-px ${
+                statusFilter === 'published'
+                  ? 'text-accent border-accent bg-accent/5'
+                  : 'text-slate-400 border-transparent hover:text-white hover:bg-white/5'
+              }`}
+            >
+              Published
+            </button>
+          </div>
+        )}
 
         {/* How it works dialog */}
         <Dialog open={showHowItWorks} onOpenChange={setShowHowItWorks}>
@@ -444,9 +477,19 @@ export default function BlogAdminPage() {
               <p className="text-slate-400">No pending blog posts</p>
             </CardContent>
           </Card>
+        ) : filteredPosts.length === 0 ? (
+          <Card>
+            <CardContent className="p-8 text-center">
+              <p className="text-slate-400">
+                {statusFilter === 'published'
+                  ? 'No published blog posts yet.'
+                  : 'All current posts are already published.'}
+              </p>
+            </CardContent>
+          </Card>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
-            {pendingPosts.map((post) => {
+            {filteredPosts.map((post) => {
               const isCopied = Boolean(post.copiedBy?.trim())
               return (
               <Card
