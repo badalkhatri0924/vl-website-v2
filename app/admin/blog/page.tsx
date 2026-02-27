@@ -416,7 +416,7 @@ export default function BlogAdminPage() {
                 </li>
                 <li>
                   The AI writes the article, generates a matching image, and saves everything in Firebase (<span className="font-mono text-white">blogListings</span>) as a{' '}
-                  <span className="font-semibold">pending</span> post with title, excerpt, image, tags, category, and read time — all shown in this admin list.
+                  <span className="font-semibold">pending</span> post with title, excerpt, image, tags, category, and read time - all shown in this admin list.
                 </li>
                 <li>
                   Each card shows the generated image, title, excerpt, read time, and category. Use{' '}

@@ -518,7 +518,7 @@ export default function NewsPostPage() {
                 const isBatchConfirming = confirmDeleteBatchId === batch.id
                 const isBatchDeleting = deletingBatchId === batch.id
                 const mixedLabel = unclaimedCount < batch.posts.length
-                  ? `Delete ${unclaimedCount} unclaimed — keep ${batch.posts.length - unclaimedCount} copied?`
+                  ? `Delete ${unclaimedCount} unclaimed - keep ${batch.posts.length - unclaimedCount} copied?`
                   : `Delete all ${batch.posts.length} posts?`
                 return (
                   <Card key={batch.id} className="bg-white/5 border-white/10 mb-4 last:mb-0">

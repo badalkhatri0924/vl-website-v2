@@ -474,7 +474,7 @@ export default function ProductPostPage() {
                   const isBatchConfirming = confirmDeleteBatchId === batch.id
                   const isBatchDeleting = deletingBatchId === batch.id
                   const mixedLabel = unclaimedCount < batch.posts.length
-                    ? `Delete ${unclaimedCount} unclaimed — keep ${batch.posts.length - unclaimedCount} copied?`
+                    ? `Delete ${unclaimedCount} unclaimed - keep ${batch.posts.length - unclaimedCount} copied?`
                     : `Delete all ${batch.posts.length} posts?`
                   return (
                     <Card key={batch.id} className="bg-white/5 border-white/10 mb-4 last:mb-0">
@@ -581,7 +581,7 @@ export default function ProductPostPage() {
           )}
           {linkedInPosts.length > 0 && (
             <div className="mt-8 pt-6 border-t border-white/10">
-              <h3 className="text-lg font-display font-bold mb-4">Generated posts ({linkedInPosts.length}) — saved below</h3>
+              <h3 className="text-lg font-display font-bold mb-4">Generated posts ({linkedInPosts.length}) - saved below</h3>
               <div className="space-y-4">
                 {linkedInPosts.map((post, i) => renderPostCard(post, `modal-${i}`))}
               </div>
