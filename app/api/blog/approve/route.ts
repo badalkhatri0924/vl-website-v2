@@ -10,7 +10,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://versionlabs.co'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { pendingId, publishStatus = 'draft' } = body
+    const { pendingId, publishStatus = 'draft', publishedBy } = body
 
     if (!pendingId) {
       return NextResponse.json(
@@ -29,9 +29,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Set published date based on publish status
-    const publishedAt = publishStatus === 'published' 
-      ? new Date().toISOString()
-      : undefined
+    const publishedAt = publishStatus === 'published' ? new Date().toISOString() : undefined
 
     // Create the post in Sanity
     const postId = await createBlogPost({
@@ -54,6 +52,8 @@ export async function POST(request: NextRequest) {
       await updatePendingBlogPost(pendingId, {
         publishStatus: 'published',
         publishedUrl,
+        publishedBy: typeof publishedBy === 'string' ? publishedBy : undefined,
+        publishedAt,
       })
     } else {
       // Draft: remove from pending (current behavior)

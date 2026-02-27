@@ -27,6 +27,8 @@ export interface PendingBlogPost {
   imageUrl?: string
   createdAt: string
   publishStatus?: 'draft' | 'published'
+  publishedBy?: string // Admin username who published the blog
+  publishedAt?: string // ISO date when published
   publishedUrl?: string // Full URL when published (e.g. https://versionlabs.co/blog/slug)
   linkedInContent?: string // Generated LinkedIn post content
   copiedBy?: string // Username from localStorage when user copies LinkedIn content
@@ -163,7 +165,12 @@ export async function addPendingBlogPost(post: Omit<PendingBlogPost, 'id' | 'cre
  */
 export async function updatePendingBlogPost(
   id: string,
-  updates: Partial<Pick<PendingBlogPost, 'publishStatus' | 'publishedUrl' | 'linkedInContent' | 'copiedBy' | 'copiedAt'>>
+  updates: Partial<
+    Pick<
+      PendingBlogPost,
+      'publishStatus' | 'publishedUrl' | 'linkedInContent' | 'copiedBy' | 'copiedAt' | 'publishedBy' | 'publishedAt'
+    >
+  >
 ): Promise<boolean> {
   try {
     const docRef = doc(db, COLLECTION_NAME, id)

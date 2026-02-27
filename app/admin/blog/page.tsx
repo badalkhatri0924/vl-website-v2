@@ -126,12 +126,18 @@ export default function BlogAdminPage() {
   const handleApprove = async (pendingId: string, publishStatus: 'draft' | 'published' = 'draft') => {
     try {
       setProcessing(`${pendingId}-approve-${publishStatus}`)
+      const publishUserName = userName?.trim() || undefined
       const response = await fetch('/api/blog/approve', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ pendingId, publishStatus }),
+        body: JSON.stringify({
+          pendingId,
+          publishStatus,
+          // Track which admin published the post (if available)
+          publishedBy: publishStatus === 'published' ? publishUserName : undefined,
+        }),
       })
 
       const data = await response.json()
@@ -493,6 +499,12 @@ export default function BlogAdminPage() {
                             <span className="text-white">{post.tags.join(', ')}</span>
                           </span>
                         )}
+                        {post.publishStatus === 'published' && post.publishedBy && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-600/20 text-emerald-300 border border-emerald-500/40">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                            Published by {post.publishedBy}
+                          </span>
+                        )}
                       </div>
                     </div>
 
@@ -693,6 +705,19 @@ export default function BlogAdminPage() {
                     <span className="text-slate-400">Created:</span>
                     <span className="ml-2 text-white">{formatDate(selectedPost.createdAt)}</span>
                   </div>
+                  {selectedPost.publishStatus === 'published' && selectedPost.publishedBy && (
+                    <div className="break-words col-span-2 flex flex-wrap items-center gap-2">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-600/20 text-emerald-300 border border-emerald-500/40">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        Published by {selectedPost.publishedBy}
+                      </span>
+                      {selectedPost.publishedAt && (
+                        <span className="text-slate-400 text-xs">
+                          {formatDate(selectedPost.publishedAt)}
+                        </span>
+                      )}
+                    </div>
+                  )}
                   {selectedPost.tags && selectedPost.tags.length > 0 && (
                     <div className="col-span-2 break-words">
                       <span className="text-slate-400">Tags:</span>
