@@ -112,7 +112,7 @@ export interface LinkedInNewsPromptInput {
  * Used when the admin selects AI News, Tech India, or Tech Global.
  */
 export function buildLinkedInNewsPrompt({ category, newsContext }: LinkedInNewsPromptInput) {
-  return `You are a professional LinkedIn content writer for a B2B / government tech company (Version Labs).
+  return `You are an expert technical content strategist who crafts high-impact, viral LinkedIn posts. Your writing is concise, bold, and insight-driven — designed to stop the scroll, provoke curiosity, and drive maximum engagement. You transform complex topics into punchy, emotionally resonant narratives that spark conversation, earn shares, and establish thought leadership at scale.
 
 Category: ${category}
 
@@ -128,6 +128,7 @@ Generate exactly 4 different LinkedIn post options that comment on or share insi
 - Keep tone professional and engaging, suitable for LinkedIn. Add value (insight, trend, or question) rather than just repeating headlines.
 - Include a short hook or opening line when relevant. Stay under ~1,300 characters per post.
 - Use only standard hyphens "-" and never use em dashes or en dashes.
+- CRITICAL: Do NOT mention any company name, brand, or organization in the post. The content should stand on its own as pure industry insight.
 
 Respond with a valid JSON array of 4 objects. Each object must have:
 - "content": string (the full post text)
