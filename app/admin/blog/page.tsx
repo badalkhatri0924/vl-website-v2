@@ -402,14 +402,25 @@ export default function BlogAdminPage() {
               </p>
               <ol className="list-decimal list-inside space-y-2 text-slate-300">
                 <li>
-                  <span className="font-semibold text-white">Generate New Blog</span> runs the AI prompt, creates a new article,
-                  and saves it in Firebase (collection <span className="font-mono text-white">blogListings</span>) as a
-                  <span className="font-semibold"> pending</span> post with image, tags, and metadata that are then shown in
-                  this admin list.
+                  <span className="font-semibold text-white">Generate New Blog</span> opens a form where you can optionally choose a{' '}
+                  <span className="font-semibold text-white">Category</span> from the configured list.
+                  <ul className="mt-1 ml-5 list-disc space-y-1">
+                    <li>
+                      <span className="font-semibold text-white">Category selected</span> – the AI generates an article focused on that specific category.
+                    </li>
+                    <li>
+                      <span className="font-semibold text-white">No preference</span> – the system picks a random category from the same configured list and generates the article around that.
+                    </li>
+                  </ul>
+                  The category list is managed dynamically in Firebase (<span className="font-mono text-white">blogConfig / categoryLists</span>). Any category you add there appears in the dropdown automatically.
                 </li>
                 <li>
-                  Each card in the grid shows the generated image, title, excerpt, read time, and tags. Use{' '}
-                  <span className="font-semibold text-white">View Details</span> to read the full content.
+                  The AI writes the article, generates a matching image, and saves everything in Firebase (<span className="font-mono text-white">blogListings</span>) as a{' '}
+                  <span className="font-semibold">pending</span> post with title, excerpt, image, tags, category, and read time — all shown in this admin list.
+                </li>
+                <li>
+                  Each card shows the generated image, title, excerpt, read time, and category. Use{' '}
+                  <span className="font-semibold text-white">View Details</span> to read the full article.
                 </li>
                 <li>
                   Use the action buttons:
