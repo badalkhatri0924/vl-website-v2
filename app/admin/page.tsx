@@ -47,6 +47,16 @@ const LINKS = [
     borderHover: 'hover:border-emerald-500/40',
   },
   {
+    href: 'https://content.versionlabs.co/',
+    label: 'Content Tool by Version Labs',
+    description: 'AI Content Engine by Version Labs. Generate and manage AI-powered content at scale.',
+    icon: ExternalLink,
+    external: true,
+    accent: 'from-orange-500/20 to-amber-500/10',
+    iconBg: 'bg-gradient-to-br from-orange-500/20 to-amber-500/10 text-orange-400',
+    borderHover: 'hover:border-orange-500/40',
+  },
+  {
     href: '/studio',
     label: 'Open Sanity Studio',
     description: 'Edit content in Sanity CMS.',
