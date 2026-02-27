@@ -62,9 +62,6 @@ export async function POST(request: NextRequest) {
       publishStatus = 'draft',
     } = body
 
-    // For the new deep-dive prompt, we always use a single internal category
-    const category = 'VersionLabs Insights'
-
     // Validate AI provider - only Gemini is supported now
     if (aiProvider !== 'gemini') {
       return NextResponse.json(
@@ -133,6 +130,12 @@ export async function POST(request: NextRequest) {
         // If JSON.parse fails, fall back to original markdownBody
       }
     }
+
+    // Decide on the category to use for this article and image generation.
+    // Prefer the category returned by the model (mapped from Priority Themes),
+    // but fall back to the legacy default if missing.
+    const category = (blogContent.category && blogContent.category.trim()) || 'VersionLabs Insights'
+    console.log('Deep-dive blog generated with category:', category, '| preferred idea index:', preferredIdeaIndex)
 
     // Convert markdown body to PortableText
     const portableTextBody = markdownToPortableText(markdownBody)

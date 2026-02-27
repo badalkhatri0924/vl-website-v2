@@ -473,10 +473,25 @@ export default function BlogAdminPage() {
                       </div>
                       <p className="text-slate-300 mb-3">{post.excerpt}</p>
                       <div className="flex flex-wrap gap-4 text-sm text-slate-400">
-                        <span>Read Time: <span className="text-white">{post.readTime}</span></span>
-                        <span>Created: <span className="text-white">{formatDate(post.createdAt)}</span></span>
+                        <span>
+                          Read Time:{' '}
+                          <span className="text-white">{post.readTime}</span>
+                        </span>
+                        {post.category && (
+                          <span>
+                            Category:{' '}
+                            <span className="text-white">{post.category}</span>
+                          </span>
+                        )}
+                        <span>
+                          Created:{' '}
+                          <span className="text-white">{formatDate(post.createdAt)}</span>
+                        </span>
                         {post.tags && post.tags.length > 0 && (
-                          <span>Tags: <span className="text-white">{post.tags.join(', ')}</span></span>
+                          <span>
+                            Tags:{' '}
+                            <span className="text-white">{post.tags.join(', ')}</span>
+                          </span>
                         )}
                       </div>
                     </div>
@@ -664,6 +679,12 @@ export default function BlogAdminPage() {
                     <span className="text-slate-400">Read Time:</span>
                     <span className="ml-2 text-white">{selectedPost.readTime}</span>
                   </div>
+                  {selectedPost.category && (
+                    <div className="break-words">
+                      <span className="text-slate-400">Category:</span>
+                      <span className="ml-2 text-white">{selectedPost.category}</span>
+                    </div>
+                  )}
                   <div className="break-words col-span-2">
                     <span className="text-slate-400">Slug:</span>
                     <span className="ml-2 text-white break-all">{selectedPost.slug}</span>

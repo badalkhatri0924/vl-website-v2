@@ -132,6 +132,7 @@ Final Answer Requirements:
   "excerpt": "1-2 sentence hook, max ~300 characters",
   "body": "Full markdown article here, including Summary, The Big Picture, Why Current Approaches Fail, What Needs to Change, and Looking Ahead sections, with clear headings and short paragraphs.",
   "tags": ["tag1", "tag2", "tag3"],
+  "category": "Exactly one of the Priority Themes listed above, copied verbatim (for example, \"National Digital Infrastructure\" or \"AI for Public Sector Operations\"). This describes which theme the article is primarily based on.",
   "inputTopic": "Input Topic: [CATCHY_HEADLINE] - [CORE_INSIGHTS]",
   "imageConcept": "One-sentence abstract visual concept using the required visual keywords"
 }
@@ -139,6 +140,7 @@ Final Answer Requirements:
 - The "body" must be 1200–2200 words, written in markdown, with logical headings that match the required sections.
 - The "tags" array should contain 3–6 plain-language keywords that a policy-maker or executive might search for.
 - All tags must be distinct (no duplicates, treating different capitalization as the same tag), and at least one tag must be uniquely specific to the exact Input Topic of this article, not a generic theme.
+- The "category" field must be set to exactly one of the Priority Themes listed earlier in this prompt (no new wording, no abbreviations).
 - The "inputTopic" field must follow the exact format described (starting with the words "Input Topic:").
 - The "imageConcept" sentence must be suitable to send directly to an AI image model and must follow all visual rules above.`;
 }

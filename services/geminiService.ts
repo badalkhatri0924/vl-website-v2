@@ -47,6 +47,11 @@ export interface BlogContent {
   body: string
   tags: string[]
   /**
+   * Category/theme for the article, expected to match one of the
+   * Priority Themes listed in the master prompt.
+   */
+  category?: string
+  /**
    * The combined topic string used for the deep-dive article and image concept.
    * Format: "[CATCHY_TAGLINE] - [CORE_INSIGHTS]"
    */
@@ -99,6 +104,7 @@ export async function generateBlogContent(
             : typeof parsed.tags === 'string'
               ? parsed.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
               : ['Insights'],
+          category: typeof parsed.category === 'string' ? parsed.category : undefined,
           inputTopic: typeof parsed.inputTopic === 'string' ? parsed.inputTopic : undefined,
           imageConcept: typeof parsed.imageConcept === 'string' ? parsed.imageConcept : undefined,
         };
@@ -113,6 +119,7 @@ export async function generateBlogContent(
         excerpt: extractExcerpt(responseText) || responseText.substring(0, 200),
         body: responseText,
         tags: extractTags(responseText) || ['Insights'],
+        category: undefined,
         inputTopic: undefined,
         imageConcept: undefined,
       };
@@ -125,6 +132,10 @@ export async function generateBlogContent(
 
     if (!blogContent.tags || blogContent.tags.length === 0) {
       blogContent.tags = ['Insights'];
+    }
+
+    if (!blogContent.category || typeof blogContent.category !== 'string' || !blogContent.category.trim()) {
+      blogContent.category = 'VersionLabs Insights';
     }
 
     return blogContent;
