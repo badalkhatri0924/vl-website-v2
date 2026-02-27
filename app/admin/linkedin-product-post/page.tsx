@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Copy, Check, ExternalLink, ChevronDown, ArrowLeft, Download } from 'lucide-react'
+import { Copy, Check, ExternalLink, ChevronDown, ArrowLeft, Download, Trash2 } from 'lucide-react'
 import { Avatar } from '../blog/Avatar'
 import type { LinkedInPostBatch, LinkedInPostItem } from '@/lib/linkedinPosts'
 
@@ -28,6 +28,8 @@ export default function ProductPostPage() {
   const [claimingKey, setClaimingKey] = useState<string | null>(null)
   const [activeTabBatchId, setActiveTabBatchId] = useState<string | null>(null)
   const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false)
+  const [deletingPostKey, setDeletingPostKey] = useState<string | null>(null)
+  const [confirmDeletePostKey, setConfirmDeletePostKey] = useState<string | null>(null)
 
   useEffect(() => {
     try {
@@ -69,6 +71,21 @@ export default function ProductPostPage() {
       setActiveTabBatchId(productTabs[0].id)
     }
   }, [batches])
+
+  const handleDeletePost = async (batchId: string, postIndex: number, postKey: string) => {
+    setDeletingPostKey(postKey)
+    try {
+      await fetch('/api/linkedin/delete', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ batchId, postIndex }),
+      })
+      await fetchBatches()
+    } finally {
+      setDeletingPostKey(null)
+      setConfirmDeletePostKey(null)
+    }
+  }
 
   const handleGenerateLinkedIn = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -179,6 +196,8 @@ export default function ProductPostPage() {
     const isJustCopied = copiedKey === postKey
     const isClaiming = claimingKey === postKey
     const showClaimError = copyErrorKey === postKey
+    const isConfirmingDelete = confirmDeletePostKey === postKey
+    const isDeletingPost = deletingPostKey === postKey
     return (
       <Card
         key={postKey}
@@ -226,20 +245,54 @@ export default function ProductPostPage() {
                 )}
               </span>
             ) : (
-              <Button
-                variant="secondary"
-                className="flex items-center gap-2 py-2 px-4 text-xs"
-                disabled={isClaiming}
-                onClick={() =>
-                  copyPost(
-                    post.content,
-                    postKey,
-                    options ? { batchId: options.batchId, postIndex: options.postIndex } : undefined
+              <>
+                <Button
+                  variant="secondary"
+                  className="flex items-center gap-2 py-2 px-4 text-xs"
+                  disabled={isClaiming}
+                  onClick={() =>
+                    copyPost(
+                      post.content,
+                      postKey,
+                      options ? { batchId: options.batchId, postIndex: options.postIndex } : undefined
+                    )
+                  }
+                >
+                  {isClaiming ? 'Claiming…' : isJustCopied ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
+                </Button>
+                {options && (
+                  isConfirmingDelete ? (
+                    <>
+                      <span className="text-xs text-slate-400">Delete?</span>
+                      <Button
+                        variant="secondary"
+                        className="text-xs px-3 py-1 h-auto"
+                        disabled={isDeletingPost}
+                        onClick={() => setConfirmDeletePostKey(null)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        className="text-xs px-3 py-1 h-auto bg-red-500/15 text-red-400 border-red-500/30 hover:bg-red-500/25 hover:text-red-300"
+                        disabled={isDeletingPost}
+                        onClick={() => handleDeletePost(options.batchId, options.postIndex, postKey)}
+                      >
+                        {isDeletingPost ? 'Deleting…' : 'Delete'}
+                      </Button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      title="Delete post"
+                      className="ml-auto flex items-center justify-center w-7 h-7 rounded-md text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                      onClick={() => setConfirmDeletePostKey(postKey)}
+                    >
+                      <Trash2 size={15} />
+                    </button>
                   )
-                }
-              >
-                {isClaiming ? 'Claiming…' : isJustCopied ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
-              </Button>
+                )}
+              </>
             )}
             {isJustCopied && userName && !isClaimed && (
               <span className="text-xs text-slate-400">Copied by {userName}</span>
