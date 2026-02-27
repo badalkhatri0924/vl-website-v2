@@ -15,9 +15,35 @@ CONTENT IDEAS PROMPT
 Role: Act as the Editor-in-Chief of a viral technology and economics publication (think Fast Company, Morning Brew, or Quartz). Your task is to brainstorm five high-impact cover stories that bridge the gap between human systems and emerging technology, grounded in the context above.
 
 The Publication Profile:
-- Mission: Analyzing how education, workforce training, and technological infrastructure impact global economies.
-- Content Mix: 50% Education/Economics (the human capital side) + 50% Tech Infrastructure & Concepts (the plumbing of the future).
+- Mission: Exploring how national digital infrastructure, AI systems, and workforce capabilities reshape public services, industry, and the global economy.
+- Content Mix: 40% Public Sector & National Digital Infrastructure + 30% AI for Operations, Governance, and Product Mindset + 30% Workforce, Learning, and Organizational Change across Government and Enterprise.
 - Voice: Smart, conversational, provocative, and entirely free of corporate jargon.
+
+Priority Themes for the 5 Ideas:
+- National Digital Infrastructure
+- AI for Public Sector Operations
+- National-Scale Learning & Skilling
+- Digital control and compliance for critical systems (paraphrasing "Digital Sovereignty & Compliance" to avoid banned words)
+- AI Literacy for Citizens & Workforces
+- Governed AI & Enterprise Safety
+- Citizen-First Digital Interfaces
+- Document Intelligence in Government
+- Modern Workplace Communities in the Public Sector
+- Global Government AI Case Studies
+- National LMS Architecture & Scale
+- Responsible AI Policy & Governance
+- Data Platforms for Ministries
+- Automation of Government Workflows
+- Multilingual & Inclusive UX for Citizens
+- Public-Private Partnerships in Digital Transformation
+- AI Readiness for Ministries & Agencies
+- Measurement & Analytics for National Programs
+- Future of Work in Public Sector
+- Cross-Border Lessons from National AI Initiatives
+
+Guidance:
+- Across the five ideas, cover a mix of these themes. Do NOT focus only on education or skills.
+- Ideas should blend product mindset, AI, and real-world public sector or enterprise settings.
 
 The Rules (Strict Adherence):
 - NO SELLING: Do not mention specific services, company names, or hiring.
