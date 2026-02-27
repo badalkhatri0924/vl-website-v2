@@ -30,6 +30,8 @@ export default function TwitterProductPostPage() {
   const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false)
   const [deletingPostKey, setDeletingPostKey] = useState<string | null>(null)
   const [confirmDeletePostKey, setConfirmDeletePostKey] = useState<string | null>(null)
+  const [deletingBatchId, setDeletingBatchId] = useState<string | null>(null)
+  const [confirmDeleteBatchId, setConfirmDeleteBatchId] = useState<string | null>(null)
 
   useEffect(() => {
     try {
@@ -84,6 +86,21 @@ export default function TwitterProductPostPage() {
     } finally {
       setDeletingPostKey(null)
       setConfirmDeletePostKey(null)
+    }
+  }
+
+  const handleDeleteBatch = async (batchId: string) => {
+    setDeletingBatchId(batchId)
+    try {
+      await fetch('/api/twitter/delete', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ batchId }),
+      })
+      await fetchBatches()
+    } finally {
+      setDeletingBatchId(null)
+      setConfirmDeleteBatchId(null)
     }
   }
 
@@ -454,27 +471,69 @@ export default function TwitterProductPostPage() {
                     ))}
                   </div>
                 </div>
-                {displayBatches.map((batch) => (
-                  <Card key={batch.id} className="bg-white/5 border-white/10 mb-4 last:mb-0">
-                    <CardContent className="p-6">
-                      <a
-                        href={batch.productUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-accent text-sm hover:underline flex items-center gap-1 mb-2"
-                      >
-                        {batch.productUrl}
-                        <ExternalLink size={14} />
-                      </a>
-                      <p className="text-slate-500 text-xs mb-6">{formatDate(batch.createdAt)}</p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {batch.posts.map((post, i) =>
-                          renderPostCard(post, `${batch.id}-${i}`, { batchId: batch.id, postIndex: i })
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                {displayBatches.map((batch) => {
+                  const allUnclaimed = batch.posts.every((p) => !p.copiedBy?.trim())
+                  const isBatchConfirming = confirmDeleteBatchId === batch.id
+                  const isBatchDeleting = deletingBatchId === batch.id
+                  return (
+                    <Card key={batch.id} className="bg-white/5 border-white/10 mb-4 last:mb-0">
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                          <a
+                            href={batch.productUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-accent text-sm hover:underline flex items-center gap-1"
+                          >
+                            {batch.productUrl}
+                            <ExternalLink size={14} />
+                          </a>
+                          {allUnclaimed && (
+                            <div className="flex items-center gap-2 shrink-0">
+                              {isBatchConfirming ? (
+                                <>
+                                  <span className="text-xs text-slate-400">Delete all {batch.posts.length} posts?</span>
+                                  <Button
+                                    variant="secondary"
+                                    className="text-xs px-3 py-1 h-auto"
+                                    disabled={isBatchDeleting}
+                                    onClick={() => setConfirmDeleteBatchId(null)}
+                                  >
+                                    Cancel
+                                  </Button>
+                                  <Button
+                                    variant="secondary"
+                                    className="text-xs px-3 py-1 h-auto bg-red-500/15 text-red-400 border-red-500/30 hover:bg-red-500/25 hover:text-red-300"
+                                    disabled={isBatchDeleting}
+                                    onClick={() => handleDeleteBatch(batch.id)}
+                                  >
+                                    {isBatchDeleting ? 'Deleting…' : 'Delete all'}
+                                  </Button>
+                                </>
+                              ) : (
+                                <button
+                                  type="button"
+                                  title="Delete entire batch"
+                                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs text-slate-500 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-colors"
+                                  onClick={() => setConfirmDeleteBatchId(batch.id)}
+                                >
+                                  <Trash2 size={13} />
+                                  Delete batch
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-slate-500 text-xs mb-6">{formatDate(batch.createdAt)}</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {batch.posts.map((post, i) =>
+                            renderPostCard(post, `${batch.id}-${i}`, { batchId: batch.id, postIndex: i })
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )
+                })}
               </div>
             )
           })()

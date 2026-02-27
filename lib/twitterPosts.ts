@@ -134,6 +134,14 @@ export async function addTwitterPostBatch(
 }
 
 /**
+ * Delete an entire batch document from Firestore. No tracking of who deleted or why.
+ */
+export async function deleteTwitterPostBatch(batchId: string): Promise<void> {
+  const docRef = doc(db, COLLECTION_NAME, batchId)
+  await deleteDoc(docRef)
+}
+
+/**
  * Delete a single post from a batch by index. No tracking of who deleted or why.
  * If the batch becomes empty after removal, the whole document is deleted.
  */
