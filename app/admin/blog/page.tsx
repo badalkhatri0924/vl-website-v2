@@ -582,10 +582,10 @@ export default function BlogAdminPage() {
                       ) : (
                         <>
                           <Button
-                            variant="secondary"
+                            variant="danger"
                             onClick={() => handleReject(post.id)}
                             disabled={processing === `${post.id}-reject`}
-                            className="flex-1 min-w-[120px] bg-red-500 hover:bg-red-600 text-white hover:text-white border-red-600"
+                            className="flex-1 min-w-[120px]"
                           >
                             {processing === `${post.id}-reject` ? 'Processing...' : 'Reject'}
                           </Button>
@@ -791,10 +791,9 @@ export default function BlogAdminPage() {
                   ) : (
                     <>
                       <Button
-                        variant="secondary"
+                        variant="danger"
                         onClick={() => handleReject(selectedPost.id)}
                         disabled={processing === `${selectedPost.id}-reject`}
-                        className="bg-red-600 hover:bg-red-700 text-white hover:text-white border-red-600"
                       >
                         {processing === `${selectedPost.id}-reject` ? 'Processing...' : 'Reject'}
                       </Button>
