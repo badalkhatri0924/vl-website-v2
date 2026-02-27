@@ -5,6 +5,7 @@ import {
   getDoc,
   doc,
   updateDoc,
+  deleteDoc,
   query,
   orderBy,
   Timestamp,
@@ -160,6 +161,32 @@ export async function addNewPostBatch(
     sourceArticles: payload.sourceArticles,
     posts: payload.posts,
     createdAt: createdAt.toDate().toISOString(),
+  }
+}
+
+/**
+ * Delete an entire news post batch. No tracking of who deleted or why.
+ */
+export async function deleteNewPostBatch(batchId: string): Promise<void> {
+  const docRef = doc(db, COLLECTION_NAME, batchId)
+  await deleteDoc(docRef)
+}
+
+/**
+ * Delete a single post from a batch by index. No tracking of who deleted or why.
+ * If the batch becomes empty after removal, the whole document is deleted.
+ */
+export async function deleteNewPost(batchId: string, postIndex: number): Promise<void> {
+  const docRef = doc(db, COLLECTION_NAME, batchId)
+  const snap = await getDoc(docRef)
+  if (!snap.exists()) return
+  const data = snap.data()
+  const posts = Array.isArray(data.posts) ? [...data.posts] : []
+  posts.splice(postIndex, 1)
+  if (posts.length === 0) {
+    await deleteDoc(docRef)
+  } else {
+    await updateDoc(docRef, { posts })
   }
 }
 

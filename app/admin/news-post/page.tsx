@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { Copy, Check, ExternalLink, ArrowLeft, ChevronDown } from 'lucide-react'
+import { Copy, Check, ExternalLink, ArrowLeft, ChevronDown, Trash2 } from 'lucide-react'
 import { Avatar } from '../blog/Avatar'
 import type { LinkedInPostItem } from '@/lib/linkedinPosts'
 import type { NewPostBatch } from '@/lib/newPosts'
@@ -42,6 +42,10 @@ export default function NewsPostPage() {
   const [activeSavedCategory, setActiveSavedCategory] = useState<NewsCategoryId>('ai-news')
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false)
   const [showNewsForm, setShowNewsForm] = useState(false)
+  const [deletingPostKey, setDeletingPostKey] = useState<string | null>(null)
+  const [confirmDeletePostKey, setConfirmDeletePostKey] = useState<string | null>(null)
+  const [deletingBatchId, setDeletingBatchId] = useState<string | null>(null)
+  const [confirmDeleteBatchId, setConfirmDeleteBatchId] = useState<string | null>(null)
 
   useEffect(() => {
     try {
@@ -132,6 +136,36 @@ export default function NewsPostPage() {
     }
   }
 
+  const handleDeletePost = async (batchId: string, postIndex: number, postKey: string) => {
+    setDeletingPostKey(postKey)
+    try {
+      await fetch('/api/news-posts/delete', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ batchId, postIndex }),
+      })
+      await fetchBatches()
+    } finally {
+      setDeletingPostKey(null)
+      setConfirmDeletePostKey(null)
+    }
+  }
+
+  const handleDeleteBatch = async (batchId: string) => {
+    setDeletingBatchId(batchId)
+    try {
+      await fetch('/api/news-posts/delete', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ batchId }),
+      })
+      await fetchBatches()
+    } finally {
+      setDeletingBatchId(null)
+      setConfirmDeleteBatchId(null)
+    }
+  }
+
   const formatDate = (iso: string) => {
     try {
       return new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
@@ -195,6 +229,8 @@ export default function NewsPostPage() {
     const isJustCopied = copiedKey === postKey
     const isClaiming = claimingKey === postKey
     const showClaimError = copyErrorKey === postKey
+    const isConfirmingDelete = confirmDeletePostKey === postKey
+    const isDeletingPost = deletingPostKey === postKey
     return (
       <Card
         key={postKey}
@@ -256,20 +292,54 @@ export default function NewsPostPage() {
                 )}
               </span>
             ) : (
-              <Button
-                variant="secondary"
-                className="flex items-center gap-2 py-2 px-4 text-xs"
-                disabled={isClaiming}
-                onClick={() =>
-                  copyPost(
-                    post.content,
-                    postKey,
-                    options ? { batchId: options.batchId, postIndex: options.postIndex } : undefined
+              <>
+                <Button
+                  variant="secondary"
+                  className="flex items-center gap-2 py-2 px-4 text-xs"
+                  disabled={isClaiming}
+                  onClick={() =>
+                    copyPost(
+                      post.content,
+                      postKey,
+                      options ? { batchId: options.batchId, postIndex: options.postIndex } : undefined
+                    )
+                  }
+                >
+                  {isClaiming ? 'Claiming…' : isJustCopied ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
+                </Button>
+                {options && (
+                  isConfirmingDelete ? (
+                    <>
+                      <span className="text-xs text-slate-400">Delete?</span>
+                      <Button
+                        variant="secondary"
+                        className="text-xs px-3 py-1 h-auto"
+                        disabled={isDeletingPost}
+                        onClick={() => setConfirmDeletePostKey(null)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        className="text-xs px-3 py-1 h-auto bg-red-500/15 text-red-400 border-red-500/30 hover:bg-red-500/25 hover:text-red-300"
+                        disabled={isDeletingPost}
+                        onClick={() => handleDeletePost(options.batchId, options.postIndex, postKey)}
+                      >
+                        {isDeletingPost ? 'Deleting…' : 'Delete'}
+                      </Button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      title="Delete post"
+                      className="ml-auto flex items-center justify-center w-7 h-7 rounded-md text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                      onClick={() => setConfirmDeletePostKey(postKey)}
+                    >
+                      <Trash2 size={15} />
+                    </button>
                   )
-                }
-              >
-                {isClaiming ? 'Claiming…' : isJustCopied ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
-              </Button>
+                )}
+              </>
             )}
             {isJustCopied && userName && !isClaimed && (
               <span className="text-xs text-slate-400">Copied by {userName}</span>
@@ -442,25 +512,67 @@ export default function NewsPostPage() {
                   </p>
                 )
               }
-              return categoryBatches.map((batch) => (
-                <Card key={batch.id} className="bg-white/5 border-white/10 mb-4 last:mb-0">
-                  <CardContent className="p-6">
-                    <p className="text-slate-500 text-xs mb-4">{formatDate(batch.createdAt)}</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {batch.posts.map((post, i) => {
-                        const sourceArticles = batch.sourceArticles && batch.sourceArticles.length > 0 ? batch.sourceArticles : []
-                        const index = post.sourceArticleIndex ?? i % sourceArticles.length
-                        const sourceArticle = sourceArticles[index]
-                        return renderPostCard(post, `saved-${batch.id}-${i}`, {
-                          batchId: batch.id,
-                          postIndex: i,
-                          sourceArticle,
-                        })
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
+              return categoryBatches.map((batch) => {
+                const allUnclaimed = batch.posts.every((p) => !p.copiedBy?.trim())
+                const isBatchConfirming = confirmDeleteBatchId === batch.id
+                const isBatchDeleting = deletingBatchId === batch.id
+                return (
+                  <Card key={batch.id} className="bg-white/5 border-white/10 mb-4 last:mb-0">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between gap-3 mb-4">
+                        <p className="text-slate-500 text-xs">{formatDate(batch.createdAt)}</p>
+                        {allUnclaimed && (
+                          <div className="flex items-center gap-2 shrink-0">
+                            {isBatchConfirming ? (
+                              <>
+                                <span className="text-xs text-slate-400">Delete all {batch.posts.length} posts?</span>
+                                <Button
+                                  variant="secondary"
+                                  className="text-xs px-3 py-1 h-auto"
+                                  disabled={isBatchDeleting}
+                                  onClick={() => setConfirmDeleteBatchId(null)}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  variant="secondary"
+                                  className="text-xs px-3 py-1 h-auto bg-red-500/15 text-red-400 border-red-500/30 hover:bg-red-500/25 hover:text-red-300"
+                                  disabled={isBatchDeleting}
+                                  onClick={() => handleDeleteBatch(batch.id)}
+                                >
+                                  {isBatchDeleting ? 'Deleting…' : 'Delete all'}
+                                </Button>
+                              </>
+                            ) : (
+                              <button
+                                type="button"
+                                title="Delete entire batch"
+                                className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs text-slate-500 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-colors"
+                                onClick={() => setConfirmDeleteBatchId(batch.id)}
+                              >
+                                <Trash2 size={13} />
+                                Delete batch
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {batch.posts.map((post, i) => {
+                          const sourceArticles = batch.sourceArticles && batch.sourceArticles.length > 0 ? batch.sourceArticles : []
+                          const index = post.sourceArticleIndex ?? i % sourceArticles.length
+                          const sourceArticle = sourceArticles[index]
+                          return renderPostCard(post, `saved-${batch.id}-${i}`, {
+                            batchId: batch.id,
+                            postIndex: i,
+                            sourceArticle,
+                          })
+                        })}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              })
             })()}
           </div>
         )}
