@@ -20,26 +20,18 @@ The Publication Profile:
 - Voice: Smart, conversational, provocative, and entirely free of corporate jargon.
 
 Priority Themes for the 5 Ideas:
-- National Digital Infrastructure
-- AI for Public Sector Operations
-- National-Scale Learning & Skilling
-- Digital control and compliance for critical systems (paraphrasing "Digital Sovereignty & Compliance" to avoid banned words)
-- AI Literacy for Citizens & Workforces
-- Governed AI & Enterprise Safety
-- Citizen-First Digital Interfaces
-- Document Intelligence in Government
-- Modern Workplace Communities in the Public Sector
-- Global Government AI Case Studies
-- National LMS Architecture & Scale
-- Responsible AI Policy & Governance
-- Data Platforms for Ministries
-- Automation of Government Workflows
-- Multilingual & Inclusive UX for Citizens
-- Public-Private Partnerships in Digital Transformation
-- AI Readiness for Ministries & Agencies
-- Measurement & Analytics for National Programs
-- Future of Work in Public Sector
-- Cross-Border Lessons from National AI Initiatives
+- The actual list of Priority Themes is managed dynamically in system configuration and passed to you via PREFERRED_CATEGORY. Treat PREFERRED_CATEGORY as the authoritative category label and do not invent new category names.
+
+CATEGORY SELECTION RULE (OPTIONAL)
+----
+
+At the top of this prompt, you may also see a line of the form:
+
+PREFERRED_CATEGORY: [ONE_PRIORITY_THEME]
+
+Rules:
+- If PREFERRED_CATEGORY is present, you MUST ensure that the selected idea and the final "category" field in the JSON output both match PREFERRED_CATEGORY exactly, using one of the Priority Themes listed above.
+- If PREFERRED_CATEGORY is missing, you are free to choose any single category from the Priority Themes list, making sure the article primarily focuses on that theme.
 
 Guidance:
 - Across the five ideas, cover a mix of these themes. Do NOT focus only on education or skills.

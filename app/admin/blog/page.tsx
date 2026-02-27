@@ -53,6 +53,10 @@ export default function BlogAdminPage() {
   const [copiedPostId, setCopiedPostId] = useState<string | null>(null)
   const [userName, setUserName] = useState('')
   const [statusFilter, setStatusFilter] = useState<'non-published' | 'published'>('non-published')
+  const [availableCategories, setAvailableCategories] = useState<string[]>([])
+  const [showGenerateDialog, setShowGenerateDialog] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<string>('')
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false)
 
   // Load admin username from localStorage (set by main admin layout login)
   useEffect(() => {
@@ -65,6 +69,24 @@ export default function BlogAdminPage() {
   // Load pending posts on mount (auth is handled by parent admin layout)
   useEffect(() => {
     fetchPendingPosts()
+  }, [])
+
+  // Load blog configuration (categories, authors, etc.)
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const response = await fetch('/api/blog/generate')
+        if (!response.ok) return
+        const data = await response.json()
+        if (Array.isArray(data.categories)) {
+          setAvailableCategories(data.categories)
+        }
+      } catch (error) {
+        console.error('Error fetching blog config:', error)
+      }
+    }
+
+    fetchConfig()
   }, [])
 
   const fetchPendingPosts = async () => {
@@ -82,7 +104,7 @@ export default function BlogAdminPage() {
     }
   }
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (category?: string) => {
     try {
       setIsGenerating(true)
       const response = await fetch('/api/blog/generate', {
@@ -93,6 +115,7 @@ export default function BlogAdminPage() {
         body: JSON.stringify({
           // Always create as draft; publish is handled via Approve flow
           publishStatus: 'draft',
+          category: category ?? undefined,
         }),
       })
 
@@ -320,7 +343,7 @@ export default function BlogAdminPage() {
             </Button>
             <Button
               variant="primary"
-              onClick={handleGenerate}
+              onClick={() => setShowGenerateDialog(true)}
               disabled={isGenerating}
               className="w-full sm:w-auto"
             >
@@ -918,6 +941,120 @@ export default function BlogAdminPage() {
         </Dialog>
 
         {/* No dialog – clicking "Generate New Blog" now starts generation immediately */}
+        <Dialog
+          open={showGenerateDialog}
+          onOpenChange={(open) => {
+            setShowGenerateDialog(open)
+            if (!open) {
+              setIsCategoryDropdownOpen(false)
+            }
+          }}
+        >
+          <DialogContent className="w-full max-w-lg md:max-w-3xl overflow-y-auto max-h-[90vh]">
+            <DialogHeader>
+              <DialogTitle>Generate New Blog</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-2 text-sm text-slate-200">
+              <p className="text-slate-400">
+                Optionally choose a primary category. If you skip this, a random category will be selected from the configured list.
+              </p>
+
+              <label className="flex flex-col gap-1 text-xs font-medium text-slate-300">
+                Category (optional)
+                <div className="mt-1">
+                  <button
+                    type="button"
+                    onClick={() => setIsCategoryDropdownOpen((open) => !open)}
+                    className="flex w-full items-center justify-between rounded-md bg-slate-900 border border-slate-700 px-3 py-2 text-sm text-slate-100 hover:border-slate-500 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-obsidian-950"
+                  >
+                    <span className={selectedCategory ? 'text-slate-100 text-left' : 'text-slate-500 text-left'}>
+                      {selectedCategory || 'No preference (random from list)'}
+                    </span>
+                    <svg
+                      className={`ml-2 h-4 w-4 text-slate-400 transition-transform ${isCategoryDropdownOpen ? 'rotate-180' : ''}`}
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M5.25 7.5L10 12.25L14.75 7.5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+
+                  {isCategoryDropdownOpen && (
+                    <div className="mt-1 max-h-[360px] w-full overflow-y-auto rounded-md border border-slate-700 bg-slate-900 shadow-xl">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCategory('')
+                          setIsCategoryDropdownOpen(false)
+                        }}
+                        className={`flex w-full items-start px-3 py-2 text-left text-xs ${
+                          !selectedCategory
+                            ? 'bg-slate-800 text-slate-100'
+                            : 'text-slate-300 hover:bg-slate-800'
+                        }`}
+                      >
+                        No preference (random from list)
+                      </button>
+                      {availableCategories.map((category) => {
+                        const isActive = category === selectedCategory
+                        return (
+                          <button
+                            key={category}
+                            type="button"
+                            onClick={() => {
+                              setSelectedCategory(category)
+                              setIsCategoryDropdownOpen(false)
+                            }}
+                            className={`flex w-full items-start px-3 py-2 text-left text-xs ${
+                              isActive
+                                ? 'bg-slate-800 text-slate-100'
+                                : 'text-slate-300 hover:bg-slate-800'
+                            }`}
+                          >
+                            {category}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              </label>
+
+              <div className="flex justify-end gap-2 pt-4">
+                <Button
+                  variant="secondary"
+                  type="button"
+                  onClick={() => {
+                    setShowGenerateDialog(false)
+                    setIsCategoryDropdownOpen(false)
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="primary"
+                  type="button"
+                  onClick={() => {
+                    setShowGenerateDialog(false)
+                    setIsCategoryDropdownOpen(false)
+                    handleGenerate(selectedCategory || undefined)
+                  }}
+                  disabled={isGenerating}
+                >
+                  {isGenerating ? 'Generating…' : 'Generate'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   )

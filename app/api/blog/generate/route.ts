@@ -5,6 +5,7 @@ import { getDefaultAuthorId, getAuthors, uploadImageBufferToSanity, testSanityCo
 import { generateBlogImage, calculateReadTime, countWords } from '@/lib/content/imageHandler'
 import { addPendingBlogPost } from '@/lib/pendingBlogs'
 import { getNextIdeaIndex } from '@/lib/blogIdeaRotation'
+import { getAllBlogCategories, pickRandomCategory } from '@/lib/blogCategories'
 
 /**
  * Generate a slug from a title
@@ -56,11 +57,16 @@ export async function POST(request: NextRequest) {
     }
 
     const {
-      // category and topic are intentionally ignored for the new prompt flow
       aiProvider = 'gemini',
       authorId,
       publishStatus = 'draft',
-    } = body
+      category: requestedCategory,
+    } = body as {
+      aiProvider?: 'gemini'
+      authorId?: string
+      publishStatus?: 'draft' | 'published'
+      category?: string
+    }
 
     // Validate AI provider - only Gemini is supported now
     if (aiProvider !== 'gemini') {
@@ -73,19 +79,50 @@ export async function POST(request: NextRequest) {
     // Generate content using AI (deep-dive prompt flow)
     console.log(`Generating deep-dive blog content, provider: gemini`)
 
+    // Resolve available categories from Firestore config (with fallback)
+    const availableCategories = await getAllBlogCategories()
+
     // Determine which of the 5 internally brainstormed ideas to use
     // in a fixed rotation: 1 → 2 → 3 → 4 → 5 → 1 → ...
     const preferredIdeaIndex = await getNextIdeaIndex()
-    const basePrompt = `PREFERRED_IDEA_INDEX: ${preferredIdeaIndex}`
+
+    // Determine the category hint to pass to the model:
+    // - if the admin selected a category and it exists in config, use that
+    // - otherwise, randomly pick one from the configured list
+    const normalizedRequestedCategory =
+      typeof requestedCategory === 'string' ? requestedCategory.trim() : ''
+
+    const validRequestedCategory =
+      normalizedRequestedCategory &&
+      availableCategories.includes(normalizedRequestedCategory)
+        ? normalizedRequestedCategory
+        : ''
+
+    const randomFallbackCategory = pickRandomCategory(availableCategories)
+
+    const categoryHint = validRequestedCategory || randomFallbackCategory || ''
+
+    const basePromptLines: string[] = []
+
+    if (categoryHint) {
+      basePromptLines.push(
+        `PREFERRED_CATEGORY: ${categoryHint}`,
+        'You MUST ensure that the selected idea and the final "category" field in the JSON output both match PREFERRED_CATEGORY exactly, using one of the Priority Themes only.'
+      )
+    }
+
+    basePromptLines.push(`PREFERRED_IDEA_INDEX: ${preferredIdeaIndex}`)
+
+    const basePrompt = basePromptLines.join('\n')
 
     const blogContent = await generateBlogContent(basePrompt)
 
     // Get or use default author
-    let finalAuthorId = authorId
+    let finalAuthorId: string | undefined = authorId ?? undefined
     if (!finalAuthorId) {
       console.log('No authorId provided, fetching default author...')
-      finalAuthorId = await getDefaultAuthorId()
-      if (!finalAuthorId) {
+      const defaultAuthorId = await getDefaultAuthorId()
+      if (!defaultAuthorId) {
         // Try to get all authors for better error message
         const allAuthors = await getAuthors()
         console.error('No authors found. Available authors:', allAuthors)
@@ -99,6 +136,7 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         )
       }
+      finalAuthorId = defaultAuthorId
       console.log('Using default author ID:', finalAuthorId)
     }
 
@@ -132,10 +170,25 @@ export async function POST(request: NextRequest) {
     }
 
     // Decide on the category to use for this article and image generation.
-    // Prefer the category returned by the model (mapped from Priority Themes),
-    // but fall back to the legacy default if missing.
-    const category = (blogContent.category && blogContent.category.trim()) || 'VersionLabs Insights'
-    console.log('Deep-dive blog generated with category:', category, '| preferred idea index:', preferredIdeaIndex)
+    // Prefer (in order):
+    // 1) The validated admin-selected category
+    // 2) The random fallback category from config
+    // 3) The category returned by the model
+    // 4) A legacy default if everything else fails.
+    const modelCategory = blogContent.category && blogContent.category.trim()
+
+    const category =
+      validRequestedCategory ||
+      randomFallbackCategory ||
+      modelCategory ||
+      'National Digital Infrastructure'
+
+    console.log(
+      'Deep-dive blog generated with category:',
+      category,
+      '| preferred idea index:',
+      preferredIdeaIndex
+    )
 
     // Convert markdown body to PortableText
     const portableTextBody = markdownToPortableText(markdownBody)
@@ -195,7 +248,7 @@ export async function POST(request: NextRequest) {
     const pendingPost = await addPendingBlogPost({
       title: blogContent.title,
       slug,
-      authorId: finalAuthorId,
+      authorId: finalAuthorId as string,
       category,
       excerpt: blogContent.excerpt,
       readTime,
@@ -235,16 +288,18 @@ export async function POST(request: NextRequest) {
  */
 export async function GET() {
   try {
-    // Only authors are currently used by the admin; categories are handled entirely by the prompt.
     const authors = await getAuthors()
     const authorDetails = (authors || []).map(author => ({
       id: author._id,
       name: author.name,
     }))
 
+    const categories = await getAllBlogCategories()
+
     return NextResponse.json({
       availableProviders: ['gemini'],
       authors: authorDetails,
+      categories,
     })
   } catch (error) {
     return NextResponse.json(

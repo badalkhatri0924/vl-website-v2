@@ -64,7 +64,7 @@ export const DialogContent: React.FC<DialogContentProps> = ({
   onClose
 }) => {
   return (
-    <div className={`bg-obsidian-950/95 backdrop-blur-3xl border border-white/10 rounded-2xl shadow-2xl p-8 mx-auto relative overflow-hidden ${className}`}>
+    <div className={`bg-obsidian-950/95 backdrop-blur-3xl border border-white/10 rounded-2xl shadow-2xl p-8 mx-auto relative ${className}`}>
       {showCloseButton && onClose && (
         <button
           onClick={onClose}
