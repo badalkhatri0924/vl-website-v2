@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/card'
-import { ExternalLink, ArrowRight, LayoutGrid, PenLine } from 'lucide-react'
+import { ExternalLink, ArrowRight, LayoutGrid, PenLine, Link2 } from 'lucide-react'
 
 const LINKS = [
   {
@@ -37,6 +37,15 @@ const LINKS = [
     borderHover: 'hover:border-sky-500/40',
   },
   
+  {
+    href: '/admin/url-analyser',
+    label: 'URL Analyser',
+    description: 'Paste any URL — blog, article, or product page. We read the full content and generate a ready-to-post LinkedIn update.',
+    icon: Link2,
+    accent: 'from-violet-500/20 to-purple-500/10',
+    iconBg: 'bg-gradient-to-br from-violet-500/20 to-purple-500/10 text-violet-400',
+    borderHover: 'hover:border-violet-500/40',
+  },
   {
     href: '/admin/blog',
     label: 'Blog Admin',
