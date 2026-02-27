@@ -513,19 +513,23 @@ export default function NewsPostPage() {
                 )
               }
               return categoryBatches.map((batch) => {
-                const allUnclaimed = batch.posts.every((p) => !p.copiedBy?.trim())
+                const unclaimedCount = batch.posts.filter((p) => !p.copiedBy?.trim()).length
+                const hasUnclaimed = unclaimedCount > 0
                 const isBatchConfirming = confirmDeleteBatchId === batch.id
                 const isBatchDeleting = deletingBatchId === batch.id
+                const mixedLabel = unclaimedCount < batch.posts.length
+                  ? `Delete ${unclaimedCount} unclaimed — keep ${batch.posts.length - unclaimedCount} copied?`
+                  : `Delete all ${batch.posts.length} posts?`
                 return (
                   <Card key={batch.id} className="bg-white/5 border-white/10 mb-4 last:mb-0">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between gap-3 mb-4">
                         <p className="text-slate-500 text-xs">{formatDate(batch.createdAt)}</p>
-                        {allUnclaimed && (
+                        {hasUnclaimed && (
                           <div className="flex items-center gap-2 shrink-0">
                             {isBatchConfirming ? (
                               <>
-                                <span className="text-xs text-slate-400">Delete all {batch.posts.length} posts?</span>
+                                <span className="text-xs text-slate-400">{mixedLabel}</span>
                                 <Button
                                   variant="secondary"
                                   className="text-xs px-3 py-1 h-auto"
@@ -540,13 +544,13 @@ export default function NewsPostPage() {
                                   disabled={isBatchDeleting}
                                   onClick={() => handleDeleteBatch(batch.id)}
                                 >
-                                  {isBatchDeleting ? 'Deleting…' : 'Delete all'}
+                                  {isBatchDeleting ? 'Deleting…' : 'Delete'}
                                 </Button>
                               </>
                             ) : (
                               <button
                                 type="button"
-                                title="Delete entire batch"
+                                title="Delete unclaimed posts in this batch"
                                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs text-slate-500 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-colors"
                                 onClick={() => setConfirmDeleteBatchId(batch.id)}
                               >

@@ -142,6 +142,26 @@ export async function deleteTwitterPostBatch(batchId: string): Promise<void> {
 }
 
 /**
+ * Delete only unclaimed posts from a batch. Claimed posts are preserved.
+ * If no posts remain after removal, the whole document is deleted.
+ */
+export async function deleteUnclaimedTwitterPosts(batchId: string): Promise<void> {
+  const docRef = doc(db, COLLECTION_NAME, batchId)
+  const snap = await getDoc(docRef)
+  if (!snap.exists()) return
+  const data = snap.data()
+  const posts = Array.isArray(data.posts) ? data.posts : []
+  const remaining = posts.filter(
+    (p: Record<string, unknown>) => typeof p?.copiedBy === 'string' && p.copiedBy.trim() !== ''
+  )
+  if (remaining.length === 0) {
+    await deleteDoc(docRef)
+  } else {
+    await updateDoc(docRef, { posts: remaining })
+  }
+}
+
+/**
  * Delete a single post from a batch by index. No tracking of who deleted or why.
  * If the batch becomes empty after removal, the whole document is deleted.
  */

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { deleteTwitterPost, deleteTwitterPostBatch } from '@/lib/twitterPosts'
+import { deleteTwitterPost, deleteUnclaimedTwitterPosts } from '@/lib/twitterPosts'
 
 export async function DELETE(request: NextRequest) {
   try {
@@ -12,7 +12,8 @@ export async function DELETE(request: NextRequest) {
     }
 
     if (postIndex === undefined) {
-      await deleteTwitterPostBatch(batchId)
+      // Batch delete: removes unclaimed posts, keeps claimed ones
+      await deleteUnclaimedTwitterPosts(batchId)
     } else {
       await deleteTwitterPost(batchId, postIndex)
     }

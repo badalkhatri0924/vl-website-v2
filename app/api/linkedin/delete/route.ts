@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { deleteLinkedInPost, deleteLinkedInPostBatch } from '@/lib/linkedinPosts'
+import { deleteLinkedInPost, deleteUnclaimedLinkedInPosts } from '@/lib/linkedinPosts'
 
 export async function DELETE(request: NextRequest) {
   try {
@@ -12,7 +12,8 @@ export async function DELETE(request: NextRequest) {
     }
 
     if (postIndex === undefined) {
-      await deleteLinkedInPostBatch(batchId)
+      // Batch delete: removes unclaimed posts, keeps claimed ones
+      await deleteUnclaimedLinkedInPosts(batchId)
     } else {
       await deleteLinkedInPost(batchId, postIndex)
     }

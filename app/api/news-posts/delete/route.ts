@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { deleteNewPost, deleteNewPostBatch } from '@/lib/newPosts'
+import { deleteNewPost, deleteUnclaimedNewPosts } from '@/lib/newPosts'
 
 export async function DELETE(request: NextRequest) {
   try {
@@ -12,7 +12,8 @@ export async function DELETE(request: NextRequest) {
     }
 
     if (postIndex === undefined) {
-      await deleteNewPostBatch(batchId)
+      // Batch delete: removes unclaimed posts, keeps claimed ones
+      await deleteUnclaimedNewPosts(batchId)
     } else {
       await deleteNewPost(batchId, postIndex)
     }
