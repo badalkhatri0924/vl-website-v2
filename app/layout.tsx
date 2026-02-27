@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Manrope } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import LayoutWrapper from '@/components/LayoutWrapper'
 // import Chatbot from '@/components/Chatbot'
@@ -98,6 +99,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-6PRS72969V"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-6PRS72969V');
+          `}
+        </Script>
+      </head>
       <body 
         className={`${inter.variable} ${manrope.variable} min-h-screen selection:bg-accent selection:text-white bg-white overflow-x-hidden`}
         suppressHydrationWarning
